@@ -19,10 +19,10 @@ const CATEGORIES = [
 ];
 
 const TACO_ITEMS = [
-  {id:1,name:'TACOS Azada',price:3.50,button_color:'#4CAF50',is_taxable:1,is_ebt_eligible:0,grid_position:1,category_id:26},
-  {id:2,name:'TACOS BBQ',price:3.50,button_color:'#8BC34A',is_taxable:1,is_ebt_eligible:0,grid_position:2,category_id:26},
-  {id:3,name:'Tacos Chorizo',price:3.50,button_color:'#2196F3',is_taxable:1,is_ebt_eligible:0,grid_position:3,category_id:26},
-  {id:4,name:'TACOS DE HUEVO',price:3.00,button_color:'#F44336',is_taxable:1,is_ebt_eligible:0,grid_position:4,category_id:26},
+  {id:1,name:'TACOS Azada',price:1.99,button_color:'#4CAF50',is_taxable:1,is_ebt_eligible:0,grid_position:1,category_id:26},
+  {id:2,name:'TACOS BBQ',price:1.99,button_color:'#8BC34A',is_taxable:1,is_ebt_eligible:0,grid_position:2,category_id:26},
+  {id:3,name:'Tacos Chorizo',price:1.99,button_color:'#2196F3',is_taxable:1,is_ebt_eligible:0,grid_position:3,category_id:26},
+  {id:4,name:'TACOS DE HUEVO',price:1.99,button_color:'#F44336',is_taxable:1,is_ebt_eligible:0,grid_position:4,category_id:26},
   {id:5,name:'CON QUESO',price:1.00,button_color:'#4CAF50',is_taxable:1,is_ebt_eligible:0,grid_position:5,category_id:26},
   {id:6,name:'Carne Extra',price:2.00,button_color:'#B71C1C',is_taxable:1,is_ebt_eligible:0,grid_position:6,category_id:26},
   {id:7,name:'Doble Tortilla',price:0.50,button_color:'#4CAF50',is_taxable:1,is_ebt_eligible:0,grid_position:7,category_id:26},
@@ -48,10 +48,123 @@ const TACO_ITEMS = [
 ];
 
 const SAMPLE_ITEMS_BY_CATEGORY = {
-  1: [{id:101,name:'Arroz Blanco',price:3.00,button_color:'#FF9800',is_taxable:1,is_ebt_eligible:0,grid_position:1},{id:102,name:'Arroz Rojo',price:3.50,button_color:'#E53E3E',is_taxable:1,is_ebt_eligible:0,grid_position:2},{id:103,name:'Arroz con Pollo',price:8.99,button_color:'#D69E2E',is_taxable:1,is_ebt_eligible:0,grid_position:3}],
-  8: [{id:201,name:'Agua Horchata',price:3.00,button_color:'#D69E2E',is_taxable:1,is_ebt_eligible:0,grid_position:1},{id:202,name:'Agua Jamaica',price:3.00,button_color:'#E53E3E',is_taxable:1,is_ebt_eligible:0,grid_position:2},{id:203,name:'Coca Cola',price:2.50,button_color:'#B71C1C',is_taxable:1,is_ebt_eligible:0,grid_position:3},{id:204,name:'Jarritos',price:2.00,button_color:'#FF9800',is_taxable:1,is_ebt_eligible:0,grid_position:4}],
-  14: [{id:301,name:'Burrito Azada',price:9.99,button_color:'#4CAF50',is_taxable:1,is_ebt_eligible:0,grid_position:1},{id:302,name:'Burrito Pollo',price:9.99,button_color:'#FFEB3B',is_taxable:1,is_ebt_eligible:0,grid_position:2},{id:303,name:'Burrito Carnitas',price:9.99,button_color:'#FF9800',is_taxable:1,is_ebt_eligible:0,grid_position:3},{id:304,name:'Burrito Pastor',price:9.99,button_color:'#E91E63',is_taxable:1,is_ebt_eligible:0,grid_position:4}],
+  1: [
+    {id:101,name:'Arroz Blanco',price:3.00,button_color:'#FF9800',is_taxable:1,is_ebt_eligible:0,grid_position:1},
+    {id:102,name:'Arroz Rojo',price:3.50,button_color:'#E53E3E',is_taxable:1,is_ebt_eligible:0,grid_position:2},
+    {id:103,name:'Arroz con Pollo',price:8.99,button_color:'#D69E2E',is_taxable:1,is_ebt_eligible:0,grid_position:3},
+    {id:104,name:'Arroz con Camarones',price:12.99,button_color:'#009688',is_taxable:1,is_ebt_eligible:0,grid_position:4},
+  ],
+  2: [
+    {id:110,name:'Coctel de Camaron',price:14.99,button_color:'#E53E3E',is_taxable:1,is_ebt_eligible:0,grid_position:1},
+    {id:111,name:'Coctel de Pulpo',price:15.99,button_color:'#9C27B0',is_taxable:1,is_ebt_eligible:0,grid_position:2},
+    {id:112,name:'Coctel Mixto',price:16.99,button_color:'#FF9800',is_taxable:1,is_ebt_eligible:0,grid_position:3},
+    {id:113,name:'Campechana',price:16.99,button_color:'#B71C1C',is_taxable:1,is_ebt_eligible:0,grid_position:4},
+  ],
+  3: [
+    {id:120,name:'Frijoles Refritos',price:2.50,button_color:'#795548',is_taxable:1,is_ebt_eligible:0,grid_position:1},
+    {id:121,name:'Frijoles de Olla',price:2.50,button_color:'#5D4037',is_taxable:1,is_ebt_eligible:0,grid_position:2},
+    {id:122,name:'Frijoles Charros',price:3.99,button_color:'#E53E3E',is_taxable:1,is_ebt_eligible:0,grid_position:3},
+  ],
+  4: [
+    {id:130,name:'Menudo Chico',price:8.99,button_color:'#F44336',is_taxable:1,is_ebt_eligible:0,grid_position:1},
+    {id:131,name:'Menudo Grande',price:12.99,button_color:'#B71C1C',is_taxable:1,is_ebt_eligible:0,grid_position:2},
+    {id:132,name:'Menudo Para Llevar (qt)',price:10.99,button_color:'#E91E63',is_taxable:1,is_ebt_eligible:0,grid_position:3},
+  ],
+  5: [
+    {id:140,name:'Cebolla (lb)',price:0.99,button_color:'#8BC34A',is_taxable:0,is_ebt_eligible:1,grid_position:1},
+    {id:141,name:'Tomate (lb)',price:1.49,button_color:'#F44336',is_taxable:0,is_ebt_eligible:1,grid_position:2},
+    {id:142,name:'Cilantro',price:0.79,button_color:'#4CAF50',is_taxable:0,is_ebt_eligible:1,grid_position:3},
+    {id:143,name:'Chile Serrano (lb)',price:1.99,button_color:'#2E7D32',is_taxable:0,is_ebt_eligible:1,grid_position:4},
+    {id:144,name:'Limon (each)',price:0.25,button_color:'#CDDC39',is_taxable:0,is_ebt_eligible:1,grid_position:5},
+    {id:145,name:'Aguacate (each)',price:1.50,button_color:'#33691E',is_taxable:0,is_ebt_eligible:1,grid_position:6},
+  ],
+  6: [
+    {id:150,name:'Rice Side',price:2.00,button_color:'#FF9800',is_taxable:1,is_ebt_eligible:0,grid_position:1},
+    {id:151,name:'Beans Side',price:2.00,button_color:'#795548',is_taxable:1,is_ebt_eligible:0,grid_position:2},
+    {id:152,name:'Guac Side',price:3.00,button_color:'#4CAF50',is_taxable:1,is_ebt_eligible:0,grid_position:3},
+    {id:153,name:'Sour Cream Side',price:1.50,button_color:'#E0E0E0',is_taxable:1,is_ebt_eligible:0,grid_position:4},
+    {id:154,name:'Chips & Salsa',price:3.99,button_color:'#FF5722',is_taxable:1,is_ebt_eligible:0,grid_position:5},
+  ],
+  7: [
+    {id:160,name:'Tamal de Puerco',price:2.50,button_color:'#FF9800',is_taxable:1,is_ebt_eligible:0,grid_position:1},
+    {id:161,name:'Tamal de Pollo',price:2.50,button_color:'#FFEB3B',is_taxable:1,is_ebt_eligible:0,grid_position:2},
+    {id:162,name:'Tamal de Rajas',price:2.50,button_color:'#4CAF50',is_taxable:1,is_ebt_eligible:0,grid_position:3},
+    {id:163,name:'Tamal Dulce',price:2.00,button_color:'#E91E63',is_taxable:1,is_ebt_eligible:0,grid_position:4},
+    {id:164,name:'Dozen Tamales',price:24.99,button_color:'#B71C1C',is_taxable:1,is_ebt_eligible:0,grid_position:5},
+  ],
+  8: [
+    {id:201,name:'Agua Horchata',price:3.00,button_color:'#D69E2E',is_taxable:1,is_ebt_eligible:0,grid_position:1},
+    {id:202,name:'Agua Jamaica',price:3.00,button_color:'#E53E3E',is_taxable:1,is_ebt_eligible:0,grid_position:2},
+    {id:203,name:'Coca Cola',price:1.49,button_color:'#B71C1C',is_taxable:1,is_ebt_eligible:0,grid_position:3},
+    {id:204,name:'Jarritos',price:2.00,button_color:'#FF9800',is_taxable:1,is_ebt_eligible:0,grid_position:4},
+    {id:205,name:'Sprite',price:1.49,button_color:'#4CAF50',is_taxable:1,is_ebt_eligible:0,grid_position:5},
+    {id:206,name:'Agua Natural',price:1.00,button_color:'#2196F3',is_taxable:1,is_ebt_eligible:0,grid_position:6},
+    {id:207,name:'Mexican Coke',price:2.50,button_color:'#880E4F',is_taxable:1,is_ebt_eligible:0,grid_position:7},
+    {id:208,name:'Cafe',price:2.00,button_color:'#3E2723',is_taxable:1,is_ebt_eligible:0,grid_position:8},
+    {id:209,name:'Atole',price:3.50,button_color:'#FFAB91',is_taxable:1,is_ebt_eligible:0,grid_position:9},
+  ],
+  9: [
+    {id:210,name:'Comida Deli Plate',price:8.99,button_color:'#2196F3',is_taxable:1,is_ebt_eligible:0,grid_position:1},
+    {id:211,name:'Chicharron (lb)',price:7.99,button_color:'#FF9800',is_taxable:1,is_ebt_eligible:0,grid_position:2},
+    {id:212,name:'Carnitas (lb)',price:9.99,button_color:'#795548',is_taxable:1,is_ebt_eligible:0,grid_position:3},
+    {id:213,name:'Barbacoa (lb)',price:12.99,button_color:'#B71C1C',is_taxable:1,is_ebt_eligible:0,grid_position:4},
+  ],
+  10: [
+    {id:220,name:'Gordita Azada',price:4.99,button_color:'#4CAF50',is_taxable:1,is_ebt_eligible:0,grid_position:1},
+    {id:221,name:'Gordita Chicharron',price:4.99,button_color:'#FF9800',is_taxable:1,is_ebt_eligible:0,grid_position:2},
+    {id:222,name:'Gordita Rajas',price:4.99,button_color:'#F44336',is_taxable:1,is_ebt_eligible:0,grid_position:3},
+    {id:223,name:'Gordita Frijol',price:3.99,button_color:'#795548',is_taxable:1,is_ebt_eligible:0,grid_position:4},
+  ],
+  14: [
+    {id:301,name:'Burrito Azada',price:9.99,button_color:'#4CAF50',is_taxable:1,is_ebt_eligible:0,grid_position:1},
+    {id:302,name:'Burrito Pollo',price:9.99,button_color:'#FFEB3B',is_taxable:1,is_ebt_eligible:0,grid_position:2},
+    {id:303,name:'Burrito Carnitas',price:9.99,button_color:'#FF9800',is_taxable:1,is_ebt_eligible:0,grid_position:3},
+    {id:304,name:'Burrito Pastor',price:9.99,button_color:'#E91E63',is_taxable:1,is_ebt_eligible:0,grid_position:4},
+    {id:305,name:'Burrito Chorizo',price:9.99,button_color:'#B71C1C',is_taxable:1,is_ebt_eligible:0,grid_position:5},
+    {id:306,name:'Super Burrito',price:12.99,button_color:'#9C27B0',is_taxable:1,is_ebt_eligible:0,grid_position:6},
+  ],
+  15: [
+    {id:310,name:'Huevos Rancheros',price:8.99,button_color:'#F44336',is_taxable:1,is_ebt_eligible:0,grid_position:1},
+    {id:311,name:'Huevos con Chorizo',price:8.99,button_color:'#FF9800',is_taxable:1,is_ebt_eligible:0,grid_position:2},
+    {id:312,name:'Chilaquiles',price:8.99,button_color:'#4CAF50',is_taxable:1,is_ebt_eligible:0,grid_position:3},
+    {id:313,name:'Huevos a la Mexicana',price:8.99,button_color:'#FFEB3B',is_taxable:1,is_ebt_eligible:0,grid_position:4},
+  ],
+  18: [
+    {id:320,name:'Quesadilla Queso',price:5.99,button_color:'#FFEB3B',is_taxable:1,is_ebt_eligible:0,grid_position:1},
+    {id:321,name:'Quesadilla Azada',price:8.99,button_color:'#4CAF50',is_taxable:1,is_ebt_eligible:0,grid_position:2},
+    {id:322,name:'Quesadilla Pollo',price:8.99,button_color:'#FF9800',is_taxable:1,is_ebt_eligible:0,grid_position:3},
+    {id:323,name:'Quesadilla Pastor',price:8.99,button_color:'#E91E63',is_taxable:1,is_ebt_eligible:0,grid_position:4},
+  ],
+  19: [
+    {id:330,name:'Sope Azada',price:4.50,button_color:'#4CAF50',is_taxable:1,is_ebt_eligible:0,grid_position:1},
+    {id:331,name:'Sope Pollo',price:4.50,button_color:'#FFEB3B',is_taxable:1,is_ebt_eligible:0,grid_position:2},
+    {id:332,name:'Sope Chorizo',price:4.50,button_color:'#F44336',is_taxable:1,is_ebt_eligible:0,grid_position:3},
+    {id:333,name:'Sope Frijol',price:3.50,button_color:'#795548',is_taxable:1,is_ebt_eligible:0,grid_position:4},
+  ],
+  20: [
+    {id:340,name:'Torta Azada',price:8.99,button_color:'#4CAF50',is_taxable:1,is_ebt_eligible:0,grid_position:1},
+    {id:341,name:'Torta Milanesa',price:8.99,button_color:'#FF9800',is_taxable:1,is_ebt_eligible:0,grid_position:2},
+    {id:342,name:'Torta Cubana',price:10.99,button_color:'#B71C1C',is_taxable:1,is_ebt_eligible:0,grid_position:3},
+    {id:343,name:'Torta Pastor',price:8.99,button_color:'#E91E63',is_taxable:1,is_ebt_eligible:0,grid_position:4},
+    {id:344,name:'Torta Hawaiana',price:9.99,button_color:'#FFEB3B',is_taxable:1,is_ebt_eligible:0,grid_position:5},
+  ],
+  21: [
+    {id:350,name:'Caldo de Pollo',price:10.99,button_color:'#FFEB3B',is_taxable:1,is_ebt_eligible:0,grid_position:1},
+    {id:351,name:'Caldo de Res',price:12.99,button_color:'#B71C1C',is_taxable:1,is_ebt_eligible:0,grid_position:2},
+    {id:352,name:'Caldo de Camaron',price:14.99,button_color:'#E91E63',is_taxable:1,is_ebt_eligible:0,grid_position:3},
+    {id:353,name:'Caldo Tlalpeno',price:10.99,button_color:'#FF9800',is_taxable:1,is_ebt_eligible:0,grid_position:4},
+  ],
+  25: [
+    {id:360,name:'Salsa Verde (8oz)',price:2.00,button_color:'#4CAF50',is_taxable:1,is_ebt_eligible:0,grid_position:1},
+    {id:361,name:'Salsa Roja (8oz)',price:2.00,button_color:'#F44336',is_taxable:1,is_ebt_eligible:0,grid_position:2},
+    {id:362,name:'Salsa Habanero (8oz)',price:2.50,button_color:'#FF9800',is_taxable:1,is_ebt_eligible:0,grid_position:3},
+  ],
   26: TACO_ITEMS,
+  27: [
+    {id:370,name:'Tostada Azada',price:4.50,button_color:'#4CAF50',is_taxable:1,is_ebt_eligible:0,grid_position:1},
+    {id:371,name:'Tostada Pollo',price:4.50,button_color:'#FFEB3B',is_taxable:1,is_ebt_eligible:0,grid_position:2},
+    {id:372,name:'Tostada Ceviche',price:5.99,button_color:'#2196F3',is_taxable:1,is_ebt_eligible:0,grid_position:3},
+  ],
 };
 
 const CUSTOMERS = [
