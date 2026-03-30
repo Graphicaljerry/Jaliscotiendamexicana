@@ -1,0 +1,118 @@
+/**
+ * Mock API for browser preview (no Electron).
+ * This lets the app render in any browser for demo/preview purposes.
+ */
+
+const CATEGORIES = [
+  {id:1,name:'ARROZ',display_order:1},{id:2,name:'COKTAILS',display_order:2},{id:3,name:'FRIJOLES',display_order:3},
+  {id:4,name:'MENUDO',display_order:4},{id:5,name:'PRODUCE',display_order:5},{id:6,name:'SIDE ORDERS',display_order:6},
+  {id:7,name:'TAMALES',display_order:7},{id:8,name:'BEBIDAS',display_order:8},{id:9,name:'DELI',display_order:9},
+  {id:10,name:'GORDITAS',display_order:10},{id:11,name:'PRODUCE A',display_order:11},
+  {id:12,name:'SINCRNZDA',display_order:12},{id:13,name:'TOGO LLEVAR',display_order:13},
+  {id:14,name:'BURRITO',display_order:14},{id:15,name:'DESAYUNOS',display_order:15},
+  {id:16,name:'GUACAMOLE',display_order:16},{id:17,name:'PICO DE GALLO',display_order:17},
+  {id:18,name:'QUESADILLA',display_order:18},{id:19,name:'SOPES',display_order:19},
+  {id:20,name:'TORTAS',display_order:20},{id:21,name:'CALDOS',display_order:21},
+  {id:22,name:'FLAUTAS',display_order:22},{id:23,name:'GUIZADOS',display_order:23},
+  {id:24,name:'POZOLE',display_order:24},{id:25,name:'SALSA',display_order:25},
+  {id:26,name:'TACOS',display_order:26},{id:27,name:'TOSTADAS',display_order:27}
+];
+
+const TACO_ITEMS = [
+  {id:1,name:'TACOS Azada',price:3.50,button_color:'#4CAF50',is_taxable:1,is_ebt_eligible:0,grid_position:1,category_id:26},
+  {id:2,name:'TACOS BBQ',price:3.50,button_color:'#8BC34A',is_taxable:1,is_ebt_eligible:0,grid_position:2,category_id:26},
+  {id:3,name:'Tacos Chorizo',price:3.50,button_color:'#2196F3',is_taxable:1,is_ebt_eligible:0,grid_position:3,category_id:26},
+  {id:4,name:'TACOS DE HUEVO',price:3.00,button_color:'#F44336',is_taxable:1,is_ebt_eligible:0,grid_position:4,category_id:26},
+  {id:5,name:'CON QUESO',price:1.00,button_color:'#4CAF50',is_taxable:1,is_ebt_eligible:0,grid_position:5,category_id:26},
+  {id:6,name:'Carne Extra',price:2.00,button_color:'#B71C1C',is_taxable:1,is_ebt_eligible:0,grid_position:6,category_id:26},
+  {id:7,name:'Doble Tortilla',price:0.50,button_color:'#4CAF50',is_taxable:1,is_ebt_eligible:0,grid_position:7,category_id:26},
+  {id:8,name:'Tortillas Extras Unidad',price:0.25,button_color:'#9C27B0',is_taxable:1,is_ebt_eligible:0,grid_position:8,category_id:26},
+  {id:9,name:'CON AGUACATE',price:1.50,button_color:'#B71C1C',is_taxable:1,is_ebt_eligible:0,grid_position:9,category_id:26},
+  {id:10,name:'TACOS Carnitas',price:3.50,button_color:'#009688',is_taxable:1,is_ebt_eligible:0,grid_position:10,category_id:26},
+  {id:11,name:'TACOS Lengua',price:4.00,button_color:'#009688',is_taxable:1,is_ebt_eligible:0,grid_position:11,category_id:26},
+  {id:12,name:'Tacos Cabeza',price:3.50,button_color:'#9C27B0',is_taxable:1,is_ebt_eligible:0,grid_position:12,category_id:26},
+  {id:13,name:'Taco Chicharron',price:3.00,button_color:'#757575',is_taxable:1,is_ebt_eligible:0,grid_position:13,category_id:26},
+  {id:14,name:'ORDEN QUESO BIRRIA',price:5.00,button_color:'#FF9800',is_taxable:1,is_ebt_eligible:0,grid_position:14,category_id:26},
+  {id:15,name:'TACOS Tripa',price:3.50,button_color:'#E91E63',is_taxable:1,is_ebt_eligible:0,grid_position:15,category_id:26},
+  {id:16,name:'TACOS Pollo',price:3.00,button_color:'#FFEB3B',is_taxable:1,is_ebt_eligible:0,grid_position:16,category_id:26},
+  {id:17,name:'Flauta por unidad',price:2.50,button_color:'#F44336',is_taxable:1,is_ebt_eligible:0,grid_position:17,category_id:26},
+  {id:18,name:'Taco de Buche',price:3.50,button_color:'#757575',is_taxable:1,is_ebt_eligible:0,grid_position:18,category_id:26},
+  {id:19,name:'Comida Deli',price:8.99,button_color:'#2196F3',is_taxable:1,is_ebt_eligible:0,grid_position:19,category_id:26},
+  {id:20,name:'Crema extra 2oz',price:1.00,button_color:'#4CAF50',is_taxable:1,is_ebt_eligible:0,grid_position:20,category_id:26},
+  {id:21,name:'TACOS Camaron',price:4.50,button_color:'#FFEB3B',is_taxable:1,is_ebt_eligible:0,grid_position:21,category_id:26},
+  {id:22,name:'TACOS Pastor',price:3.50,button_color:'#FFEB3B',is_taxable:1,is_ebt_eligible:0,grid_position:22,category_id:26},
+  {id:23,name:'Tacos de Secina',price:3.50,button_color:'#F44336',is_taxable:1,is_ebt_eligible:0,grid_position:23,category_id:26},
+  {id:24,name:'Tortilla de Harina',price:0.50,button_color:'#757575',is_taxable:1,is_ebt_eligible:0,grid_position:24,category_id:26},
+  {id:25,name:'Taco Preprdo',price:3.50,button_color:'#FFEB3B',is_taxable:1,is_ebt_eligible:0,grid_position:25,category_id:26},
+  {id:26,name:'Crema extra 4oz',price:1.50,button_color:'#4CAF50',is_taxable:1,is_ebt_eligible:0,grid_position:26,category_id:26},
+];
+
+const SAMPLE_ITEMS_BY_CATEGORY = {
+  1: [{id:101,name:'Arroz Blanco',price:3.00,button_color:'#FF9800',is_taxable:1,is_ebt_eligible:0,grid_position:1},{id:102,name:'Arroz Rojo',price:3.50,button_color:'#E53E3E',is_taxable:1,is_ebt_eligible:0,grid_position:2},{id:103,name:'Arroz con Pollo',price:8.99,button_color:'#D69E2E',is_taxable:1,is_ebt_eligible:0,grid_position:3}],
+  8: [{id:201,name:'Agua Horchata',price:3.00,button_color:'#D69E2E',is_taxable:1,is_ebt_eligible:0,grid_position:1},{id:202,name:'Agua Jamaica',price:3.00,button_color:'#E53E3E',is_taxable:1,is_ebt_eligible:0,grid_position:2},{id:203,name:'Coca Cola',price:2.50,button_color:'#B71C1C',is_taxable:1,is_ebt_eligible:0,grid_position:3},{id:204,name:'Jarritos',price:2.00,button_color:'#FF9800',is_taxable:1,is_ebt_eligible:0,grid_position:4}],
+  14: [{id:301,name:'Burrito Azada',price:9.99,button_color:'#4CAF50',is_taxable:1,is_ebt_eligible:0,grid_position:1},{id:302,name:'Burrito Pollo',price:9.99,button_color:'#FFEB3B',is_taxable:1,is_ebt_eligible:0,grid_position:2},{id:303,name:'Burrito Carnitas',price:9.99,button_color:'#FF9800',is_taxable:1,is_ebt_eligible:0,grid_position:3},{id:304,name:'Burrito Pastor',price:9.99,button_color:'#E91E63',is_taxable:1,is_ebt_eligible:0,grid_position:4}],
+  26: TACO_ITEMS,
+};
+
+const CUSTOMERS = [
+  {id:1,customer_number:'C001',name:'Maria Garcia',phone:'555-0101',email:'maria@email.com'},
+  {id:2,customer_number:'C002',name:'Jose Rodriguez',phone:'555-0102',email:'jose@email.com'},
+  {id:3,customer_number:'C003',name:'Ana Martinez',phone:'555-0103',email:'ana@email.com'},
+];
+
+export function installMockApi() {
+  if (window.api) return; // Real Electron API exists, don't mock
+
+  window.api = {
+    getItems: () => Promise.resolve(TACO_ITEMS),
+    getItemByBarcode: (barcode) => {
+      const grocery = [
+        {id:50,barcode:'4011',name:'Bananas (lb)',price:0.69,is_taxable:0,is_ebt_eligible:1},
+        {id:51,barcode:'7501000611218',name:'Jarritos Tamarindo 370ml',price:1.50,is_taxable:1,is_ebt_eligible:0},
+      ];
+      return Promise.resolve(grocery.find(i => i.barcode === barcode) || null);
+    },
+    getItemById: (id) => Promise.resolve(TACO_ITEMS.find(i => i.id === id) || null),
+    getItemsByCategory: (catId) => Promise.resolve(SAMPLE_ITEMS_BY_CATEGORY[catId] || []),
+    searchItems: (q) => Promise.resolve(TACO_ITEMS.filter(i => i.name.toLowerCase().includes(q.toLowerCase()))),
+    createItem: (item) => Promise.resolve({ id: Date.now(), ...item }),
+    updateItem: (id, item) => Promise.resolve({ id, ...item }),
+    deleteItem: () => Promise.resolve({ success: true }),
+
+    getCategories: () => Promise.resolve(CATEGORIES),
+    createCategory: (c) => Promise.resolve({ id: Date.now(), ...c }),
+    updateCategory: (id, c) => Promise.resolve({ id, ...c }),
+    deleteCategory: () => Promise.resolve({ success: true }),
+
+    searchCustomers: (query) => {
+      const q = query.replace(/^[#@]/, '').toLowerCase();
+      return Promise.resolve(CUSTOMERS.filter(c =>
+        c.name.toLowerCase().includes(q) || (c.phone && c.phone.includes(q)) || (c.email && c.email.includes(q)) || (c.customer_number && c.customer_number.toLowerCase().includes(q))
+      ));
+    },
+    getCustomerById: (id) => Promise.resolve(CUSTOMERS.find(c => c.id === id) || null),
+    createCustomer: (c) => Promise.resolve({ id: Date.now(), ...c }),
+    updateCustomer: (id, c) => Promise.resolve({ id, ...c }),
+
+    createTransaction: (d) => Promise.resolve({ id: Date.now(), ...d }),
+    getTransactions: () => Promise.resolve([]),
+    getTransactionById: () => Promise.resolve(null),
+    getDailySales: () => Promise.resolve({ date: new Date().toISOString().split('T')[0], summary: { transaction_count: 0, total_subtotal: 0, total_tax: 0, total_sales: 0, total_discounts: 0, total_ebt: 0 }, byPaymentType: [], transactions: [] }),
+
+    getSetting: (key) => {
+      const s = { tax_rate: '8.25', store_name: 'Jalisco Tienda Mexicana', admin_password: '1234', server_mode: 'primary' };
+      return Promise.resolve(s[key] || null);
+    },
+    setSetting: () => Promise.resolve({ success: true }),
+    getAllSettings: () => Promise.resolve({ tax_rate: '8.25', store_name: 'Jalisco Tienda Mexicana', admin_password: '1234', printer_type: 'epson', printer_interface: '', server_port: '3000', server_mode: 'primary', ebt_enabled: 'true' }),
+
+    printReceipt: () => Promise.resolve({ success: true, message: 'Preview mode - no printer' }),
+    openCashDrawer: () => Promise.resolve({ success: true }),
+    testPrinter: () => Promise.resolve({ success: true, message: 'Preview mode - no printer connected' }),
+
+    getNetworkStatus: () => Promise.resolve({ mode: 'primary', connected: true, ip: 'preview' }),
+    setServerMode: () => Promise.resolve({ success: true }),
+  };
+
+  console.log('Mock API installed for browser preview');
+}
