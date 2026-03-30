@@ -1,0 +1,44 @@
+appId: com.jalisco.pos
+productName: Jalisco Tienda Mexicana POS
+copyright: Copyright 2024 Jalisco Tienda Mexicana
+
+directories:
+  output: release
+  buildResources: build
+
+files:
+  - dist/**/*
+  - electron/**/*
+  - node_modules/**/*
+  - package.json
+
+extraResources:
+  - from: electron/database/schema.sql
+    to: database/schema.sql
+
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+  icon: public/icon.ico
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Jalisco POS
+
+mac:
+  target:
+    - target: dmg
+      arch:
+        - x64
+        - arm64
+
+linux:
+  target:
+    - target: AppImage
+      arch:
+        - x64

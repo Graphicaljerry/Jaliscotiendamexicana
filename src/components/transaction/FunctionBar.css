@@ -1,0 +1,67 @@
+.function-bar {
+  flex-shrink: 0;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+  padding: 4px 8px;
+}
+
+.fn-row {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.fn-row:last-child {
+  margin-bottom: 0;
+}
+
+.fn-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 4px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  min-height: 44px;
+  gap: 2px;
+}
+
+.fn-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--accent-blue);
+}
+
+.fn-btn.fn-danger {
+  border-color: var(--accent-red);
+}
+.fn-btn.fn-danger:hover {
+  background: var(--btn-danger);
+  color: var(--text-bright);
+}
+
+.fn-btn.fn-success {
+  border-color: var(--accent-green);
+  background: var(--bg-tertiary);
+}
+.fn-btn.fn-success:hover {
+  background: var(--btn-success);
+  color: var(--text-bright);
+}
+
+.fn-key {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--accent-yellow);
+  letter-spacing: 0.5px;
+}
+
+.fn-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.2;
+}

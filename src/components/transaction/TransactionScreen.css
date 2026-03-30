@@ -1,0 +1,180 @@
+/* ─── Transaction Screen Layout ──────────────────────── */
+.transaction-screen {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ─── Top Bar ────────────────────────────────────────── */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-tertiary);
+  padding: 8px 16px;
+  border-bottom: 2px solid var(--accent-blue);
+  flex-shrink: 0;
+}
+
+.store-name {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text-bright);
+  letter-spacing: 1px;
+}
+
+.top-bar-right {
+  display: flex;
+  gap: 8px;
+}
+
+.top-bar-right button {
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  min-height: 44px;
+}
+
+.btn-grid-toggle {
+  background: var(--accent-teal);
+  color: var(--text-bright);
+}
+.btn-grid-toggle:hover {
+  background: #2C9490;
+}
+
+.btn-admin {
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+.btn-admin:hover {
+  background: var(--bg-hover);
+  color: var(--text-bright);
+}
+
+/* ─── Main Content ───────────────────────────────────── */
+.main-content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ─── Left Panel ─────────────────────────────────────── */
+.left-panel {
+  width: 260px;
+  min-width: 260px;
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border-color);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+}
+
+.section-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.customer-section {
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  padding: 12px;
+}
+
+.customer-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.customer-name {
+  font-weight: 600;
+  color: var(--accent-blue);
+  flex: 1;
+}
+
+.btn-change-customer,
+.btn-clear-customer {
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-hover);
+  color: var(--text-secondary);
+}
+
+.btn-customer-lookup {
+  width: 100%;
+  padding: 10px;
+  background: var(--bg-hover);
+  color: var(--text-primary);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  min-height: 44px;
+}
+.btn-customer-lookup:hover {
+  background: var(--accent-blue);
+  color: var(--text-bright);
+}
+
+/* ─── Begin Transaction ──────────────────────────────── */
+.begin-section {
+  margin-top: auto;
+}
+
+.btn-begin {
+  width: 100%;
+  padding: 14px;
+  background: var(--accent-green);
+  color: var(--text-bright);
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: var(--radius-md);
+  min-height: 52px;
+}
+.btn-begin:hover {
+  background: var(--btn-success-hover);
+}
+
+/* ─── Center Panel ───────────────────────────────────── */
+.center-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ─── Prompt Modals ──────────────────────────────────── */
+.prompt-modal {
+  min-width: 320px;
+  text-align: center;
+}
+
+.prompt-modal h3 {
+  margin-bottom: 16px;
+  font-size: 18px;
+  color: var(--text-bright);
+}
+
+.prompt-modal input {
+  width: 100%;
+  font-size: 24px;
+  text-align: center;
+  padding: 12px;
+  margin-bottom: 8px;
+}
+
+.prompt-hint {
+  color: var(--text-muted);
+  font-size: 12px;
+}

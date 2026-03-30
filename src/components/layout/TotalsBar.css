@@ -1,0 +1,120 @@
+.totals-bar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: stretch;
+  background: var(--bg-tertiary);
+  border-top: 2px solid var(--accent-blue);
+  padding: 8px 16px;
+  gap: 16px;
+}
+
+.totals-left,
+.totals-center,
+.totals-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.totals-left {
+  min-width: 280px;
+}
+
+.totals-center {
+  flex: 1;
+  justify-content: center;
+}
+
+.totals-right {
+  min-width: 240px;
+  justify-content: flex-end;
+}
+
+.total-field {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.total-field label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+}
+
+.total-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-bright);
+}
+
+/* Paid Input */
+.paid-field {
+  min-width: 120px;
+}
+
+.paid-input-wrap {
+  display: flex;
+  align-items: center;
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 0 8px;
+}
+
+.dollar-sign {
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.paid-input {
+  width: 100px;
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-bright);
+  padding: 4px 0 4px 4px;
+  text-align: right;
+}
+
+.paid-input:focus {
+  border: none;
+  outline: none;
+}
+
+/* Change Due (Red) */
+.change-due {
+  color: var(--accent-red) !important;
+  font-size: 20px;
+}
+
+/* EBT */
+.ebt-field .total-value {
+  color: var(--accent-teal);
+}
+
+/* Grand Total */
+.grand-total-field {
+  background: rgba(74, 144, 217, 0.15);
+  padding: 6px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--accent-blue);
+}
+
+.grand-total-value {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text-bright);
+}
+
+.tax-label {
+  font-size: 9px;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+  text-align: right;
+}

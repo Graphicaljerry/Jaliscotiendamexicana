@@ -1,0 +1,78 @@
+.transaction-table-wrapper {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0;
+}
+
+.transaction-table {
+  width: 100%;
+}
+
+.transaction-table th {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.col-num { width: 50px; text-align: center; }
+.col-desc { min-width: 200px; }
+.col-price { width: 90px; text-align: right; }
+.col-qty { width: 120px; text-align: center; }
+.col-total { width: 100px; text-align: right; }
+.col-disc { width: 90px; text-align: right; }
+.col-edit { width: 60px; text-align: center; }
+
+.empty-message {
+  text-align: center;
+  padding: 60px 20px !important;
+  color: var(--text-muted);
+  font-size: 16px;
+}
+
+/* Quantity Controls */
+.qty-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.qty-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  background: var(--bg-tertiary);
+  color: var(--text-bright);
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+}
+.qty-btn:hover {
+  background: var(--accent-blue);
+}
+
+.qty-value {
+  font-weight: 700;
+  min-width: 24px;
+  text-align: center;
+}
+
+/* Remove Button */
+.btn-remove-item {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--accent-red);
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-remove-item:hover {
+  background: var(--btn-danger);
+  color: var(--text-bright);
+}

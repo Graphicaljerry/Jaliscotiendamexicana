@@ -1,0 +1,138 @@
+.item-grid {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.grid-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.grid-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-bright);
+}
+
+.grid-header-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-change-grid,
+.btn-hide-grid {
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  min-height: 36px;
+}
+
+.btn-change-grid {
+  background: var(--accent-blue);
+  color: var(--text-bright);
+}
+.btn-change-grid:hover {
+  background: var(--btn-primary-hover);
+}
+
+.btn-hide-grid {
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+.btn-hide-grid:hover {
+  background: var(--bg-hover);
+}
+
+.grid-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+/* ─── Grid Buttons Layout ────────────────────────────── */
+.grid-buttons {
+  display: grid;
+  gap: 6px;
+}
+
+.category-grid {
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.item-subgrid {
+  grid-template-columns: repeat(7, 1fr);
+}
+
+@media (max-width: 1400px) {
+  .category-grid,
+  .item-subgrid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+/* ─── Grid Button Styles ─────────────────────────────── */
+.grid-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 8px;
+  border-radius: var(--radius-md);
+  color: white;
+  font-weight: 700;
+  text-align: center;
+  min-height: 80px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  border: 2px solid transparent;
+}
+
+.grid-btn:hover {
+  filter: brightness(1.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.02);
+}
+
+.grid-btn:active {
+  transform: scale(0.97);
+  filter: brightness(0.9);
+}
+
+.category-btn {
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+.item-btn {
+  min-height: 90px;
+}
+
+.item-btn-name {
+  font-size: 12px;
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+
+.item-btn-price {
+  font-size: 14px;
+  font-weight: 800;
+  opacity: 0.9;
+}
+
+.grid-loading,
+.grid-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px;
+  color: var(--text-muted);
+  font-size: 16px;
+}
