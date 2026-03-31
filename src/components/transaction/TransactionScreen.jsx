@@ -101,12 +101,15 @@ function TransactionScreen() {
       const lastIndex = store.items.length - 1;
       const weight = parseFloat(scaleWeight);
       if (weight > 0) {
-        // Set quantity to the weight (e.g. 1.77 lbs)
-        // Price stays per-lb, total = price × weight
         store.updateItemQuantity(lastIndex, weight);
       }
     }
     setShowScale(false);
+    // Re-focus the code input after modal closes
+    setTimeout(() => {
+      const codeInput = document.querySelector('.hidden-code-input');
+      if (codeInput) codeInput.focus();
+    }, 200);
   };
 
   // Hold current transaction
