@@ -1,14 +1,14 @@
 .function-bar {
   flex-shrink: 0;
   background: var(--bg-secondary);
-  border-top: 1px solid var(--border-color);
-  padding: 3px 6px;
+  border-top: 2px solid var(--border-color);
+  padding: 6px 8px;
 }
 
 .fn-row {
   display: flex;
-  gap: 3px;
-  margin-bottom: 3px;
+  gap: 4px;
+  margin-bottom: 4px;
 }
 
 .fn-row:last-child { margin-bottom: 0; }
@@ -19,13 +19,13 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 4px 3px;
+  padding: 8px 4px;
   background: var(--bg-input);
   border: 1px solid var(--border-color);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   color: var(--text-primary);
-  min-height: 36px;
-  gap: 1px;
+  min-height: 48px;
+  gap: 2px;
 }
 
 .fn-btn:hover {
@@ -35,41 +35,40 @@
 }
 
 .fn-btn.fn-danger { border-color: var(--accent-red); }
-.fn-btn.fn-danger:hover { background: var(--btn-danger); color: #ffffff; }
+.fn-btn.fn-danger:hover { background: var(--btn-danger); color: #fff; }
 
-.fn-btn.fn-success { border-color: var(--accent-green); background: #f0fdf4; }
-.fn-btn.fn-success:hover { background: var(--btn-success); color: #ffffff; }
+.fn-btn.fn-success {
+  border-color: var(--accent-green);
+  background: #f0fdf4;
+}
+.fn-btn.fn-success:hover { background: var(--btn-success); color: #fff; }
 
 .fn-btn.fn-highlight {
   background: #fef3c7;
-  border-color: var(--accent-yellow);
+  border-color: #f59e0b;
   color: var(--text-bright);
-  animation: pulse-held 2s ease-in-out infinite;
 }
-
-@keyframes pulse-held {
-  0%, 100% { box-shadow: none; }
-  50% { box-shadow: 0 0 8px rgba(202, 138, 4, 0.4); }
+.fn-btn.fn-highlight:hover {
+  background: #f59e0b;
+  color: #fff;
 }
 
 .fn-key {
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 700;
   color: var(--accent-orange);
   letter-spacing: 0.5px;
 }
-.fn-btn:hover .fn-key { color: #ffffff; }
+.fn-btn:hover .fn-key { color: #fff; }
 
 .fn-label {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
   text-align: center;
-  line-height: 1.1;
+  line-height: 1.2;
 }
 
-@media (max-width: 768px) {
-  .function-bar { padding: 2px 4px; }
-  .fn-btn { min-height: 30px; padding: 3px 2px; }
-  .fn-label { font-size: 9px; }
-  .fn-key { font-size: 8px; }
+@media (max-width: 1024px) {
+  .fn-btn { min-height: 42px; padding: 6px 3px; }
+  .fn-label { font-size: 10px; }
 }

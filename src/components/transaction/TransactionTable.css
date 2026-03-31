@@ -6,72 +6,29 @@
   min-height: 0;
 }
 
-/* ─── Inline Entry Bar ───────────────────────────────── */
-.inline-entry-bar {
+/* ─── Top Bar (search + scale) ───────────────────────── */
+.table-top-bar {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   gap: 6px;
-  padding: 8px 10px;
+  padding: 6px 10px;
   background: var(--bg-secondary);
-  border-bottom: 2px solid var(--border-color);
+  border-bottom: 1px solid var(--border-light);
   flex-shrink: 0;
 }
 
-.entry-field {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+.search-wrap {
   position: relative;
+  width: 260px;
 }
 
-.entry-field label {
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--text-muted);
-}
-
-.entry-field-search {
-  flex: 1;
-  min-width: 0;
-}
-
-.code-input-wrap {
-  position: relative;
-}
-
-.item-code-input {
-  width: 110px;
-  font-size: 16px;
-  font-weight: 700;
-  padding: 6px 8px;
-  border: 2px solid var(--accent-blue);
-  border-radius: var(--radius-sm);
-  background: #eef2ff;
-}
-
-.item-code-input:focus {
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
-}
-
-.code-error {
-  position: absolute;
-  right: 4px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 10px;
-  color: var(--accent-red);
-  font-weight: 600;
-}
-
-.item-search-input {
+.compact-search {
   width: 100%;
   font-size: 13px;
   padding: 6px 8px;
 }
 
-.inline-search-dropdown {
+.search-dropdown {
   position: absolute;
   top: 100%;
   left: 0;
@@ -98,29 +55,28 @@
   text-align: left;
   min-height: 34px;
 }
-
 .search-result-btn:last-child { border-bottom: none; }
-.search-result-btn:hover { background: var(--accent-blue); color: #ffffff; }
+.search-result-btn:hover { background: var(--accent-blue); color: #fff; }
 
 .sr-code { font-weight: 700; min-width: 40px; color: var(--accent-blue); font-size: 11px; }
-.search-result-btn:hover .sr-code { color: #ffffff; }
-.sr-name { flex: 1; font-weight: 500; }
+.search-result-btn:hover .sr-code { color: #fff; }
+.sr-name { flex: 1; }
 .sr-price { font-weight: 700; color: var(--accent-green); }
-.search-result-btn:hover .sr-price { color: #ffffff; }
+.search-result-btn:hover .sr-price { color: #fff; }
 
 .btn-scale-inline {
-  padding: 6px 10px;
+  padding: 6px 12px;
   background: #7c3aed;
-  color: #ffffff;
+  color: #fff;
   border-radius: var(--radius-sm);
   font-weight: 600;
   font-size: 12px;
-  min-height: 34px;
+  min-height: 32px;
   white-space: nowrap;
 }
 .btn-scale-inline:hover { background: #6d28d9; }
 
-/* ─── Table Scroll Area ──────────────────────────────── */
+/* ─── Table ──────────────────────────────────────────── */
 .table-scroll {
   flex: 1;
   overflow-y: auto;
@@ -135,34 +91,83 @@
   position: sticky;
   top: 0;
   z-index: 10;
-  background: #e2e8f0;
-  font-size: 11px;
-  padding: 6px 8px;
+  background: #1e3a5f;
+  color: #ffffff;
+  font-size: 12px;
+  padding: 8px 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
 
 .transaction-table td {
-  padding: 5px 8px;
+  padding: 6px 10px;
   font-size: 13px;
+  border-bottom: 1px solid var(--border-light);
 }
 
-.col-itemnum { width: 80px; text-align: center; }
-.col-desc { min-width: 140px; }
-.col-price { width: 70px; text-align: right; }
+.col-itemnum { width: 110px; text-align: center; }
+.col-desc { min-width: 160px; }
+.col-price { width: 80px; text-align: right; }
 .col-qty { width: 80px; text-align: center; }
-.col-total { width: 80px; text-align: right; }
+.col-total { width: 90px; text-align: right; font-weight: 600; }
 .col-disc { width: 70px; text-align: right; }
 .col-edit { width: 40px; text-align: center; }
 
-.mono { font-family: 'Courier New', monospace; font-weight: 700; font-size: 12px; }
+.mono { font-family: 'Courier New', monospace; font-weight: 700; font-size: 13px; }
 
-.empty-message {
-  text-align: center;
-  padding: 40px 16px !important;
-  color: var(--text-muted);
-  font-size: 14px;
+/* ─── Inline Entry Row (next empty row, highlighted) ── */
+.entry-row {
+  background: #e8ecf1;
 }
 
-/* ─── Quantity Input (directly editable) ─────────────── */
+.entry-cell {
+  position: relative;
+}
+
+.inline-code-input {
+  width: 100%;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 6px 8px;
+  border: 2px solid var(--accent-blue);
+  border-radius: 4px;
+  background: #ffffff;
+  text-align: center;
+  font-family: 'Courier New', monospace;
+}
+
+.inline-code-input:focus {
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+  outline: none;
+}
+
+.inline-error {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  font-size: 10px;
+  color: var(--accent-red);
+  font-weight: 600;
+}
+
+.entry-hint {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-style: italic;
+}
+
+/* Empty placeholder rows */
+.empty-row td {
+  height: 32px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.empty-row:nth-child(even) td {
+  background: var(--bg-input);
+}
+
+/* ─── Quantity Input ─────────────────────────────────── */
 .qty-input {
   width: 56px;
   text-align: center;
@@ -180,17 +185,13 @@
   box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
 }
 
-/* Hide number input arrows */
 .qty-input::-webkit-inner-spin-button,
-.qty-input::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
+.qty-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 .qty-input { -moz-appearance: textfield; }
 
 .btn-remove-item {
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   border-radius: 4px;
   background: transparent;
   color: var(--accent-red);
@@ -199,16 +200,10 @@
   align-items: center;
   justify-content: center;
 }
-.btn-remove-item:hover {
-  background: var(--btn-danger);
-  color: #ffffff;
-}
+.btn-remove-item:hover { background: var(--btn-danger); color: #fff; }
 
 /* ─── Mobile ─────────────────────────────────────────── */
 @media (max-width: 768px) {
-  .inline-entry-bar { padding: 6px; gap: 4px; }
-  .item-code-input { width: 80px; font-size: 14px; padding: 5px 6px; }
-  .col-disc { display: none; }
-  .transaction-table th:nth-child(6),
-  .transaction-table td:nth-child(6) { display: none; }
+  .search-wrap { width: 180px; }
+  .col-disc, .transaction-table th:nth-child(6), .transaction-table td:nth-child(6) { display: none; }
 }
