@@ -123,7 +123,10 @@ function TransactionScreen() {
     <div className="transaction-screen">
       {/* Top Bar */}
       <div className="top-bar">
-        <div className="store-name">JALISCO TIENDA MEXICANA</div>
+        <div className="store-name">
+          <img src="/logo.svg" alt="Jalisco" className="store-logo" />
+          JALISCO TIENDA MEXICANA
+        </div>
         <div className="top-bar-center">
           {isActive ? (
             <span className="txn-number">Transaction# <strong>{store.transactionNumber || '—'}</strong></span>

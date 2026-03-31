@@ -26,6 +26,7 @@ function useKeyboardShortcuts(handlers) {
           break;
         case 'F2':
           e.preventDefault();
+          e.stopPropagation();
           h.onDeleteLast?.();
           break;
         case 'F3':
