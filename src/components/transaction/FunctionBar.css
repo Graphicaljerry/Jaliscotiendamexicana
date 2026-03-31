@@ -2,18 +2,16 @@
   flex-shrink: 0;
   background: var(--bg-secondary);
   border-top: 1px solid var(--border-color);
-  padding: 4px 8px;
+  padding: 3px 6px;
 }
 
 .fn-row {
   display: flex;
-  gap: 4px;
-  margin-bottom: 4px;
+  gap: 3px;
+  margin-bottom: 3px;
 }
 
-.fn-row:last-child {
-  margin-bottom: 0;
-}
+.fn-row:last-child { margin-bottom: 0; }
 
 .fn-btn {
   flex: 1;
@@ -21,13 +19,13 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 6px 4px;
+  padding: 4px 3px;
   background: var(--bg-input);
   border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
+  border-radius: 3px;
   color: var(--text-primary);
-  min-height: 44px;
-  gap: 2px;
+  min-height: 36px;
+  gap: 1px;
 }
 
 .fn-btn:hover {
@@ -36,37 +34,30 @@
   border-color: var(--accent-blue);
 }
 
-.fn-btn.fn-danger {
-  border-color: var(--accent-red);
-}
-.fn-btn.fn-danger:hover {
-  background: var(--btn-danger);
-  color: #ffffff;
-}
+.fn-btn.fn-danger { border-color: var(--accent-red); }
+.fn-btn.fn-danger:hover { background: var(--btn-danger); color: #ffffff; }
 
-.fn-btn.fn-success {
-  border-color: var(--accent-green);
-  background: #f0fdf4;
-}
-.fn-btn.fn-success:hover {
-  background: var(--btn-success);
-  color: #ffffff;
-}
+.fn-btn.fn-success { border-color: var(--accent-green); background: #f0fdf4; }
+.fn-btn.fn-success:hover { background: var(--btn-success); color: #ffffff; }
 
 .fn-key {
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 700;
   color: var(--accent-orange);
   letter-spacing: 0.5px;
 }
-
-.fn-btn:hover .fn-key {
-  color: #ffffff;
-}
+.fn-btn:hover .fn-key { color: #ffffff; }
 
 .fn-label {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
   text-align: center;
-  line-height: 1.2;
+  line-height: 1.1;
+}
+
+@media (max-width: 768px) {
+  .function-bar { padding: 2px 4px; }
+  .fn-btn { min-height: 30px; padding: 3px 2px; }
+  .fn-label { font-size: 9px; }
+  .fn-key { font-size: 8px; }
 }

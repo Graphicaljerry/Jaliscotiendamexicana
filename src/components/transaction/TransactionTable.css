@@ -1,16 +1,17 @@
 .transaction-table-wrapper {
   flex: 1;
-  overflow-y: auto;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
 }
 
 /* ─── Inline Entry Bar ───────────────────────────────── */
 .inline-entry-bar {
   display: flex;
   align-items: flex-end;
-  gap: 8px;
-  padding: 10px 12px;
+  gap: 6px;
+  padding: 8px 10px;
   background: var(--bg-secondary);
   border-bottom: 2px solid var(--border-color);
   flex-shrink: 0;
@@ -19,12 +20,12 @@
 .entry-field {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 2px;
   position: relative;
 }
 
 .entry-field label {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -33,36 +34,41 @@
 
 .entry-field-search {
   flex: 1;
+  min-width: 0;
+}
+
+.code-input-wrap {
+  position: relative;
 }
 
 .item-code-input {
-  width: 140px;
-  font-size: 18px;
+  width: 110px;
+  font-size: 16px;
   font-weight: 700;
-  padding: 8px 10px;
+  padding: 6px 8px;
   border: 2px solid var(--accent-blue);
   border-radius: var(--radius-sm);
   background: #eef2ff;
 }
 
 .item-code-input:focus {
-  border-color: var(--accent-blue);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
 }
 
 .code-error {
   position: absolute;
-  right: 0;
-  top: 0;
-  font-size: 11px;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 10px;
   color: var(--accent-red);
   font-weight: 600;
 }
 
 .item-search-input {
   width: 100%;
-  font-size: 14px;
-  padding: 8px 10px;
+  font-size: 13px;
+  padding: 6px 8px;
 }
 
 .inline-search-dropdown {
@@ -75,69 +81,54 @@
   border-radius: 0 0 var(--radius-sm) var(--radius-sm);
   box-shadow: var(--shadow-lg);
   z-index: 100;
-  max-height: 280px;
+  max-height: 240px;
   overflow-y: auto;
 }
 
 .search-result-btn {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   width: 100%;
-  padding: 8px 10px;
+  padding: 6px 8px;
   background: var(--bg-secondary);
   color: var(--text-primary);
-  font-size: 13px;
+  font-size: 12px;
   border-bottom: 1px solid var(--border-light);
   text-align: left;
-  min-height: 38px;
+  min-height: 34px;
 }
 
 .search-result-btn:last-child { border-bottom: none; }
+.search-result-btn:hover { background: var(--accent-blue); color: #ffffff; }
 
-.search-result-btn:hover {
-  background: var(--accent-blue);
-  color: #ffffff;
-}
-
-.sr-code {
-  font-weight: 700;
-  min-width: 50px;
-  color: var(--accent-blue);
-  font-size: 12px;
-}
-
+.sr-code { font-weight: 700; min-width: 40px; color: var(--accent-blue); font-size: 11px; }
 .search-result-btn:hover .sr-code { color: #ffffff; }
-
-.sr-name {
-  flex: 1;
-  font-weight: 500;
-}
-
-.sr-price {
-  font-weight: 700;
-  color: var(--accent-green);
-}
-
+.sr-name { flex: 1; font-weight: 500; }
+.sr-price { font-weight: 700; color: var(--accent-green); }
 .search-result-btn:hover .sr-price { color: #ffffff; }
 
 .btn-scale-inline {
-  padding: 8px 14px;
+  padding: 6px 10px;
   background: #7c3aed;
   color: #ffffff;
   border-radius: var(--radius-sm);
   font-weight: 600;
-  font-size: 13px;
-  min-height: 40px;
+  font-size: 12px;
+  min-height: 34px;
   white-space: nowrap;
 }
-
 .btn-scale-inline:hover { background: #6d28d9; }
 
-/* ─── Transaction Table ──────────────────────────────── */
+/* ─── Table Scroll Area ──────────────────────────────── */
+.table-scroll {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
 .transaction-table {
   width: 100%;
-  flex: 1;
 }
 
 .transaction-table th {
@@ -145,58 +136,65 @@
   top: 0;
   z-index: 10;
   background: #e2e8f0;
+  font-size: 11px;
+  padding: 6px 8px;
 }
 
-.col-itemnum { width: 110px; text-align: center; font-family: monospace; }
-.col-desc { min-width: 200px; }
-.col-price { width: 90px; text-align: right; }
-.col-qty { width: 120px; text-align: center; }
-.col-total { width: 100px; text-align: right; }
-.col-disc { width: 90px; text-align: right; }
-.col-edit { width: 60px; text-align: center; }
+.transaction-table td {
+  padding: 5px 8px;
+  font-size: 13px;
+}
+
+.col-itemnum { width: 80px; text-align: center; }
+.col-desc { min-width: 140px; }
+.col-price { width: 70px; text-align: right; }
+.col-qty { width: 80px; text-align: center; }
+.col-total { width: 80px; text-align: right; }
+.col-disc { width: 70px; text-align: right; }
+.col-edit { width: 40px; text-align: center; }
+
+.mono { font-family: 'Courier New', monospace; font-weight: 700; font-size: 12px; }
 
 .empty-message {
   text-align: center;
-  padding: 60px 20px !important;
+  padding: 40px 16px !important;
   color: var(--text-muted);
-  font-size: 15px;
+  font-size: 14px;
 }
 
-.qty-controls {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
+/* ─── Quantity Input (directly editable) ─────────────── */
+.qty-input {
+  width: 56px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 4px 2px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: var(--bg-input);
+  color: var(--text-primary);
 }
 
-.qty-btn {
+.qty-input:focus {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+/* Hide number input arrows */
+.qty-input::-webkit-inner-spin-button,
+.qty-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.qty-input { -moz-appearance: textfield; }
+
+.btn-remove-item {
   width: 28px;
   height: 28px;
   border-radius: 4px;
-  background: var(--accent-blue);
-  color: #ffffff;
-  font-size: 16px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 28px;
-}
-.qty-btn:hover { background: var(--btn-primary-hover); }
-
-.qty-value {
-  font-weight: 700;
-  min-width: 24px;
-  text-align: center;
-}
-
-.btn-remove-item {
-  width: 32px;
-  height: 32px;
-  border-radius: 4px;
   background: transparent;
   color: var(--accent-red);
-  font-size: 14px;
+  font-size: 13px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -204,4 +202,13 @@
 .btn-remove-item:hover {
   background: var(--btn-danger);
   color: #ffffff;
+}
+
+/* ─── Mobile ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .inline-entry-bar { padding: 6px; gap: 4px; }
+  .item-code-input { width: 80px; font-size: 14px; padding: 5px 6px; }
+  .col-disc { display: none; }
+  .transaction-table th:nth-child(6),
+  .transaction-table td:nth-child(6) { display: none; }
 }

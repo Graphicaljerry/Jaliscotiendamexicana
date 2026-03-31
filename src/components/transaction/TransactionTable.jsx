@@ -12,12 +12,10 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
   const [searchResults, setSearchResults] = useState([]);
   const inputRef = useRef(null);
 
-  // Auto-focus the item code input
   useEffect(() => {
     if (inputRef.current) inputRef.current.focus();
   }, [items.length]);
 
-  // Handle typing a code and pressing Enter
   const handleCodeSubmit = async () => {
     if (!itemCode.trim()) return;
     setCodeError('');
@@ -30,7 +28,6 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
     }
   };
 
-  // Search by name
   useEffect(() => {
     if (searchQuery.length < 2) { setSearchResults([]); return; }
     const timer = setTimeout(async () => {
@@ -49,25 +46,32 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
     if (inputRef.current) inputRef.current.focus();
   };
 
+  const handleQtyChange = (index, value) => {
+    const qty = parseInt(value);
+    if (!isNaN(qty)) {
+      updateItemQuantity(index, qty);
+    }
+  };
+
   return (
     <div className="transaction-table-wrapper">
-      {/* Inline entry row - type item number here */}
+      {/* Inline entry row */}
       <div className="inline-entry-bar">
         <div className="entry-field">
-          <label>Item Number</label>
-          <input
-            ref={inputRef}
-            type="text"
-            inputMode="numeric"
-            className="item-code-input"
-            placeholder="Enter code..."
-            value={itemCode}
-            onChange={(e) => setItemCode(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') handleCodeSubmit();
-            }}
-          />
-          {codeError && <span className="code-error">{codeError}</span>}
+          <label>Item #</label>
+          <div className="code-input-wrap">
+            <input
+              ref={inputRef}
+              type="text"
+              inputMode="numeric"
+              className="item-code-input"
+              placeholder="Code"
+              value={itemCode}
+              onChange={(e) => setItemCode(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter') handleCodeSubmit(); }}
+            />
+            {codeError && <span className="code-error">{codeError}</span>}
+          </div>
         </div>
         <div className="entry-field entry-field-search">
           <label>Search by Name</label>
@@ -90,60 +94,61 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
             </div>
           )}
         </div>
-        <button className="btn-scale-inline" onClick={onOpenScale}>
-          Scale Weight
-        </button>
+        <button className="btn-scale-inline" onClick={onOpenScale}>Scale</button>
       </div>
 
       {/* Transaction items table */}
-      <table className="transaction-table">
-        <thead>
-          <tr>
-            <th className="col-itemnum">Item Number</th>
-            <th className="col-desc">Description</th>
-            <th className="col-price">Price</th>
-            <th className="col-qty">Quantity</th>
-            <th className="col-total">Total</th>
-            <th className="col-disc">Disc.</th>
-            <th className="col-edit">Edit</th>
-          </tr>
-        </thead>
-        <tbody>
-          {items.length === 0 ? (
+      <div className="table-scroll">
+        <table className="transaction-table">
+          <thead>
             <tr>
-              <td colSpan="7" className="empty-message">
-                Type an item number above, scan a barcode, or use the Item Grid to add items
-              </td>
+              <th className="col-itemnum">Item #</th>
+              <th className="col-desc">Description</th>
+              <th className="col-price">Price</th>
+              <th className="col-qty">Quantity</th>
+              <th className="col-total">Total</th>
+              <th className="col-disc">Disc.</th>
+              <th className="col-edit"></th>
             </tr>
-          ) : (
-            items.map((item, index) => (
-              <tr key={index}>
-                <td className="col-itemnum">{item.barcode || item.item_id || '—'}</td>
-                <td className="col-desc">{item.item_name || item.name}</td>
-                <td className="col-price">${item.unit_price.toFixed(2)}</td>
-                <td className="col-qty">
-                  <div className="qty-controls">
-                    <button className="qty-btn" onClick={() => updateItemQuantity(index, item.quantity - 1)}>-</button>
-                    <span className="qty-value">{item.quantity}</span>
-                    <button className="qty-btn" onClick={() => updateItemQuantity(index, item.quantity + 1)}>+</button>
-                  </div>
-                </td>
-                <td className="col-total">${item.line_total.toFixed(2)}</td>
-                <td className="col-disc">
-                  {item.discount > 0 ? (
-                    <span className="text-red">-${item.discount.toFixed(2)}</span>
-                  ) : (
-                    <span className="text-muted">—</span>
-                  )}
-                </td>
-                <td className="col-edit">
-                  <button className="btn-remove-item" onClick={() => removeItem(index)} title="Remove item">✕</button>
+          </thead>
+          <tbody>
+            {items.length === 0 ? (
+              <tr>
+                <td colSpan="7" className="empty-message">
+                  Type an item number above, scan a barcode, or use the Item Grid
                 </td>
               </tr>
-            ))
-          )}
-        </tbody>
-      </table>
+            ) : (
+              items.map((item, index) => (
+                <tr key={index}>
+                  <td className="col-itemnum mono">{item.barcode || item.item_id || '—'}</td>
+                  <td className="col-desc">{item.item_name || item.name}</td>
+                  <td className="col-price">${item.unit_price.toFixed(2)}</td>
+                  <td className="col-qty">
+                    <input
+                      type="number"
+                      className="qty-input"
+                      value={item.quantity}
+                      min="0"
+                      onChange={(e) => handleQtyChange(index, e.target.value)}
+                      onFocus={(e) => e.target.select()}
+                    />
+                  </td>
+                  <td className="col-total">${item.line_total.toFixed(2)}</td>
+                  <td className="col-disc">
+                    {item.discount > 0 ? (
+                      <span className="text-red">-${item.discount.toFixed(2)}</span>
+                    ) : '—'}
+                  </td>
+                  <td className="col-edit">
+                    <button className="btn-remove-item" onClick={() => removeItem(index)}>✕</button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

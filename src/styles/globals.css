@@ -57,6 +57,12 @@ html, body, #root {
   color: var(--text-primary);
   background-color: var(--bg-primary);
   -webkit-font-smoothing: antialiased;
+  /* Prevent iOS bounce/overscroll */
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+  position: fixed;
+  top: 0;
+  left: 0;
 }
 
 /* ─── SCROLLBARS ─────────────────────────────────────── */
