@@ -151,7 +151,7 @@
 /* Typing indicator shows typed text in the cell */
 .typing-indicator {
   font-family: 'Courier New', monospace;
-  font-size: 15px;
+  font-size: 22px;
   font-weight: 700;
   color: var(--text-primary);
   min-height: 20px;
