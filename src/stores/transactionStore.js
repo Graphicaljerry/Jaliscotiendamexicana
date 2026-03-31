@@ -76,6 +76,7 @@ const useTransactionStore = create((set, get) => ({
       return {
         items: [...state.items, {
           item_id: item.id,
+          barcode: item.barcode || null,
           item_name: item.name,
           name: item.name,
           unit_price: item.price,

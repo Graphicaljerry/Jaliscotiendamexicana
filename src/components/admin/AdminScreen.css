@@ -132,11 +132,36 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 16px;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .panel-header h3 {
   font-size: 18px;
   color: var(--text-bright);
+}
+
+.panel-header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.filter-input {
+  width: 240px;
+  padding: 8px 12px;
+  font-size: 13px;
+}
+
+.admin-header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.admin-nav-links {
+  font-size: 13px;
+  color: rgba(255,255,255,0.6);
 }
 
 .btn-add {
@@ -319,4 +344,101 @@
 .setting-row input,
 .setting-row select {
   flex: 1;
+}
+
+/* ─── Inventory Maintenance ──────────────────────────── */
+.inventory-form {
+  border: 2px solid var(--accent-blue);
+}
+
+.inv-form-grid {
+  display: grid;
+  grid-template-columns: 180px 1fr 120px 200px 150px;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.form-field-wide {
+  min-width: 200px;
+}
+
+.pos-options-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.pos-fieldset {
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  flex: 1;
+}
+
+.pos-fieldset legend {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  padding: 0 4px;
+}
+
+.radio-label,
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-primary);
+  padding: 3px 0;
+  cursor: pointer;
+}
+
+.radio-label input,
+.checkbox-label input {
+  width: auto;
+  margin: 0;
+}
+
+.inv-table-wrap {
+  max-height: 500px;
+  overflow-y: auto;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+}
+
+.mono {
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+}
+
+.sell-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.sell-scale {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.sell-qty {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.inv-footer {
+  padding: 8px 12px;
+  font-size: 13px;
+  color: var(--text-muted);
+  text-align: right;
+}
+
+@media (max-width: 1200px) {
+  .inv-form-grid {
+    grid-template-columns: 1fr 1fr;
+  }
 }
