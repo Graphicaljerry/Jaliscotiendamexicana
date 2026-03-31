@@ -2,7 +2,7 @@ import React from 'react';
 import useTransactionStore from '../../stores/transactionStore';
 import './FunctionBar.css';
 
-function FunctionBar({ onShowGrid, onShowCustomer, onShowPayment, onQuantityPrompt, onPricePrompt, onDiscountPrompt }) {
+function FunctionBar({ onShowGrid, onShowCustomer, onShowPayment, onQuantityPrompt, onPricePrompt, onDiscountPrompt, onHold }) {
   const store = useTransactionStore();
 
   const row1 = [
@@ -14,6 +14,7 @@ function FunctionBar({ onShowGrid, onShowCustomer, onShowPayment, onQuantityProm
     { label: 'Coupon', key: 'F11', action: () => {} },
     { label: 'Customer Inquiry', key: '', action: onShowCustomer },
     { label: 'Write Memo', key: '', action: () => {} },
+    { label: 'Put on Hold', key: '', action: onHold, highlight: true },
   ];
 
   const row2 = [
@@ -34,7 +35,7 @@ function FunctionBar({ onShowGrid, onShowCustomer, onShowPayment, onQuantityProm
         {row1.map((btn, i) => (
           <button
             key={i}
-            className={`fn-btn ${btn.danger ? 'fn-danger' : ''} ${btn.success ? 'fn-success' : ''}`}
+            className={`fn-btn ${btn.danger ? 'fn-danger' : ''} ${btn.success ? 'fn-success' : ''} ${btn.highlight ? 'fn-highlight' : ''}`}
             onClick={btn.action}
           >
             {btn.key && <span className="fn-key">{btn.key}</span>}

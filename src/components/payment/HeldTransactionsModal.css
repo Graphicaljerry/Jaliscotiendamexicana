@@ -1,0 +1,126 @@
+.held-modal {
+  min-width: 600px;
+  max-width: 800px;
+}
+
+.held-modal h2 {
+  font-size: 20px;
+  color: var(--text-bright);
+  margin-bottom: 4px;
+}
+
+.held-hint {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+
+.held-empty {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-muted);
+  font-size: 16px;
+}
+
+.held-table {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.held-txn-num {
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--accent-blue);
+}
+
+.held-total {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.held-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.btn-reload {
+  padding: 6px 14px;
+  background: var(--accent-blue);
+  color: #ffffff;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 13px;
+  min-height: 34px;
+}
+
+.btn-reload:hover {
+  background: var(--btn-primary-hover);
+}
+
+.btn-delete-held {
+  padding: 6px 10px;
+  background: transparent;
+  color: var(--accent-red);
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 12px;
+  min-height: 34px;
+}
+
+.btn-delete-held:hover {
+  background: var(--btn-danger);
+  color: #ffffff;
+}
+
+.held-preview {
+  background: var(--bg-input);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  margin-bottom: 16px;
+}
+
+.held-preview h4 {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.held-items-list {
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.held-item-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 3px 0;
+  font-size: 13px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.held-item-row:last-child {
+  border-bottom: none;
+}
+
+.held-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-close-held {
+  padding: 10px 24px;
+  background: var(--bg-hover);
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 14px;
+  min-height: 40px;
+}
+
+.btn-close-held:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-bright);
+}

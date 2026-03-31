@@ -1,21 +1,33 @@
 import { create } from 'zustand';
 
+// Generate transaction numbers (auto-incrementing, stored in memory)
+let nextTxnNumber = 300001;
+
 const useTransactionStore = create((set, get) => ({
   // Transaction state
   items: [],
   customer: null,
-  transactionType: 'sale',       // sale, return, layaway, order, quote
-  taxType: 'taxable',            // taxable, tax_exempt, alt_tax
-  discountMode: 'none',          // none, by_line, all
+  transactionType: 'sale',
+  taxType: 'taxable',
+  discountMode: 'none',
   discountPercent: 0,
-  outputType: 'paper_tape',      // paper_tape, invoice
+  outputType: 'paper_tape',
   paymentType: 'cash',
   amountPaid: 0,
   taxRate: 8.25,
 
-  // Computed values
-  get itemCount() { return get().items.reduce((sum, item) => sum + item.quantity, 0); },
+  // Current transaction number (assigned when items are added)
+  transactionNumber: null,
 
+  // Held transactions list
+  heldTransactions: [],
+
+  // Whether we're in "active transaction" mode or "idle" mode
+  // idle = no items, shows the idle function bar with "Reload Held Transaction"
+  // active = items present, shows the transaction function bar
+  isActive: false,
+
+  // Computed values
   getSubtotal: () => {
     const { items } = get();
     return items.reduce((sum, item) => sum + item.line_total - (item.discount || 0), 0);
@@ -52,9 +64,21 @@ const useTransactionStore = create((set, get) => ({
     return Math.max(0, amountPaid - grandTotal);
   },
 
+  // Begin a new transaction (assigns a number)
+  beginTransaction: () => {
+    const num = nextTxnNumber++;
+    set({ isActive: true, transactionNumber: num });
+  },
+
   // Actions
   addItem: (item) => {
     set((state) => {
+      // Auto-begin transaction if not active
+      let newState = {};
+      if (!state.isActive || !state.transactionNumber) {
+        newState = { isActive: true, transactionNumber: nextTxnNumber++ };
+      }
+
       // Check if item already in cart
       const existingIndex = state.items.findIndex(i => i.item_id === item.id);
       if (existingIndex >= 0) {
@@ -64,16 +88,16 @@ const useTransactionStore = create((set, get) => ({
           quantity: updated[existingIndex].quantity + 1,
           line_total: (updated[existingIndex].quantity + 1) * updated[existingIndex].unit_price
         };
-        return { items: updated };
+        return { ...newState, items: updated };
       }
 
-      // Apply discount if discount-all mode
       let discount = 0;
       if (state.discountMode === 'all' && state.discountPercent > 0) {
         discount = item.price * (state.discountPercent / 100);
       }
 
       return {
+        ...newState,
         items: [...state.items, {
           item_id: item.id,
           barcode: item.barcode || null,
@@ -91,15 +115,14 @@ const useTransactionStore = create((set, get) => ({
   },
 
   removeItem: (index) => {
-    set((state) => ({
-      items: state.items.filter((_, i) => i !== index)
-    }));
+    set((state) => {
+      const newItems = state.items.filter((_, i) => i !== index);
+      return { items: newItems };
+    });
   },
 
   removeLastItem: () => {
-    set((state) => ({
-      items: state.items.slice(0, -1)
-    }));
+    set((state) => ({ items: state.items.slice(0, -1) }));
   },
 
   updateItemQuantity: (index, quantity) => {
@@ -147,22 +170,86 @@ const useTransactionStore = create((set, get) => ({
   setAmountPaid: (amount) => set({ amountPaid: amount }),
   setTaxRate: (rate) => set({ taxRate: rate }),
 
-  // Set next item to return (F3 - Return Next)
   returnNextFlag: false,
   setReturnNext: (flag) => set({ returnNextFlag: flag }),
 
-  // Set quantity for next item (F5)
   nextQuantity: 1,
   setNextQuantity: (qty) => set({ nextQuantity: qty }),
 
-  // Tax exempt next item
   taxExemptNextFlag: false,
   setTaxExemptNext: (flag) => set({ taxExemptNextFlag: flag }),
 
-  // Clear the entire transaction
+  // ─── HOLD TRANSACTION ─────────────────────────────────
+  // Put current transaction on hold (kitchen sends ticket, cashier reloads later)
+  holdTransaction: () => {
+    const state = get();
+    if (state.items.length === 0) return;
+
+    const held = {
+      id: state.transactionNumber || nextTxnNumber++,
+      timestamp: new Date().toLocaleString(),
+      customer: state.customer,
+      items: [...state.items],
+      transactionType: state.transactionType,
+      taxType: state.taxType,
+      subtotal: state.getSubtotal(),
+      grandTotal: state.getGrandTotal(),
+      itemCount: state.items.reduce((sum, i) => sum + i.quantity, 0),
+    };
+
+    set((s) => ({
+      heldTransactions: [...s.heldTransactions, held],
+      // Clear current transaction
+      items: [],
+      customer: null,
+      transactionNumber: null,
+      isActive: false,
+      transactionType: 'sale',
+      taxType: 'taxable',
+      discountMode: 'none',
+      discountPercent: 0,
+      amountPaid: 0,
+      returnNextFlag: false,
+      nextQuantity: 1,
+      taxExemptNextFlag: false,
+    }));
+
+    return held.id;
+  },
+
+  // Reload a held transaction (cashier pulls it up to charge customer)
+  reloadHeldTransaction: (heldId) => {
+    const state = get();
+    const held = state.heldTransactions.find(h => h.id === heldId);
+    if (!held) return false;
+
+    set({
+      items: [...held.items],
+      customer: held.customer,
+      transactionNumber: held.id,
+      isActive: true,
+      transactionType: held.transactionType,
+      taxType: held.taxType,
+      // Remove from held list
+      heldTransactions: state.heldTransactions.filter(h => h.id !== heldId),
+    });
+
+    return true;
+  },
+
+  // Delete a held transaction without reloading
+  deleteHeldTransaction: (heldId) => {
+    set((s) => ({
+      heldTransactions: s.heldTransactions.filter(h => h.id !== heldId),
+    }));
+  },
+
+  // Clear the entire transaction and go back to idle
   clearTransaction: () => set({
     items: [],
     customer: null,
+    transactionNumber: null,
+    isActive: false,
     transactionType: 'sale',
     taxType: 'taxable',
     discountMode: 'none',

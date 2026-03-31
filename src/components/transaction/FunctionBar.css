@@ -40,6 +40,18 @@
 .fn-btn.fn-success { border-color: var(--accent-green); background: #f0fdf4; }
 .fn-btn.fn-success:hover { background: var(--btn-success); color: #ffffff; }
 
+.fn-btn.fn-highlight {
+  background: #fef3c7;
+  border-color: var(--accent-yellow);
+  color: var(--text-bright);
+  animation: pulse-held 2s ease-in-out infinite;
+}
+
+@keyframes pulse-held {
+  0%, 100% { box-shadow: none; }
+  50% { box-shadow: 0 0 8px rgba(202, 138, 4, 0.4); }
+}
+
 .fn-key {
   font-size: 9px;
   font-weight: 700;

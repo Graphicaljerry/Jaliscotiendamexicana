@@ -149,6 +149,39 @@
   border-color: var(--accent-blue);
 }
 
+/* ─── Transaction Number ─────────────────────────────── */
+.txn-number {
+  font-size: 14px;
+  color: rgba(255,255,255,0.8);
+}
+.txn-number strong {
+  color: #ffffff;
+  font-size: 18px;
+}
+
+/* ─── Held Transactions Badge ────────────────────────── */
+.held-count-badge {
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  color: #92400e;
+  text-align: center;
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.held-count-badge:hover {
+  background: #fde68a;
+}
+
+.btn-begin-new {
+  background: var(--accent-blue);
+}
+.btn-begin-new:hover {
+  background: var(--btn-primary-hover);
+}
+
 /* ─── Begin/Finish Button ────────────────────────────── */
 .begin-section {
   margin-top: auto;
