@@ -19,7 +19,7 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
   const [customQty, setCustomQty] = useState('1');
 
   const inputRef = useRef(null);
-  const customDescRef = useRef(null);
+  const customPriceRef = useRef(null);
   const tableEndRef = useRef(null);
 
   useEffect(() => {
@@ -27,8 +27,9 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
     if (tableEndRef.current) tableEndRef.current.scrollIntoView({ behavior: 'smooth' });
   }, [items.length, customEntry]);
 
+  // Focus price input when custom entry opens
   useEffect(() => {
-    if (customEntry && customDescRef.current) customDescRef.current.focus();
+    if (customEntry && customPriceRef.current) customPriceRef.current.focus();
   }, [customEntry]);
 
   const handleCodeSubmit = async () => {
@@ -203,30 +204,19 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
               </tr>
             ))}
 
-            {/* ─── CUSTOM PRICE ENTRY ROW ──────────────── */}
+            {/* ─── CUSTOM PRICE ENTRY ROW (looks like a normal row) ── */}
             {customEntry && (
               <tr className="custom-entry-row">
-                <td className="col-itemnum">
-                  <span className="custom-code-badge">{customEntry.taxable ? '2' : '1'}</span>
-                </td>
-                <td className="col-desc">
-                  <input
-                    ref={customDescRef}
-                    type="text"
-                    className="custom-input"
-                    placeholder="Description (optional)"
-                    value={customDesc}
-                    onChange={(e) => setCustomDesc(e.target.value)}
-                    onKeyDown={(e) => { if (e.key === 'Escape') setCustomEntry(null); }}
-                  />
-                </td>
+                <td className="col-itemnum mono">{customEntry.taxable ? '2' : '1'}</td>
+                <td className="col-desc">{customEntry.taxable ? 'Grocery Taxed' : 'Grocery'}</td>
                 <td className="col-price">
                   <input
+                    ref={customPriceRef}
                     type="number"
                     step="0.01"
                     min="0"
-                    className="custom-input custom-price-input"
-                    placeholder="Price"
+                    className="qty-input custom-price-field"
+                    placeholder="0.00"
                     value={customPrice}
                     onChange={(e) => setCustomPrice(e.target.value)}
                     onKeyDown={(e) => {
@@ -239,7 +229,7 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
                   <input
                     type="number"
                     min="1"
-                    className="custom-input custom-qty-input"
+                    className="qty-input"
                     value={customQty}
                     onChange={(e) => setCustomQty(e.target.value)}
                     onKeyDown={(e) => {
@@ -249,17 +239,11 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
                   />
                 </td>
                 <td className="col-total">
-                  <span className="custom-preview">
-                    {customPrice ? `$${(parseFloat(customPrice || 0) * parseInt(customQty || 1)).toFixed(2)}` : '—'}
-                  </span>
+                  {customPrice ? `$${(parseFloat(customPrice || 0) * parseInt(customQty || 1)).toFixed(2)}` : '—'}
                 </td>
-                <td className="col-disc">
-                  <span className={`tax-badge ${customEntry.taxable ? 'taxed' : 'no-tax'}`}>
-                    {customEntry.taxable ? 'TAX' : 'NO TAX'}
-                  </span>
-                </td>
+                <td className="col-disc">—</td>
                 <td className="col-edit">
-                  <button className="btn-custom-ok" onClick={handleCustomSubmit}>OK</button>
+                  <button className="btn-remove-item" onClick={() => setCustomEntry(null)}>✕</button>
                 </td>
               </tr>
             )}
