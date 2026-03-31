@@ -12,7 +12,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #1e40af;
+  background: #2d2d2d;
   padding: 6px 12px;
   flex-shrink: 0;
   gap: 8px;
@@ -52,10 +52,10 @@
 }
 
 .btn-scale-top {
-  background: #7c3aed;
+  background: #ea8b0c;
   color: #ffffff;
 }
-.btn-scale-top:hover { background: #6d28d9; }
+.btn-scale-top:hover { background: #d97706; }
 
 .btn-grid-toggle {
   background: #0d9488;

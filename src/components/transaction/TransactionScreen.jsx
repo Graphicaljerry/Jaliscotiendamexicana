@@ -207,6 +207,9 @@ function TransactionScreen() {
         </div>
       </div>
 
+      {/* Totals Bar */}
+      <TotalsBar />
+
       {/* Function Bar — switches between active and idle */}
       {isActive ? (
         <FunctionBar
@@ -226,9 +229,6 @@ function TransactionScreen() {
           onBeginTransaction={() => store.beginTransaction()}
         />
       )}
-
-      {/* Totals Bar */}
-      <TotalsBar />
 
       {/* Modals */}
       {showCustomerLookup && <CustomerLookup onClose={() => setShowCustomerLookup(false)} />}
