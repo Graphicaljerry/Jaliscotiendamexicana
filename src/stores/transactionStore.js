@@ -79,18 +79,6 @@ const useTransactionStore = create((set, get) => ({
         newState = { isActive: true, transactionNumber: nextTxnNumber++ };
       }
 
-      // Check if item already in cart
-      const existingIndex = state.items.findIndex(i => i.item_id === item.id);
-      if (existingIndex >= 0) {
-        const updated = [...state.items];
-        updated[existingIndex] = {
-          ...updated[existingIndex],
-          quantity: updated[existingIndex].quantity + 1,
-          line_total: (updated[existingIndex].quantity + 1) * updated[existingIndex].unit_price
-        };
-        return { ...newState, items: updated };
-      }
-
       let discount = 0;
       if (state.discountMode === 'all' && state.discountPercent > 0) {
         discount = item.price * (state.discountPercent / 100);

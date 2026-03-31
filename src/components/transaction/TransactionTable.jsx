@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import useTransactionStore from '../../stores/transactionStore';
 import './TransactionTable.css';
 
@@ -13,27 +13,46 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
 
-  // Which row index is currently being "edited" (price/qty focused)
+  // Which row is being edited (price/qty)
   const [editingRow, setEditingRow] = useState(null);
 
   const inputRef = useRef(null);
   const priceRef = useRef(null);
-  const qtyRef = useRef(null);
   const tableEndRef = useRef(null);
 
-  // When not editing a row, focus the code input
+  // Focus code input when not editing
   useEffect(() => {
-    if (editingRow === null && inputRef.current) inputRef.current.focus();
+    if (editingRow === null && inputRef.current) {
+      setTimeout(() => inputRef.current?.focus(), 50);
+    }
   }, [editingRow, items.length]);
 
-  // When editing row changes, focus the price field
+  // Focus price field when editing row changes
   useEffect(() => {
     if (editingRow !== null && priceRef.current) {
-      priceRef.current.focus();
-      priceRef.current.select();
+      setTimeout(() => {
+        priceRef.current?.focus();
+        priceRef.current?.select();
+      }, 50);
     }
     if (tableEndRef.current) tableEndRef.current.scrollIntoView({ behavior: 'smooth' });
   }, [editingRow]);
+
+  // After adding an item, start editing the new row
+  const startEditingLastRow = useCallback((isScaleItem) => {
+    setTimeout(() => {
+      const currentItems = useTransactionStore.getState().items;
+      const newIndex = currentItems.length - 1;
+      if (isScaleItem) {
+        // For scale items, open scale modal right away
+        onOpenScale();
+        // Don't enter edit mode - scale modal handles it
+        setEditingRow(null);
+      } else {
+        setEditingRow(newIndex);
+      }
+    }, 30);
+  }, [onOpenScale]);
 
   const handleCodeSubmit = async () => {
     const code = itemCode.trim();
@@ -51,50 +70,41 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
         barcode: code,
       });
       setItemCode('');
-      // Set editing to the newly added row (will be last index)
-      setTimeout(() => {
-        const currentItems = useTransactionStore.getState().items;
-        setEditingRow(currentItems.length - 1);
-      }, 20);
+      startEditingLastRow(false);
       return;
     }
 
     // Regular item lookup
     setCodeError('');
-    const found = await onInlineItemAdd(code);
-    if (found) {
-      setItemCode('');
-      // After item is added, focus its price/qty for editing
-      setTimeout(() => {
-        const currentItems = useTransactionStore.getState().items;
-        setEditingRow(currentItems.length - 1);
-      }, 20);
-    } else {
-      if (window.api) {
+    let item = null;
+    if (window.api) {
+      item = await window.api.getItemByBarcode(code);
+      if (!item && !isNaN(parseInt(code))) {
+        item = await window.api.getItemById(parseInt(code));
+      }
+      if (!item) {
         const results = await window.api.searchItems(code);
         if (results && results.length > 0) {
-          const exactMatch = results.find(r => r.barcode === code);
-          if (exactMatch) {
-            addItem(exactMatch);
-            setItemCode('');
-            setTimeout(() => {
-              const currentItems = useTransactionStore.getState().items;
-              setEditingRow(currentItems.length - 1);
-            }, 20);
-            return;
-          }
+          item = results.find(r => r.barcode === code) || null;
         }
       }
+    }
+
+    if (item) {
+      addItem(item);
+      setItemCode('');
+      startEditingLastRow(item.sell_by === 'S');
+    } else {
       setCodeError('Not found');
       setTimeout(() => setCodeError(''), 1500);
     }
   };
 
-  // Confirm the editing row and move back to code input
+  // Confirm editing row → go back to code input
   const confirmRow = () => {
-    // Remove item if price is 0 (for custom entries that were never filled in)
     if (editingRow !== null && items[editingRow]) {
       const item = items[editingRow];
+      // Remove custom entries that still have $0 price
       if (item.unit_price === 0 && (item.barcode === '1' || item.barcode === '2')) {
         removeItem(editingRow);
       }
@@ -102,21 +112,17 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
     setEditingRow(null);
   };
 
-  // Handle price change for the editing row
   const handleEditPrice = (index, value) => {
     const price = parseFloat(value);
-    if (!isNaN(price)) {
-      updateItemPrice(index, price);
-    }
+    if (!isNaN(price) && price >= 0) updateItemPrice(index, price);
   };
 
-  // Handle qty change
   const handleQtyChange = (index, value) => {
     const qty = parseInt(value);
     if (!isNaN(qty)) updateItemQuantity(index, qty);
   };
 
-  // Search by name
+  // Search
   useEffect(() => {
     if (searchQuery.length < 2) { setSearchResults([]); return; }
     const timer = setTimeout(async () => {
@@ -129,18 +135,14 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
   }, [searchQuery]);
 
   const handleSearchSelect = (item) => {
-    onInlineItemAdd(item.barcode || String(item.id));
+    addItem(item);
     setSearchQuery('');
     setSearchResults([]);
-    setTimeout(() => {
-      const currentItems = useTransactionStore.getState().items;
-      setEditingRow(currentItems.length - 1);
-    }, 20);
+    startEditingLastRow(item.sell_by === 'S');
   };
 
   return (
     <div className="transaction-table-wrapper">
-      {/* Compact top bar */}
       <div className="table-top-bar">
         <div className="code-legend">
           <span className="legend-item"><strong>1</strong> = Grocery</span>
@@ -169,7 +171,6 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
         <button className="btn-scale-inline" onClick={onOpenScale}>Scale</button>
       </div>
 
-      {/* Transaction table */}
       <div className="table-scroll">
         <table className="transaction-table">
           <thead>
@@ -184,77 +185,74 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
             </tr>
           </thead>
           <tbody>
-            {items.map((item, index) => (
-              <tr key={index} className={editingRow === index ? 'editing-row' : ''}>
-                <td className="col-itemnum mono">{item.barcode || item.item_id || '—'}</td>
-                <td className="col-desc">
-                  {item.item_name || item.name}
-                  {item.is_taxable === 0 && <span className="tax-badge no-tax">NT</span>}
-                </td>
-                <td className="col-price">
-                  {editingRow === index ? (
-                    <input
-                      ref={priceRef}
-                      type="number"
-                      step="0.01"
-                      min="0"
-                      className="qty-input edit-price-input"
-                      defaultValue={item.unit_price > 0 ? item.unit_price : ''}
-                      placeholder="0.00"
-                      onChange={(e) => handleEditPrice(index, e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Tab') {
-                          // Let default Tab move to qty
-                        } else if (e.key === 'Enter') {
-                          confirmRow();
-                        } else if (e.key === 'Escape') {
-                          confirmRow();
-                        }
-                      }}
-                    />
-                  ) : (
-                    <span>${item.unit_price.toFixed(2)}</span>
-                  )}
-                </td>
-                <td className="col-qty">
-                  {editingRow === index ? (
-                    <input
-                      ref={qtyRef}
-                      type="number"
-                      min="1"
-                      className="qty-input"
-                      defaultValue={item.quantity}
-                      onChange={(e) => handleQtyChange(index, e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                          confirmRow();
-                        } else if (e.key === 'Escape') {
-                          confirmRow();
-                        }
-                      }}
-                    />
-                  ) : (
-                    <input
-                      type="number"
-                      className="qty-input"
-                      value={item.quantity}
-                      min="0"
-                      onChange={(e) => handleQtyChange(index, e.target.value)}
-                      onFocus={(e) => e.target.select()}
-                    />
-                  )}
-                </td>
-                <td className="col-total">${item.line_total.toFixed(2)}</td>
-                <td className="col-disc">
-                  {item.discount > 0 ? <span className="text-red">-${item.discount.toFixed(2)}</span> : '—'}
-                </td>
-                <td className="col-edit">
-                  <button className="btn-remove-item" onClick={() => { if (editingRow === index) setEditingRow(null); removeItem(index); }}>✕</button>
-                </td>
-              </tr>
-            ))}
+            {items.map((item, index) => {
+              const isEditing = editingRow === index;
+              return (
+                <tr key={index} className={isEditing ? 'editing-row' : ''}>
+                  <td className="col-itemnum mono">{item.barcode || item.item_id || '—'}</td>
+                  <td className="col-desc">
+                    {item.item_name || item.name}
+                    {item.is_taxable === 0 && <span className="tax-badge no-tax">NT</span>}
+                  </td>
+                  <td className="col-price">
+                    {isEditing ? (
+                      <input
+                        ref={priceRef}
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        className="qty-input edit-price-input"
+                        defaultValue={item.unit_price > 0 ? item.unit_price : ''}
+                        placeholder="0.00"
+                        onChange={(e) => handleEditPrice(index, e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') confirmRow();
+                          if (e.key === 'Escape') confirmRow();
+                        }}
+                      />
+                    ) : (
+                      <span>${item.unit_price.toFixed(2)}</span>
+                    )}
+                  </td>
+                  <td className="col-qty">
+                    {isEditing ? (
+                      <input
+                        type="number"
+                        min="1"
+                        className="qty-input"
+                        defaultValue={item.quantity}
+                        onChange={(e) => handleQtyChange(index, e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') confirmRow();
+                          if (e.key === 'Escape') confirmRow();
+                        }}
+                      />
+                    ) : (
+                      <input
+                        type="number"
+                        className="qty-input"
+                        value={item.quantity}
+                        min="0"
+                        onChange={(e) => handleQtyChange(index, e.target.value)}
+                        onFocus={(e) => e.target.select()}
+                      />
+                    )}
+                  </td>
+                  <td className="col-total">${item.line_total.toFixed(2)}</td>
+                  <td className="col-disc">
+                    {item.discount > 0 ? <span className="text-red">-${item.discount.toFixed(2)}</span> : '—'}
+                  </td>
+                  <td className="col-edit">
+                    <button className="btn-remove-item" onClick={() => {
+                      if (isEditing) setEditingRow(null);
+                      removeItem(index);
+                    }}>✕</button>
+                  </td>
+                </tr>
+              );
+            })}
 
-            {/* ─── INLINE CODE ENTRY ROW ───────────────── */}
+            {/* Code entry row - only shown when not editing */}
             {editingRow === null && (
               <tr className="entry-row" ref={tableEndRef}>
                 <td className="col-itemnum entry-cell">
@@ -280,18 +278,13 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
               </tr>
             )}
 
-            {/* Placeholder row for scroll target when editing */}
             {editingRow !== null && <tr ref={tableEndRef}><td colSpan="7"></td></tr>}
 
-            {/* Empty rows */}
             {Array.from({ length: Math.max(0, 5 - items.length) }).map((_, i) => (
               <tr key={`empty-${i}`} className="empty-row">
-                <td className="col-itemnum"></td>
-                <td className="col-desc"></td>
-                <td className="col-price"></td>
-                <td className="col-qty"></td>
-                <td className="col-total"></td>
-                <td className="col-disc"></td>
+                <td className="col-itemnum"></td><td className="col-desc"></td>
+                <td className="col-price"></td><td className="col-qty"></td>
+                <td className="col-total"></td><td className="col-disc"></td>
                 <td className="col-edit"></td>
               </tr>
             ))}
