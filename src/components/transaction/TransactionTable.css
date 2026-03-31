@@ -10,11 +10,24 @@
 .table-top-bar {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   padding: 6px 10px;
   background: var(--bg-secondary);
   border-bottom: 1px solid var(--border-light);
   flex-shrink: 0;
+}
+
+.code-legend {
+  display: flex;
+  gap: 10px;
+  font-size: 11px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.legend-item strong {
+  color: var(--accent-blue);
+  font-size: 13px;
 }
 
 .search-wrap {
@@ -201,6 +214,91 @@
   justify-content: center;
 }
 .btn-remove-item:hover { background: var(--btn-danger); color: #fff; }
+
+/* ─── Custom Price Entry Row ─────────────────────────── */
+.custom-entry-row {
+  background: #fef3c7;
+  border: 2px solid #f59e0b;
+}
+
+.custom-entry-row td {
+  padding: 6px 8px;
+}
+
+.custom-code-badge {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+  text-align: center;
+  background: var(--accent-blue);
+  color: #fff;
+  border-radius: 50%;
+  font-weight: 800;
+  font-size: 16px;
+}
+
+.custom-input {
+  width: 100%;
+  font-size: 14px;
+  padding: 6px 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: #fff;
+}
+
+.custom-input:focus {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+  outline: none;
+}
+
+.custom-price-input {
+  text-align: right;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.custom-qty-input {
+  width: 56px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.custom-preview {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.tax-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  margin-left: 4px;
+}
+
+.tax-badge.no-tax {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.tax-badge.taxed {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.btn-custom-ok {
+  padding: 6px 12px;
+  background: var(--accent-green);
+  color: #fff;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 13px;
+  min-height: 32px;
+}
+.btn-custom-ok:hover { background: var(--btn-success-hover); }
 
 /* ─── Mobile ─────────────────────────────────────────── */
 @media (max-width: 768px) {
