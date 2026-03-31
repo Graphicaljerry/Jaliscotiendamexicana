@@ -22,7 +22,7 @@
   align-items: center;
   justify-content: center;
   padding: 6px 4px;
-  background: var(--bg-card);
+  background: var(--bg-input);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
   color: var(--text-primary);
@@ -31,7 +31,8 @@
 }
 
 .fn-btn:hover {
-  background: var(--bg-hover);
+  background: var(--accent-blue);
+  color: #ffffff;
   border-color: var(--accent-blue);
 }
 
@@ -40,23 +41,27 @@
 }
 .fn-btn.fn-danger:hover {
   background: var(--btn-danger);
-  color: var(--text-bright);
+  color: #ffffff;
 }
 
 .fn-btn.fn-success {
   border-color: var(--accent-green);
-  background: var(--bg-tertiary);
+  background: #f0fdf4;
 }
 .fn-btn.fn-success:hover {
   background: var(--btn-success);
-  color: var(--text-bright);
+  color: #ffffff;
 }
 
 .fn-key {
   font-size: 10px;
   font-weight: 700;
-  color: var(--accent-yellow);
+  color: var(--accent-orange);
   letter-spacing: 0.5px;
+}
+
+.fn-btn:hover .fn-key {
+  color: #ffffff;
 }
 
 .fn-label {

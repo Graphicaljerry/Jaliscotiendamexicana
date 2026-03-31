@@ -12,6 +12,7 @@
   position: sticky;
   top: 0;
   z-index: 10;
+  background: #e2e8f0;
 }
 
 .col-num { width: 50px; text-align: center; }
@@ -29,7 +30,6 @@
   font-size: 16px;
 }
 
-/* Quantity Controls */
 .qty-controls {
   display: flex;
   align-items: center;
@@ -41,8 +41,8 @@
   width: 28px;
   height: 28px;
   border-radius: 4px;
-  background: var(--bg-tertiary);
-  color: var(--text-bright);
+  background: var(--accent-blue);
+  color: #ffffff;
   font-size: 16px;
   font-weight: 700;
   display: flex;
@@ -51,7 +51,7 @@
   min-width: 28px;
 }
 .qty-btn:hover {
-  background: var(--accent-blue);
+  background: var(--btn-primary-hover);
 }
 
 .qty-value {
@@ -60,7 +60,6 @@
   text-align: center;
 }
 
-/* Remove Button */
 .btn-remove-item {
   width: 32px;
   height: 32px;
@@ -74,5 +73,5 @@
 }
 .btn-remove-item:hover {
   background: var(--btn-danger);
-  color: var(--text-bright);
+  color: #ffffff;
 }

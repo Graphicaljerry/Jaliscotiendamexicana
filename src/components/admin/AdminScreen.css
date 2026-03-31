@@ -69,14 +69,14 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 20px;
-  background: var(--bg-tertiary);
-  border-bottom: 2px solid var(--accent-purple);
+  background: #1e40af;
+  color: #ffffff;
   flex-shrink: 0;
 }
 
 .admin-header h1 {
   font-size: 18px;
-  color: var(--text-bright);
+  color: #ffffff;
 }
 
 .btn-back-pos {

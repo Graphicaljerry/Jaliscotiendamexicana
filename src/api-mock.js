@@ -167,6 +167,48 @@ const SAMPLE_ITEMS_BY_CATEGORY = {
   ],
 };
 
+// Build a flat list of ALL items for search/lookup
+const ALL_ITEMS = [];
+Object.values(SAMPLE_ITEMS_BY_CATEGORY).forEach(items => {
+  items.forEach(item => ALL_ITEMS.push(item));
+});
+
+// Add grocery/produce items with barcode numbers
+const GROCERY_ITEMS = [
+  {id:400,barcode:'200',name:'Bananas (lb)',price:0.69,is_taxable:0,is_ebt_eligible:1},
+  {id:401,barcode:'201',name:'Manzanas (lb)',price:1.29,is_taxable:0,is_ebt_eligible:1},
+  {id:402,barcode:'202',name:'Naranjas (lb)',price:0.99,is_taxable:0,is_ebt_eligible:1},
+  {id:403,barcode:'203',name:'Jalapenos Frescos (lb)',price:1.49,is_taxable:0,is_ebt_eligible:1},
+  {id:404,barcode:'204',name:'Aguacate / Avocados (each)',price:1.50,is_taxable:0,is_ebt_eligible:1},
+  {id:405,barcode:'205',name:'Tomate Roma (lb)',price:1.29,is_taxable:0,is_ebt_eligible:1},
+  {id:406,barcode:'206',name:'Cebolla Blanca (lb)',price:0.99,is_taxable:0,is_ebt_eligible:1},
+  {id:407,barcode:'207',name:'Chile Serrano (lb)',price:1.99,is_taxable:0,is_ebt_eligible:1},
+  {id:408,barcode:'208',name:'Cilantro (bunch)',price:0.79,is_taxable:0,is_ebt_eligible:1},
+  {id:409,barcode:'209',name:'Limon (each)',price:0.25,is_taxable:0,is_ebt_eligible:1},
+  {id:410,barcode:'210',name:'Papaya (lb)',price:1.49,is_taxable:0,is_ebt_eligible:1},
+  {id:411,barcode:'211',name:'Mango (each)',price:1.29,is_taxable:0,is_ebt_eligible:1},
+  {id:412,barcode:'212',name:'Pina / Pineapple (each)',price:3.99,is_taxable:0,is_ebt_eligible:1},
+  {id:413,barcode:'213',name:'Tomatillo (lb)',price:1.49,is_taxable:0,is_ebt_eligible:1},
+  {id:414,barcode:'214',name:'Chile Poblano (lb)',price:1.99,is_taxable:0,is_ebt_eligible:1},
+  {id:415,barcode:'300',name:'Coca Cola Lata',price:1.49,is_taxable:1,is_ebt_eligible:0},
+  {id:416,barcode:'301',name:'Jarritos Tamarindo',price:1.50,is_taxable:1,is_ebt_eligible:0},
+  {id:417,barcode:'302',name:'Jarritos Mandarina',price:1.50,is_taxable:1,is_ebt_eligible:0},
+  {id:418,barcode:'303',name:'Takis Fuego 280g',price:4.99,is_taxable:1,is_ebt_eligible:1},
+  {id:419,barcode:'304',name:'Maseca Corn Flour 4.4lb',price:4.49,is_taxable:0,is_ebt_eligible:1},
+  {id:420,barcode:'305',name:'Abuelita Chocolate 540g',price:5.99,is_taxable:0,is_ebt_eligible:1},
+  {id:421,barcode:'306',name:'Crema Mexicana 16oz',price:3.99,is_taxable:0,is_ebt_eligible:1},
+  {id:422,barcode:'307',name:'Queso Fresco',price:4.49,is_taxable:0,is_ebt_eligible:1},
+  {id:423,barcode:'308',name:'Queso Oaxaca (lb)',price:5.99,is_taxable:0,is_ebt_eligible:1},
+  {id:424,barcode:'309',name:'Frijol Pinto 2lb',price:3.49,is_taxable:0,is_ebt_eligible:1},
+  {id:425,barcode:'310',name:'Arroz 2lb bag',price:2.49,is_taxable:0,is_ebt_eligible:1},
+  {id:426,barcode:'311',name:'Tortillas Corn (30ct)',price:2.99,is_taxable:0,is_ebt_eligible:1},
+  {id:427,barcode:'312',name:'Tortillas Flour (20ct)',price:3.49,is_taxable:0,is_ebt_eligible:1},
+  {id:428,barcode:'313',name:'Pan Dulce (each)',price:1.25,is_taxable:0,is_ebt_eligible:1},
+  {id:429,barcode:'314',name:'Leche Gallon',price:4.99,is_taxable:0,is_ebt_eligible:1},
+  {id:430,barcode:'315',name:'Huevos Dozen',price:3.99,is_taxable:0,is_ebt_eligible:1},
+];
+GROCERY_ITEMS.forEach(item => ALL_ITEMS.push(item));
+
 const CUSTOMERS = [
   {id:1,customer_number:'C001',name:'Maria Garcia',phone:'555-0101',email:'maria@email.com'},
   {id:2,customer_number:'C002',name:'Jose Rodriguez',phone:'555-0102',email:'jose@email.com'},
@@ -174,20 +216,22 @@ const CUSTOMERS = [
 ];
 
 export function installMockApi() {
-  if (window.api) return; // Real Electron API exists, don't mock
+  if (window.api) return;
 
   window.api = {
-    getItems: () => Promise.resolve(TACO_ITEMS),
+    getItems: () => Promise.resolve(ALL_ITEMS),
     getItemByBarcode: (barcode) => {
-      const grocery = [
-        {id:50,barcode:'4011',name:'Bananas (lb)',price:0.69,is_taxable:0,is_ebt_eligible:1},
-        {id:51,barcode:'7501000611218',name:'Jarritos Tamarindo 370ml',price:1.50,is_taxable:1,is_ebt_eligible:0},
-      ];
-      return Promise.resolve(grocery.find(i => i.barcode === barcode) || null);
+      return Promise.resolve(ALL_ITEMS.find(i => i.barcode === barcode) || null);
     },
-    getItemById: (id) => Promise.resolve(TACO_ITEMS.find(i => i.id === id) || null),
+    getItemById: (id) => Promise.resolve(ALL_ITEMS.find(i => i.id === id) || null),
     getItemsByCategory: (catId) => Promise.resolve(SAMPLE_ITEMS_BY_CATEGORY[catId] || []),
-    searchItems: (q) => Promise.resolve(TACO_ITEMS.filter(i => i.name.toLowerCase().includes(q.toLowerCase()))),
+    searchItems: (q) => {
+      const lower = q.toLowerCase();
+      return Promise.resolve(ALL_ITEMS.filter(i =>
+        i.name.toLowerCase().includes(lower) ||
+        (i.barcode && i.barcode.includes(q))
+      ).slice(0, 20));
+    },
     createItem: (item) => Promise.resolve({ id: Date.now(), ...item }),
     updateItem: (id, item) => Promise.resolve({ id, ...item }),
     deleteItem: () => Promise.resolve({ success: true }),

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import TransactionTable from './TransactionTable';
 import TransactionControls from './TransactionControls';
 import FunctionBar from './FunctionBar';
@@ -18,6 +18,18 @@ function TransactionScreen() {
   const [quantityPrompt, setQuantityPrompt] = useState(false);
   const [pricePrompt, setPricePrompt] = useState(false);
   const [discountPrompt, setDiscountPrompt] = useState(false);
+
+  // SKU / Item lookup state
+  const [skuInput, setSkuInput] = useState('');
+  const [itemSearch, setItemSearch] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [skuError, setSkuError] = useState('');
+  const skuRef = useRef(null);
+
+  // Scale state
+  const [showScale, setShowScale] = useState(false);
+  const [scaleWeight, setScaleWeight] = useState('0.00');
+  const [pendingScaleItem, setPendingScaleItem] = useState(null);
 
   const store = useTransactionStore();
 
@@ -44,20 +56,20 @@ function TransactionScreen() {
 
   // Keyboard shortcuts
   useKeyboardShortcuts({
-    onRepeatLast: () => store.repeatLastItem(),                   // F1
-    onDeleteLast: () => store.removeLastItem(),                   // F2
-    onReturnNext: () => store.setReturnNext(true),                // F3
-    onItemDirect: () => setShowGrid(true),                        // F4
-    onQuantity: () => setQuantityPrompt(true),                    // F5
-    onPrice: () => setPricePrompt(true),                          // F6
-    onDiscount: () => setDiscountPrompt(true),                    // F7
-    onSalesChange: () => {},                                       // F8
-    onCancel: () => store.clearTransaction(),                      // F9
-    onFinish: () => {                                              // F10
+    onRepeatLast: () => store.repeatLastItem(),
+    onDeleteLast: () => store.removeLastItem(),
+    onReturnNext: () => store.setReturnNext(true),
+    onItemDirect: () => setShowGrid(true),
+    onQuantity: () => setQuantityPrompt(true),
+    onPrice: () => setPricePrompt(true),
+    onDiscount: () => setDiscountPrompt(true),
+    onSalesChange: () => {},
+    onCancel: () => store.clearTransaction(),
+    onFinish: () => {
       if (store.items.length > 0) setShowPayment(true);
     },
-    onCoupon: () => {},                                            // F11
-    onItemLookup: () => setShowGrid(true),                        // F12
+    onCoupon: () => {},
+    onItemLookup: () => setShowGrid(true),
   });
 
   const handleAddGridItem = useCallback((item) => {
@@ -67,6 +79,64 @@ function TransactionScreen() {
     }
     if (qty > 1) store.setNextQuantity(1);
   }, [store]);
+
+  // SKU lookup by number code
+  const handleSkuLookup = async () => {
+    if (!skuInput.trim() || !window.api) return;
+    setSkuError('');
+    try {
+      // Try barcode first
+      let item = await window.api.getItemByBarcode(skuInput.trim());
+      if (!item) {
+        // Try as item ID
+        item = await window.api.getItemById(parseInt(skuInput.trim()));
+      }
+      if (item) {
+        store.addItem(item);
+        setSkuInput('');
+        if (skuRef.current) skuRef.current.focus();
+      } else {
+        setSkuError('Item #' + skuInput + ' not found');
+        setTimeout(() => setSkuError(''), 2000);
+      }
+    } catch (err) {
+      console.error('SKU lookup error:', err);
+    }
+  };
+
+  // Item name search
+  useEffect(() => {
+    if (itemSearch.length < 2) {
+      setSearchResults([]);
+      return;
+    }
+    const timer = setTimeout(async () => {
+      if (window.api) {
+        const results = await window.api.searchItems(itemSearch);
+        setSearchResults(results.slice(0, 10));
+      }
+    }, 250);
+    return () => clearTimeout(timer);
+  }, [itemSearch]);
+
+  // Scale - simulate reading weight
+  const handleOpenScale = () => {
+    setScaleWeight((1 + Math.random() * 3).toFixed(2));
+    setShowScale(true);
+  };
+
+  const handleScaleConfirm = () => {
+    // Apply weight as quantity to the last added item, or prompt to scan/enter item first
+    if (store.items.length > 0) {
+      const lastIndex = store.items.length - 1;
+      const weight = parseFloat(scaleWeight);
+      store.updateItemQuantity(lastIndex, 1);
+      // Update the price to be price * weight (for per-lb items)
+      const lastItem = store.items[lastIndex];
+      store.updateItemPrice(lastIndex, lastItem.unit_price * weight);
+    }
+    setShowScale(false);
+  };
 
   return (
     <div className="transaction-screen">
@@ -90,31 +160,71 @@ function TransactionScreen() {
       </div>
 
       <div className="main-content">
-        {/* Left Side - Customer + Controls */}
+        {/* Left Side - SKU Entry + Customer + Controls */}
         <div className="left-panel">
+          {/* SKU / Item Code Entry */}
+          <div className="sku-section">
+            <label className="section-label">Item # / SKU Code</label>
+            <div className="sku-input-row">
+              <input
+                ref={skuRef}
+                type="text"
+                inputMode="numeric"
+                className="sku-input"
+                placeholder="Enter code (e.g. 204)"
+                value={skuInput}
+                onChange={(e) => setSkuInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleSkuLookup();
+                }}
+              />
+              <button className="btn-sku-add" onClick={handleSkuLookup}>+</button>
+            </div>
+            {skuError && <div style={{ color: 'var(--accent-red)', fontSize: 12, marginBottom: 4 }}>{skuError}</div>}
+
+            <input
+              type="text"
+              className="sku-search-input"
+              placeholder="Search item by name..."
+              value={itemSearch}
+              onChange={(e) => setItemSearch(e.target.value)}
+            />
+            {searchResults.length > 0 && (
+              <div className="sku-results">
+                {searchResults.map((item) => (
+                  <button
+                    key={item.id}
+                    className="sku-result-item"
+                    onClick={() => {
+                      store.addItem(item);
+                      setItemSearch('');
+                      setSearchResults([]);
+                    }}
+                  >
+                    <span className="sku-result-name">{item.barcode ? `[${item.barcode}] ` : ''}{item.name}</span>
+                    <span className="sku-result-price">${item.price.toFixed(2)}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Scale Button */}
+            <button className="btn-scale" onClick={handleOpenScale} style={{ width: '100%', marginTop: 6 }}>
+              <span style={{ fontSize: 16 }}>&#9878;</span> Scale (Read Weight)
+            </button>
+          </div>
+
+          {/* Customer */}
           <div className="customer-section">
             <label className="section-label">Customer</label>
             {store.customer ? (
               <div className="customer-info">
                 <span className="customer-name">{store.customer.name}</span>
-                <button
-                  className="btn-change-customer"
-                  onClick={() => setShowCustomerLookup(true)}
-                >
-                  Change
-                </button>
-                <button
-                  className="btn-clear-customer"
-                  onClick={() => store.setCustomer(null)}
-                >
-                  Clear
-                </button>
+                <button className="btn-change-customer" onClick={() => setShowCustomerLookup(true)}>Change</button>
+                <button className="btn-clear-customer" onClick={() => store.setCustomer(null)}>Clear</button>
               </div>
             ) : (
-              <button
-                className="btn-customer-lookup"
-                onClick={() => setShowCustomerLookup(true)}
-              >
+              <button className="btn-customer-lookup" onClick={() => setShowCustomerLookup(true)}>
                 Look Up Customer
               </button>
             )}
@@ -126,9 +236,7 @@ function TransactionScreen() {
             <button
               className="btn-begin"
               onClick={() => {
-                if (store.items.length > 0) {
-                  setShowPayment(true);
-                }
+                if (store.items.length > 0) setShowPayment(true);
               }}
             >
               Begin Transaction
@@ -161,7 +269,7 @@ function TransactionScreen() {
         onDiscountPrompt={() => setDiscountPrompt(true)}
       />
 
-      {/* Totals Bar (always visible at bottom) */}
+      {/* Totals Bar */}
       <TotalsBar />
 
       {/* Modals */}
@@ -171,6 +279,36 @@ function TransactionScreen() {
 
       {showPayment && (
         <PaymentModal onClose={() => setShowPayment(false)} />
+      )}
+
+      {/* Scale Modal */}
+      {showScale && (
+        <div className="modal-overlay" onClick={() => setShowScale(false)}>
+          <div className="modal-content scale-modal" onClick={e => e.stopPropagation()}>
+            <h3>Scale Reading</h3>
+            <p style={{ color: 'var(--text-muted)', fontSize: 13 }}>Weight from scale:</p>
+            <div className="scale-display">{scaleWeight}</div>
+            <div className="scale-unit">LB</div>
+            <p style={{ color: 'var(--text-muted)', fontSize: 12, marginBottom: 12 }}>
+              This will multiply the last item's price by the weight.
+              Add the per-lb item first, then apply scale weight.
+            </p>
+            <div style={{ marginBottom: 12 }}>
+              <input
+                type="number"
+                step="0.01"
+                min="0"
+                value={scaleWeight}
+                onChange={(e) => setScaleWeight(e.target.value)}
+                style={{ width: '100%', fontSize: 20, textAlign: 'center', padding: 8 }}
+              />
+            </div>
+            <div className="scale-actions">
+              <button className="btn-scale-cancel" onClick={() => setShowScale(false)}>Cancel</button>
+              <button className="btn-scale-confirm" onClick={handleScaleConfirm}>Apply Weight</button>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Quantity Prompt */}

@@ -37,14 +37,14 @@
 
 .btn-change-grid {
   background: var(--accent-blue);
-  color: var(--text-bright);
+  color: #ffffff;
 }
 .btn-change-grid:hover {
   background: var(--btn-primary-hover);
 }
 
 .btn-hide-grid {
-  background: var(--bg-card);
+  background: var(--bg-input);
   color: var(--text-secondary);
   border: 1px solid var(--border-color);
 }
@@ -58,7 +58,6 @@
   padding: 8px;
 }
 
-/* ─── Grid Buttons Layout ────────────────────────────── */
 .grid-buttons {
   display: grid;
   gap: 6px;
@@ -79,7 +78,6 @@
   }
 }
 
-/* ─── Grid Button Styles ─────────────────────────────── */
 .grid-btn {
   display: flex;
   flex-direction: column;
@@ -91,14 +89,14 @@
   font-weight: 700;
   text-align: center;
   min-height: 80px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow);
   border: 2px solid transparent;
 }
 
 .grid-btn:hover {
-  filter: brightness(1.15);
-  border-color: rgba(255, 255, 255, 0.3);
+  filter: brightness(1.1);
+  border-color: rgba(255, 255, 255, 0.4);
   transform: scale(1.02);
 }
 

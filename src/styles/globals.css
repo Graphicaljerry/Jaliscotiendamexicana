@@ -1,40 +1,40 @@
-/* ─── CSS VARIABLES (Dark Theme) ─────────────────────── */
+/* ─── CSS VARIABLES (Light Theme) ────────────────────── */
 :root {
-  --bg-primary: #1a1a2e;
-  --bg-secondary: #16213e;
-  --bg-tertiary: #0f3460;
-  --bg-card: #1e2a4a;
-  --bg-input: #0d1b36;
-  --bg-hover: #253a5e;
+  --bg-primary: #f0f2f5;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #e8ecf1;
+  --bg-card: #ffffff;
+  --bg-input: #f7f8fa;
+  --bg-hover: #e3e8ef;
 
-  --text-primary: #e8e8e8;
-  --text-secondary: #a0aec0;
-  --text-muted: #6b7a8d;
-  --text-bright: #ffffff;
+  --text-primary: #1a1a2e;
+  --text-secondary: #4a5568;
+  --text-muted: #8896a6;
+  --text-bright: #0d0d1a;
 
-  --accent-blue: #4A90D9;
-  --accent-green: #48BB78;
-  --accent-red: #F56565;
-  --accent-yellow: #ECC94B;
-  --accent-orange: #ED8936;
-  --accent-purple: #9F7AEA;
-  --accent-teal: #38B2AC;
+  --accent-blue: #2563EB;
+  --accent-green: #16a34a;
+  --accent-red: #dc2626;
+  --accent-yellow: #ca8a04;
+  --accent-orange: #ea580c;
+  --accent-purple: #7c3aed;
+  --accent-teal: #0d9488;
 
-  --border-color: #2d3a5e;
-  --border-light: #3d4a6e;
+  --border-color: #d1d9e6;
+  --border-light: #e2e8f0;
 
-  --btn-primary: #4A90D9;
-  --btn-primary-hover: #357ABD;
-  --btn-danger: #E53E3E;
-  --btn-danger-hover: #C53030;
-  --btn-success: #38A169;
-  --btn-success-hover: #2F855A;
-  --btn-warning: #D69E2E;
+  --btn-primary: #2563EB;
+  --btn-primary-hover: #1d4ed8;
+  --btn-danger: #dc2626;
+  --btn-danger-hover: #b91c1c;
+  --btn-success: #16a34a;
+  --btn-success-hover: #15803d;
+  --btn-warning: #ca8a04;
 
-  --shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.1);
 
-  --radius-sm: 4px;
+  --radius-sm: 6px;
   --radius-md: 8px;
   --radius-lg: 12px;
 
@@ -65,14 +65,14 @@ html, body, #root {
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--bg-secondary);
+  background: var(--bg-primary);
 }
 ::-webkit-scrollbar-thumb {
   background: var(--border-color);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--border-light);
+  background: #a0aec0;
 }
 
 /* ─── BUTTONS ────────────────────────────────────────── */
@@ -103,6 +103,7 @@ input, select {
 
 input:focus, select:focus {
   border-color: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
 /* ─── TABLES ─────────────────────────────────────────── */
@@ -113,7 +114,7 @@ table {
 
 th {
   background: var(--bg-tertiary);
-  color: var(--text-bright);
+  color: var(--text-primary);
   font-weight: 600;
   text-align: left;
   padding: 10px 12px;
@@ -125,7 +126,7 @@ th {
 
 td {
   padding: 8px 12px;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-light);
   font-size: 14px;
 }
 
@@ -152,7 +153,7 @@ tr:hover {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;

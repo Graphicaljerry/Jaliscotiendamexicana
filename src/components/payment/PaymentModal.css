@@ -67,8 +67,8 @@
 }
 
 .pay-highlight {
-  background: #1a237e;
-  border-color: #5C6BC0;
+  background: #eef2ff;
+  border-color: var(--accent-blue);
 }
 
 .dollar {
@@ -84,7 +84,7 @@
   border: none;
   font-size: 22px;
   font-weight: 700;
-  color: var(--text-bright);
+  color: var(--text-primary);
   text-align: right;
   padding: 2px 0;
 }
