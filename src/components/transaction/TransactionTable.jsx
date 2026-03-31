@@ -311,9 +311,12 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
         onChange={(e) => setItemCode(e.target.value)}
         onKeyDown={(e) => { if (e.key === 'Enter') handleCodeSubmit(); }}
         onBlur={() => {
-          // Re-focus if we're not editing a row
+          // Re-focus if we're not editing a row and no modal is open
           if (editingRow === null) {
-            setTimeout(() => codeRef.current?.focus(), 100);
+            setTimeout(() => {
+              const modalOpen = document.querySelector('.modal-overlay');
+              if (!modalOpen) codeRef.current?.focus();
+            }, 100);
           }
         }}
       />
