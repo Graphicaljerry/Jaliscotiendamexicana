@@ -22,10 +22,13 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
   const qtyRef = useRef(null);
   const tableEndRef = useRef(null);
 
-  // Focus the hidden code input when not editing a row
+  // Focus the hidden code input when not editing a row and no modal is open
   useEffect(() => {
     if (editingRow === null && codeRef.current) {
-      setTimeout(() => codeRef.current?.focus(), 50);
+      setTimeout(() => {
+        const modalOpen = document.querySelector('.modal-overlay');
+        if (!modalOpen) codeRef.current?.focus();
+      }, 50);
     }
   }, [editingRow, items.length]);
 
@@ -132,7 +135,7 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
   };
 
   const handleQtyChange = (index, value) => {
-    const qty = parseInt(value);
+    const qty = parseFloat(value);
     if (!isNaN(qty)) updateItemQuantity(index, qty);
   };
 
@@ -234,7 +237,8 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
                       <input
                         ref={editField === 'qty' ? qtyRef : undefined}
                         type="number"
-                        min="1"
+                        step="0.01"
+                        min="0.01"
                         className="qty-input"
                         defaultValue={item.quantity}
                         onChange={(e) => handleQtyChange(index, e.target.value)}
@@ -249,6 +253,7 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
                         className="qty-input"
                         value={item.quantity}
                         min="0"
+                        step="0.01"
                         onChange={(e) => handleQtyChange(index, e.target.value)}
                         onFocus={(e) => e.target.select()}
                       />

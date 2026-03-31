@@ -100,8 +100,11 @@ function TransactionScreen() {
     if (store.items.length > 0) {
       const lastIndex = store.items.length - 1;
       const weight = parseFloat(scaleWeight);
-      const lastItem = store.items[lastIndex];
-      store.updateItemPrice(lastIndex, lastItem.unit_price * weight);
+      if (weight > 0) {
+        // Set quantity to the weight (e.g. 1.77 lbs)
+        // Price stays per-lb, total = price × weight
+        store.updateItemQuantity(lastIndex, weight);
+      }
     }
     setShowScale(false);
   };
@@ -238,10 +241,21 @@ function TransactionScreen() {
             <div className="scale-display">{scaleWeight}</div>
             <div className="scale-unit">LB</div>
             <div style={{ marginBottom: 12 }}>
-              <input type="number" step="0.01" min="0" value={scaleWeight}
-                onChange={(e) => setScaleWeight(e.target.value)} autoFocus
+              <input
+                id="scale-weight-input"
+                type="number"
+                step="0.01"
+                min="0"
+                value={scaleWeight}
+                onChange={(e) => setScaleWeight(e.target.value)}
+                ref={(el) => { if (el) setTimeout(() => el.focus(), 150); }}
                 style={{ width: '100%', fontSize: 20, textAlign: 'center', padding: 8 }}
-                onKeyDown={(e) => { if (e.key === 'Enter') handleScaleConfirm(); if (e.key === 'Escape') setShowScale(false); }}
+                onKeyDown={(e) => {
+                  e.stopPropagation();
+                  if (e.key === 'Enter') { e.preventDefault(); handleScaleConfirm(); }
+                  if (e.key === 'Escape') { e.preventDefault(); setShowScale(false); }
+                }}
+                onFocus={(e) => e.target.select()}
               />
             </div>
             <div className="scale-actions">
