@@ -1,16 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './ItemGrid.css';
 
-// Default category colors
-const CATEGORY_COLORS = [
-  '#E53E3E', '#DD6B20', '#D69E2E', '#38A169', '#319795',
-  '#3182CE', '#5A67D8', '#805AD5', '#D53F8C', '#E53E3E',
-  '#C05621', '#2F855A', '#2B6CB0', '#553C9A', '#B83280',
-  '#9C4221', '#276749', '#2A4365', '#44337A', '#97266D',
-  '#C53030', '#DD6B20', '#D69E2E', '#38A169', '#319795',
-  '#3182CE', '#5A67D8'
-];
-
 function ItemGrid({ onSelectItem, onHideGrid }) {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -57,6 +47,9 @@ function ItemGrid({ onSelectItem, onHideGrid }) {
     onSelectItem(item);
   };
 
+  // Get the category color for sub-items
+  const categoryColor = selectedCategory?.color || '#2563EB';
+
   return (
     <div className="item-grid">
       <div className="grid-header">
@@ -80,11 +73,11 @@ function ItemGrid({ onSelectItem, onHideGrid }) {
         {!selectedCategory ? (
           /* ─── CATEGORY GRID ────────────────────────────── */
           <div className="grid-buttons category-grid">
-            {categories.map((cat, index) => (
+            {categories.map((cat) => (
               <button
                 key={cat.id}
                 className="grid-btn category-btn"
-                style={{ backgroundColor: CATEGORY_COLORS[index % CATEGORY_COLORS.length] }}
+                style={{ backgroundColor: cat.color || '#2563EB' }}
                 onClick={() => setSelectedCategory(cat)}
               >
                 {cat.name}
@@ -103,7 +96,7 @@ function ItemGrid({ onSelectItem, onHideGrid }) {
                 <button
                   key={item.id}
                   className="grid-btn item-btn"
-                  style={{ backgroundColor: item.button_color || '#4A90D9' }}
+                  style={{ backgroundColor: categoryColor }}
                   onClick={() => handleItemClick(item)}
                 >
                   <span className="item-btn-name">{item.name}</span>
