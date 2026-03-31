@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import TopBar from '../layout/TopBar';
 import './AdminScreen.css';
 
 function AdminScreen() {
@@ -127,17 +128,16 @@ function AdminScreen() {
 
   return (
     <div className="admin-screen">
-      <div className="admin-header">
-        <h1>MEXICANA JALISCO — Back Office</h1>
-        <div className="admin-header-right">
-          <span className="admin-nav-links">
-            P.O.S. &nbsp;|&nbsp; Inventory &nbsp;|&nbsp; Customers &nbsp;|&nbsp; Financials
-          </span>
-          <button className="btn-back-pos" onClick={() => window.location.hash = '#/'}>
-            Point Of Sale
-          </button>
-        </div>
-      </div>
+      <TopBar rightContent={<>
+        <span className="admin-nav-links">
+          P.O.S. &nbsp;|&nbsp; Inventory &nbsp;|&nbsp; Customers &nbsp;|&nbsp; Financials
+        </span>
+        <button className="btn-back-pos" onClick={() => window.location.hash = '#/'}>
+          Point Of Sale
+        </button>
+      </>}>
+        <span style={{ color: 'rgba(255,255,255,0.8)', fontSize: 14, fontWeight: 600 }}>Back Office</span>
+      </TopBar>
 
       <div className="admin-tabs">
         {[

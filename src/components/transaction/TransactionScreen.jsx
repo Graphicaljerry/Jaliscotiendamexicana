@@ -4,6 +4,7 @@ import TransactionControls from './TransactionControls';
 import FunctionBar from './FunctionBar';
 import IdleFunctionBar from './IdleFunctionBar';
 import TotalsBar from '../layout/TotalsBar';
+import TopBar from '../layout/TopBar';
 import ItemGrid from '../grid/ItemGrid';
 import CustomerLookup from '../customer/CustomerLookup';
 import PaymentModal from '../payment/PaymentModal';
@@ -121,36 +122,24 @@ function TransactionScreen() {
 
   return (
     <div className="transaction-screen">
-      {/* Top Bar */}
-      <div className="top-bar">
-        <div className="store-name">
-          <img src="/logo.svg" alt="Jalisco" className="store-logo" />
-          JALISCO TIENDA MEXICANA
-        </div>
-        <div className="top-bar-center">
-          {isActive ? (
-            <span className="txn-number">Transaction# <strong>{store.transactionNumber || '—'}</strong></span>
-          ) : (
-            <span className="txn-label">Sale Transaction Entry</span>
-          )}
-        </div>
-        <div className="top-bar-right">
-          {isActive && (
-            <button className="btn-scale-top" onClick={() => {
-              setScaleWeight((1 + Math.random() * 3).toFixed(2));
-              setShowScale(true);
-            }}>
-              Scale Weight
-            </button>
-          )}
-          <button className="btn-grid-toggle" onClick={() => setShowGrid(!showGrid)}>
-            {showGrid ? 'Hide Grid' : 'Item Grid'}
-          </button>
-          <button className="btn-admin" onClick={() => window.location.hash = '#/admin'}>
-            Admin
-          </button>
-        </div>
-      </div>
+      <TopBar rightContent={<>
+        {isActive && (
+          <button className="btn-scale-top" onClick={() => {
+            setScaleWeight((1 + Math.random() * 3).toFixed(2));
+            setShowScale(true);
+          }}>Scale Weight</button>
+        )}
+        <button className="btn-grid-toggle" onClick={() => setShowGrid(!showGrid)}>
+          {showGrid ? 'Hide Grid' : 'Item Grid'}
+        </button>
+        <button className="btn-admin" onClick={() => window.location.hash = '#/admin'}>Admin</button>
+      </>}>
+        {isActive ? (
+          <span className="txn-number">Transaction# <strong>{store.transactionNumber || '—'}</strong></span>
+        ) : (
+          <span className="txn-label">Sale Transaction Entry</span>
+        )}
+      </TopBar>
 
       <div className="main-content">
         {/* Left Side */}
