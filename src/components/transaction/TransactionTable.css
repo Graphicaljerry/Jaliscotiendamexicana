@@ -215,12 +215,12 @@
 }
 .btn-remove-item:hover { background: var(--btn-danger); color: #fff; }
 
-/* ─── Custom Price Entry Row (looks like a regular row) ── */
-.custom-entry-row td {
-  background: var(--bg-input);
+/* ─── Editing Row (active price/qty edit after scan) ──── */
+.editing-row td {
+  background: #f0f4ff;
 }
 
-.custom-price-field {
+.edit-price-input {
   width: 76px;
   text-align: right;
   font-size: 15px;

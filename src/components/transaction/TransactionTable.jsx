@@ -7,70 +7,80 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
   const addItem = useTransactionStore((s) => s.addItem);
   const removeItem = useTransactionStore((s) => s.removeItem);
   const updateItemQuantity = useTransactionStore((s) => s.updateItemQuantity);
+  const updateItemPrice = useTransactionStore((s) => s.updateItemPrice);
   const [itemCode, setItemCode] = useState('');
   const [codeError, setCodeError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
 
-  // Custom price entry state
-  const [customEntry, setCustomEntry] = useState(null); // null or { taxable: boolean }
-  const [customDesc, setCustomDesc] = useState('');
-  const [customPrice, setCustomPrice] = useState('');
-  const [customQty, setCustomQty] = useState('1');
+  // Which row index is currently being "edited" (price/qty focused)
+  const [editingRow, setEditingRow] = useState(null);
 
   const inputRef = useRef(null);
-  const customPriceRef = useRef(null);
+  const priceRef = useRef(null);
+  const qtyRef = useRef(null);
   const tableEndRef = useRef(null);
 
+  // When not editing a row, focus the code input
   useEffect(() => {
-    if (!customEntry && inputRef.current) inputRef.current.focus();
-    if (tableEndRef.current) tableEndRef.current.scrollIntoView({ behavior: 'smooth' });
-  }, [items.length, customEntry]);
+    if (editingRow === null && inputRef.current) inputRef.current.focus();
+  }, [editingRow, items.length]);
 
-  // Focus price input when custom entry opens
+  // When editing row changes, focus the price field
   useEffect(() => {
-    if (customEntry && customPriceRef.current) customPriceRef.current.focus();
-  }, [customEntry]);
+    if (editingRow !== null && priceRef.current) {
+      priceRef.current.focus();
+      priceRef.current.select();
+    }
+    if (tableEndRef.current) tableEndRef.current.scrollIntoView({ behavior: 'smooth' });
+  }, [editingRow]);
 
   const handleCodeSubmit = async () => {
     const code = itemCode.trim();
     if (!code) return;
 
-    // Code "1" = custom non-taxable entry (Grocery)
-    if (code === '1') {
-      setCustomEntry({ taxable: false });
-      setCustomDesc('Grocery');
-      setCustomPrice('');
-      setCustomQty('1');
+    // Code "1" = Grocery (no tax), Code "2" = Grocery Taxed
+    if (code === '1' || code === '2') {
+      const taxable = code === '2';
+      addItem({
+        id: Date.now(),
+        name: taxable ? 'Grocery Taxed' : 'Grocery',
+        price: 0,
+        is_taxable: taxable ? 1 : 0,
+        is_ebt_eligible: 0,
+        barcode: code,
+      });
       setItemCode('');
+      // Set editing to the newly added row (will be last index)
+      setTimeout(() => {
+        const currentItems = useTransactionStore.getState().items;
+        setEditingRow(currentItems.length - 1);
+      }, 20);
       return;
     }
 
-    // Code "2" = custom taxable entry (Grocery Taxed)
-    if (code === '2') {
-      setCustomEntry({ taxable: true });
-      setCustomDesc('Grocery Taxed');
-      setCustomPrice('');
-      setCustomQty('1');
-      setItemCode('');
-      return;
-    }
-
-    // Try to find item by barcode first, then by searching
+    // Regular item lookup
     setCodeError('');
     const found = await onInlineItemAdd(code);
     if (found) {
       setItemCode('');
+      // After item is added, focus its price/qty for editing
+      setTimeout(() => {
+        const currentItems = useTransactionStore.getState().items;
+        setEditingRow(currentItems.length - 1);
+      }, 20);
     } else {
-      // Also try a search as fallback
       if (window.api) {
         const results = await window.api.searchItems(code);
         if (results && results.length > 0) {
-          // If there's an exact barcode match in search results, use it
           const exactMatch = results.find(r => r.barcode === code);
           if (exactMatch) {
             addItem(exactMatch);
             setItemCode('');
+            setTimeout(() => {
+              const currentItems = useTransactionStore.getState().items;
+              setEditingRow(currentItems.length - 1);
+            }, 20);
             return;
           }
         }
@@ -80,35 +90,30 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
     }
   };
 
-  const handleCustomSubmit = () => {
-    const price = parseFloat(customPrice);
-    const qty = parseInt(customQty) || 1;
-    if (isNaN(price) || price <= 0) return;
-
-    const desc = customDesc.trim() || (customEntry.taxable ? 'Grocery Taxed' : 'Grocery');
-
-    addItem({
-      id: Date.now(),
-      name: desc,
-      price: price,
-      is_taxable: customEntry.taxable ? 1 : 0,
-      is_ebt_eligible: 0,
-      barcode: customEntry.taxable ? '2' : '1',
-    });
-
-    // If qty > 1, update the last item's quantity
-    if (qty > 1) {
-      // Small delay so the item is added first
-      setTimeout(() => {
-        const currentItems = useTransactionStore.getState().items;
-        updateItemQuantity(currentItems.length - 1, qty);
-      }, 10);
+  // Confirm the editing row and move back to code input
+  const confirmRow = () => {
+    // Remove item if price is 0 (for custom entries that were never filled in)
+    if (editingRow !== null && items[editingRow]) {
+      const item = items[editingRow];
+      if (item.unit_price === 0 && (item.barcode === '1' || item.barcode === '2')) {
+        removeItem(editingRow);
+      }
     }
+    setEditingRow(null);
+  };
 
-    setCustomEntry(null);
-    setCustomDesc('');
-    setCustomPrice('');
-    setCustomQty('1');
+  // Handle price change for the editing row
+  const handleEditPrice = (index, value) => {
+    const price = parseFloat(value);
+    if (!isNaN(price)) {
+      updateItemPrice(index, price);
+    }
+  };
+
+  // Handle qty change
+  const handleQtyChange = (index, value) => {
+    const qty = parseInt(value);
+    if (!isNaN(qty)) updateItemQuantity(index, qty);
   };
 
   // Search by name
@@ -127,17 +132,15 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
     onInlineItemAdd(item.barcode || String(item.id));
     setSearchQuery('');
     setSearchResults([]);
-    if (inputRef.current) inputRef.current.focus();
-  };
-
-  const handleQtyChange = (index, value) => {
-    const qty = parseInt(value);
-    if (!isNaN(qty)) updateItemQuantity(index, qty);
+    setTimeout(() => {
+      const currentItems = useTransactionStore.getState().items;
+      setEditingRow(currentItems.length - 1);
+    }, 20);
   };
 
   return (
     <div className="transaction-table-wrapper">
-      {/* Compact top bar: search + scale */}
+      {/* Compact top bar */}
       <div className="table-top-bar">
         <div className="code-legend">
           <span className="legend-item"><strong>1</strong> = Grocery</span>
@@ -166,7 +169,7 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
         <button className="btn-scale-inline" onClick={onOpenScale}>Scale</button>
       </div>
 
-      {/* Transaction items table */}
+      {/* Transaction table */}
       <div className="table-scroll">
         <table className="transaction-table">
           <thead>
@@ -182,74 +185,77 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
           </thead>
           <tbody>
             {items.map((item, index) => (
-              <tr key={index}>
+              <tr key={index} className={editingRow === index ? 'editing-row' : ''}>
                 <td className="col-itemnum mono">{item.barcode || item.item_id || '—'}</td>
                 <td className="col-desc">
                   {item.item_name || item.name}
                   {item.is_taxable === 0 && <span className="tax-badge no-tax">NT</span>}
                 </td>
-                <td className="col-price">${item.unit_price.toFixed(2)}</td>
+                <td className="col-price">
+                  {editingRow === index ? (
+                    <input
+                      ref={priceRef}
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      className="qty-input edit-price-input"
+                      defaultValue={item.unit_price > 0 ? item.unit_price : ''}
+                      placeholder="0.00"
+                      onChange={(e) => handleEditPrice(index, e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Tab') {
+                          // Let default Tab move to qty
+                        } else if (e.key === 'Enter') {
+                          confirmRow();
+                        } else if (e.key === 'Escape') {
+                          confirmRow();
+                        }
+                      }}
+                    />
+                  ) : (
+                    <span>${item.unit_price.toFixed(2)}</span>
+                  )}
+                </td>
                 <td className="col-qty">
-                  <input type="number" className="qty-input" value={item.quantity} min="0"
-                    onChange={(e) => handleQtyChange(index, e.target.value)}
-                    onFocus={(e) => e.target.select()} />
+                  {editingRow === index ? (
+                    <input
+                      ref={qtyRef}
+                      type="number"
+                      min="1"
+                      className="qty-input"
+                      defaultValue={item.quantity}
+                      onChange={(e) => handleQtyChange(index, e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          confirmRow();
+                        } else if (e.key === 'Escape') {
+                          confirmRow();
+                        }
+                      }}
+                    />
+                  ) : (
+                    <input
+                      type="number"
+                      className="qty-input"
+                      value={item.quantity}
+                      min="0"
+                      onChange={(e) => handleQtyChange(index, e.target.value)}
+                      onFocus={(e) => e.target.select()}
+                    />
+                  )}
                 </td>
                 <td className="col-total">${item.line_total.toFixed(2)}</td>
                 <td className="col-disc">
                   {item.discount > 0 ? <span className="text-red">-${item.discount.toFixed(2)}</span> : '—'}
                 </td>
                 <td className="col-edit">
-                  <button className="btn-remove-item" onClick={() => removeItem(index)}>✕</button>
+                  <button className="btn-remove-item" onClick={() => { if (editingRow === index) setEditingRow(null); removeItem(index); }}>✕</button>
                 </td>
               </tr>
             ))}
 
-            {/* ─── CUSTOM PRICE ENTRY ROW (looks like a normal row) ── */}
-            {customEntry && (
-              <tr className="custom-entry-row">
-                <td className="col-itemnum mono">{customEntry.taxable ? '2' : '1'}</td>
-                <td className="col-desc">{customEntry.taxable ? 'Grocery Taxed' : 'Grocery'}</td>
-                <td className="col-price">
-                  <input
-                    ref={customPriceRef}
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    className="qty-input custom-price-field"
-                    placeholder="0.00"
-                    value={customPrice}
-                    onChange={(e) => setCustomPrice(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') handleCustomSubmit();
-                      if (e.key === 'Escape') setCustomEntry(null);
-                    }}
-                  />
-                </td>
-                <td className="col-qty">
-                  <input
-                    type="number"
-                    min="1"
-                    className="qty-input"
-                    value={customQty}
-                    onChange={(e) => setCustomQty(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') handleCustomSubmit();
-                      if (e.key === 'Escape') setCustomEntry(null);
-                    }}
-                  />
-                </td>
-                <td className="col-total">
-                  {customPrice ? `$${(parseFloat(customPrice || 0) * parseInt(customQty || 1)).toFixed(2)}` : '—'}
-                </td>
-                <td className="col-disc">—</td>
-                <td className="col-edit">
-                  <button className="btn-remove-item" onClick={() => setCustomEntry(null)}>✕</button>
-                </td>
-              </tr>
-            )}
-
-            {/* ─── INLINE ENTRY ROW ────────────────────── */}
-            {!customEntry && (
+            {/* ─── INLINE CODE ENTRY ROW ───────────────── */}
+            {editingRow === null && (
               <tr className="entry-row" ref={tableEndRef}>
                 <td className="col-itemnum entry-cell">
                   <input
@@ -268,14 +274,17 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
                   <span className="entry-hint">
                     {items.length === 0
                       ? 'Type item code, scan barcode, or press 1 (Grocery) / 2 (Grocery Taxed)'
-                      : 'Scan or type next item... (1 = Grocery, 2 = Grocery Taxed)'}
+                      : 'Scan or type next item...'}
                   </span>
                 </td>
               </tr>
             )}
 
-            {/* Empty placeholder rows */}
-            {Array.from({ length: Math.max(0, 6 - items.length) }).map((_, i) => (
+            {/* Placeholder row for scroll target when editing */}
+            {editingRow !== null && <tr ref={tableEndRef}><td colSpan="7"></td></tr>}
+
+            {/* Empty rows */}
+            {Array.from({ length: Math.max(0, 5 - items.length) }).map((_, i) => (
               <tr key={`empty-${i}`} className="empty-row">
                 <td className="col-itemnum"></td>
                 <td className="col-desc"></td>
