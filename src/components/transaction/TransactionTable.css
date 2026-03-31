@@ -134,11 +134,6 @@
   background: #e8ecf1;
 }
 
-.entry-row td {
-  padding: 8px 10px;
-  height: 44px;
-}
-
 .entry-cell {
   position: relative;
 }
@@ -156,10 +151,10 @@
 /* Typing indicator shows typed text in the cell */
 .typing-indicator {
   font-family: 'Courier New', monospace;
-  font-size: 28px;
+  font-size: 20px;
   font-weight: 700;
   color: var(--text-primary);
-  line-height: 36px;
+  line-height: 1;
   min-height: 20px;
   display: inline-block;
 }
