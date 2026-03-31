@@ -36,12 +36,20 @@ function PaymentModal({ onClose }) {
     }
   };
 
-  // Add a payment line
+  // Add a payment line — and if it covers the total, auto-finish
   const addPayment = (type) => {
     const amount = payInput !== '' ? parseFloat(payInput) || 0 : due;
     if (amount <= 0) return;
-    setPayments([...payments, { type, amount, last4: type === 'credit' || type === 'debit' ? '****' : '' }]);
+    const newPayments = [...payments, { type, amount, last4: type === 'credit' || type === 'debit' ? '****' : '' }];
+    setPayments(newPayments);
     setPayInput('');
+
+    // Auto-finish if fully paid
+    const newTotalPaid = newPayments.reduce((sum, p) => sum + p.amount, 0);
+    if (newTotalPaid >= grandTotal) {
+      // Small delay so user sees the payment line appear
+      setTimeout(() => doFinish(newPayments), 300);
+    }
   };
 
   // Remove a payment line
@@ -49,23 +57,28 @@ function PaymentModal({ onClose }) {
     setPayments(payments.filter((_, i) => i !== index));
   };
 
-  const handleFinish = async () => {
-    if (processing || totalPaid < grandTotal) return;
+  // Core finish logic — accepts optional payments array override
+  const doFinish = async (paymentsList) => {
+    const pList = paymentsList || payments;
+    const paidTotal = pList.reduce((sum, p) => sum + p.amount, 0);
+    const changeDue = Math.max(0, paidTotal - grandTotal);
+
+    if (processing || paidTotal < grandTotal) return;
     setProcessing(true);
 
     try {
-      const primaryType = payments.length > 0 ? payments[0].type : 'cash';
+      const primaryType = pList.length > 0 ? pList[0].type : 'cash';
       const txnData = {
         customer_id: store.customer ? store.customer.id : null,
         subtotal: store.getSubtotal(),
         tax_total: store.getTaxTotal(),
         discount_total: store.getDiscountTotal(),
         grand_total: grandTotal,
-        payment_type: payments.length > 1 ? 'split' : primaryType,
-        amount_paid: totalPaid,
-        change_given: change,
+        payment_type: pList.length > 1 ? 'split' : primaryType,
+        amount_paid: paidTotal,
+        change_given: changeDue,
         transaction_type: store.transactionType,
-        ebt_amount: payments.filter(p => p.type === 'ebt').reduce((s, p) => s + p.amount, 0),
+        ebt_amount: pList.filter(p => p.type === 'ebt').reduce((s, p) => s + p.amount, 0),
         items: store.items.map((item) => ({
           item_id: item.item_id,
           item_name: item.item_name || item.name,
@@ -83,10 +96,12 @@ function PaymentModal({ onClose }) {
       }
 
       setCompleted(true);
+      // Update change for display
+      setPayments(pList);
       setTimeout(() => {
         store.clearTransaction();
         onClose();
-      }, 2000);
+      }, 2500);
     } catch (err) {
       console.error('Transaction error:', err);
       alert('Error processing transaction: ' + err.message);
@@ -94,10 +109,36 @@ function PaymentModal({ onClose }) {
     setProcessing(false);
   };
 
+  const handleFinish = () => doFinish();
+
+  // F-key shortcuts inside payment modal:
+  // F1 = Cash, F2 = Debit, F3 = Credit, F4 = EBT SNAP
   const handleKeyDown = (e) => {
-    if (e.key === 'Escape') onClose();
-    if (e.key === 'Enter' && totalPaid >= grandTotal) handleFinish();
+    if (e.key === 'Escape') { onClose(); return; }
+    if (e.key === 'Enter' && totalPaid >= grandTotal) { handleFinish(); return; }
+    if (e.key === 'F1') { e.preventDefault(); addPayment('cash'); return; }
+    if (e.key === 'F2') { e.preventDefault(); addPayment('debit'); return; }
+    if (e.key === 'F3') { e.preventDefault(); addPayment('credit'); return; }
+    if (e.key === 'F4') { e.preventDefault(); addPayment('ebt'); return; }
   };
+
+  // Listen for F-keys globally while modal is open
+  // Uses a ref so the handler always sees latest state
+  const addPaymentRef = useRef(addPayment);
+  addPaymentRef.current = addPayment;
+
+  useEffect(() => {
+    function handleGlobalKey(e) {
+      if (e.key === 'F1') { e.preventDefault(); e.stopImmediatePropagation(); addPaymentRef.current('cash'); }
+      if (e.key === 'F2') { e.preventDefault(); e.stopImmediatePropagation(); addPaymentRef.current('debit'); }
+      if (e.key === 'F3') { e.preventDefault(); e.stopImmediatePropagation(); addPaymentRef.current('credit'); }
+      if (e.key === 'F4') { e.preventDefault(); e.stopImmediatePropagation(); addPaymentRef.current('ebt'); }
+      if (e.key === 'Escape') { e.preventDefault(); e.stopImmediatePropagation(); }
+    }
+    // Register on capture phase with highest priority
+    document.addEventListener('keydown', handleGlobalKey, true);
+    return () => document.removeEventListener('keydown', handleGlobalKey, true);
+  }, []);
 
   if (completed) {
     return (
