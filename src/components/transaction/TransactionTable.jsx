@@ -35,31 +35,45 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
     const code = itemCode.trim();
     if (!code) return;
 
-    // Code "1" = custom non-taxable entry
+    // Code "1" = custom non-taxable entry (Grocery)
     if (code === '1') {
       setCustomEntry({ taxable: false });
-      setCustomDesc('');
+      setCustomDesc('Grocery');
       setCustomPrice('');
       setCustomQty('1');
       setItemCode('');
       return;
     }
 
-    // Code "2" = custom taxable entry
+    // Code "2" = custom taxable entry (Grocery Taxed)
     if (code === '2') {
       setCustomEntry({ taxable: true });
-      setCustomDesc('');
+      setCustomDesc('Grocery Taxed');
       setCustomPrice('');
       setCustomQty('1');
       setItemCode('');
       return;
     }
 
+    // Try to find item by barcode first, then by searching
     setCodeError('');
     const found = await onInlineItemAdd(code);
     if (found) {
       setItemCode('');
     } else {
+      // Also try a search as fallback
+      if (window.api) {
+        const results = await window.api.searchItems(code);
+        if (results && results.length > 0) {
+          // If there's an exact barcode match in search results, use it
+          const exactMatch = results.find(r => r.barcode === code);
+          if (exactMatch) {
+            addItem(exactMatch);
+            setItemCode('');
+            return;
+          }
+        }
+      }
       setCodeError('Not found');
       setTimeout(() => setCodeError(''), 1500);
     }
@@ -70,7 +84,7 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
     const qty = parseInt(customQty) || 1;
     if (isNaN(price) || price <= 0) return;
 
-    const desc = customDesc.trim() || (customEntry.taxable ? 'Taxable Item' : 'Non-Tax Item');
+    const desc = customDesc.trim() || (customEntry.taxable ? 'Grocery Taxed' : 'Grocery');
 
     addItem({
       id: Date.now(),
@@ -125,8 +139,8 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
       {/* Compact top bar: search + scale */}
       <div className="table-top-bar">
         <div className="code-legend">
-          <span className="legend-item"><strong>1</strong> = Custom (No Tax)</span>
-          <span className="legend-item"><strong>2</strong> = Custom (Taxed)</span>
+          <span className="legend-item"><strong>1</strong> = Grocery</span>
+          <span className="legend-item"><strong>2</strong> = Grocery Taxed</span>
         </div>
         <div className="search-wrap">
           <input
@@ -269,8 +283,8 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
                 <td className="col-desc entry-cell" colSpan="6">
                   <span className="entry-hint">
                     {items.length === 0
-                      ? 'Type item code, scan barcode, or press 1 (no tax) / 2 (taxed) for custom price'
-                      : 'Scan or type next item... (1 = custom no tax, 2 = custom taxed)'}
+                      ? 'Type item code, scan barcode, or press 1 (Grocery) / 2 (Grocery Taxed)'
+                      : 'Scan or type next item... (1 = Grocery, 2 = Grocery Taxed)'}
                   </span>
                 </td>
               </tr>

@@ -72,8 +72,19 @@ function TransactionScreen() {
 
   const handleInlineItemAdd = useCallback(async (code) => {
     if (!window.api) return false;
+    // Try barcode lookup first
     let item = await window.api.getItemByBarcode(code);
-    if (!item) item = await window.api.getItemById(parseInt(code));
+    // Try by ID as fallback
+    if (!item && !isNaN(parseInt(code))) {
+      item = await window.api.getItemById(parseInt(code));
+    }
+    // Try search as last resort (find exact barcode match)
+    if (!item) {
+      const results = await window.api.searchItems(code);
+      if (results && results.length > 0) {
+        item = results.find(r => r.barcode === code) || null;
+      }
+    }
     if (item) {
       store.addItem(item);
       if (item.sell_by === 'S') {
