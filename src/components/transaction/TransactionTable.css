@@ -129,7 +129,7 @@
 
 .mono { font-family: 'Courier New', monospace; font-weight: 700; font-size: 13px; }
 
-/* ─── Inline Entry Row (next empty row, highlighted) ── */
+/* ─── Entry Row (typing indicator, no visible input) ──── */
 .entry-row {
   background: #e8ecf1;
 }
@@ -138,21 +138,35 @@
   position: relative;
 }
 
-.inline-code-input {
-  width: 100%;
-  font-size: 15px;
-  font-weight: 700;
-  padding: 6px 8px;
-  border: 2px solid var(--accent-blue);
-  border-radius: 4px;
-  background: #ffffff;
-  text-align: center;
-  font-family: 'Courier New', monospace;
+/* The actual input is hidden off-screen */
+.hidden-code-input {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
 }
 
-.inline-code-input:focus {
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
-  outline: none;
+/* Typing indicator shows typed text in the cell */
+.typing-indicator {
+  font-family: 'Courier New', monospace;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  min-height: 20px;
+  display: inline-block;
+}
+
+.typing-cursor {
+  color: var(--accent-blue);
+  animation: blink-cursor 1s step-end infinite;
+  font-weight: 400;
+}
+
+@keyframes blink-cursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 
 .inline-error {
