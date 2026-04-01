@@ -12,25 +12,26 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
   const [codeError, setCodeError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const [searchFocused, setSearchFocused] = useState(false);
 
-  // Editing state: which row and which field (price or qty)
+  // Editing state
   const [editingRow, setEditingRow] = useState(null);
-  const [editField, setEditField] = useState(null); // 'price' or 'qty'
+  const [editField, setEditField] = useState(null);
 
   const codeRef = useRef(null);
   const priceRef = useRef(null);
   const qtyRef = useRef(null);
   const tableEndRef = useRef(null);
 
-  // Focus the hidden code input when not editing a row and no modal is open
+  // Focus the hidden code input ONLY when not editing and search is not focused
   useEffect(() => {
-    if (editingRow === null && codeRef.current) {
+    if (editingRow === null && !searchFocused && codeRef.current) {
       setTimeout(() => {
         const modalOpen = document.querySelector('.modal-overlay');
-        if (!modalOpen) codeRef.current?.focus();
+        if (!modalOpen && !searchFocused) codeRef.current?.focus();
       }, 50);
     }
-  }, [editingRow, items.length]);
+  }, [editingRow, items.length, searchFocused]);
 
   // Focus price or qty when editing
   useEffect(() => {
@@ -43,23 +44,21 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
     if (tableEndRef.current) tableEndRef.current.scrollIntoView({ behavior: 'smooth' });
   }, [editingRow, editField]);
 
-  // After adding an item, decide where to focus
+  // After adding, decide where to focus
   const startEditingLastRow = useCallback((item) => {
     setTimeout(() => {
       const currentItems = useTransactionStore.getState().items;
       const newIndex = currentItems.length - 1;
 
+      // Only open scale if item explicitly has sell_by === 'S'
       if (item.sell_by === 'S') {
-        // Scale item → open scale modal, skip editing
         onOpenScale();
         setEditingRow(null);
         setEditField(null);
       } else if (item.price > 0) {
-        // Has a price → skip to quantity
         setEditingRow(newIndex);
         setEditField('qty');
       } else {
-        // No price (code 1/2) → go to price first
         setEditingRow(newIndex);
         setEditField('price');
       }
@@ -70,7 +69,6 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
     const code = itemCode.trim();
     if (!code) return;
 
-    // Code "1" = Grocery (no tax), Code "2" = Grocery Taxed
     if (code === '1' || code === '2') {
       const taxable = code === '2';
       addItem({
@@ -86,7 +84,6 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
       return;
     }
 
-    // Regular item lookup
     setCodeError('');
     let item = null;
     if (window.api) {
@@ -112,7 +109,6 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
     }
   };
 
-  // Confirm editing → go back to code input
   const confirmRow = () => {
     if (editingRow !== null && items[editingRow]) {
       const item = items[editingRow];
@@ -124,7 +120,6 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
     setEditField(null);
   };
 
-  // When Enter is pressed on price, move to qty
   const handlePriceEnter = () => {
     setEditField('qty');
   };
@@ -139,15 +134,15 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
     if (!isNaN(qty)) updateItemQuantity(index, qty);
   };
 
-  // Search
+  // Search — debounced, limited results for performance
   useEffect(() => {
     if (searchQuery.length < 2) { setSearchResults([]); return; }
     const timer = setTimeout(async () => {
       if (window.api) {
         const results = await window.api.searchItems(searchQuery);
-        setSearchResults(results.slice(0, 8));
+        setSearchResults(results.slice(0, 10));
       }
-    }, 250);
+    }, 400); // 400ms debounce for 17K items
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
@@ -155,6 +150,7 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
     addItem(item);
     setSearchQuery('');
     setSearchResults([]);
+    setSearchFocused(false);
     startEditingLastRow(item);
   };
 
@@ -172,8 +168,13 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
             placeholder="Search item by name..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            onFocus={() => setSearchFocused(true)}
+            onBlur={() => {
+              // Delay to allow click on dropdown
+              setTimeout(() => setSearchFocused(false), 200);
+            }}
           />
-          {searchResults.length > 0 && (
+          {searchResults.length > 0 && searchFocused && (
             <div className="search-dropdown">
               {searchResults.map((item) => (
                 <button key={item.id} className="search-result-btn" onClick={() => handleSearchSelect(item)}>
@@ -213,11 +214,7 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
                   </td>
                   <td className="col-price">
                     {isEditing && editField === 'price' ? (
-                      <input
-                        ref={priceRef}
-                        type="number"
-                        step="0.01"
-                        min="0"
+                      <input ref={priceRef} type="number" step="0.01" min="0"
                         className="qty-input edit-price-input"
                         defaultValue={item.unit_price > 0 ? item.unit_price : ''}
                         placeholder="0.00"
@@ -234,12 +231,8 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
                   </td>
                   <td className="col-qty">
                     {isEditing && (editField === 'qty' || editField === 'price') ? (
-                      <input
-                        ref={editField === 'qty' ? qtyRef : undefined}
-                        type="number"
-                        step="0.01"
-                        min="0.01"
-                        className="qty-input"
+                      <input ref={editField === 'qty' ? qtyRef : undefined}
+                        type="number" step="0.01" min="0.01" className="qty-input"
                         defaultValue={item.quantity}
                         onChange={(e) => handleQtyChange(index, e.target.value)}
                         onKeyDown={(e) => {
@@ -248,12 +241,8 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
                         }}
                       />
                     ) : (
-                      <input
-                        type="number"
-                        className="qty-input"
-                        value={item.quantity}
-                        min="0"
-                        step="0.01"
+                      <input type="number" className="qty-input" value={item.quantity}
+                        min="0" step="0.01"
                         onChange={(e) => handleQtyChange(index, e.target.value)}
                         onFocus={(e) => e.target.select()}
                       />
@@ -273,7 +262,7 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
               );
             })}
 
-            {/* ─── TYPING INDICATOR ROW ────────────────── */}
+            {/* Typing indicator row */}
             {editingRow === null && (
               <tr className="entry-row" ref={tableEndRef}>
                 <td className="col-itemnum entry-cell">
@@ -284,9 +273,7 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
                 </td>
                 <td className="col-desc entry-cell" colSpan="6">
                   <span className="entry-hint">
-                    {items.length === 0
-                      ? 'Start typing an item code...'
-                      : 'Type next item code...'}
+                    {items.length === 0 ? 'Start typing an item code...' : 'Type next item code...'}
                   </span>
                 </td>
               </tr>
@@ -306,7 +293,7 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
         </table>
       </div>
 
-      {/* Hidden input that captures typing for item codes */}
+      {/* Hidden input for item codes — does NOT steal focus from search */}
       <input
         ref={codeRef}
         type="text"
@@ -316,12 +303,12 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
         onChange={(e) => setItemCode(e.target.value)}
         onKeyDown={(e) => { if (e.key === 'Enter') handleCodeSubmit(); }}
         onBlur={() => {
-          // Re-focus if we're not editing a row and no modal is open
-          if (editingRow === null) {
+          if (editingRow === null && !searchFocused) {
             setTimeout(() => {
               const modalOpen = document.querySelector('.modal-overlay');
-              if (!modalOpen) codeRef.current?.focus();
-            }, 100);
+              const searchActive = document.querySelector('.compact-search:focus');
+              if (!modalOpen && !searchActive) codeRef.current?.focus();
+            }, 200);
           }
         }}
       />

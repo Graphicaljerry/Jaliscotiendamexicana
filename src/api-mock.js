@@ -228,7 +228,7 @@ export function installMockApi() {
   if (window.api) return;
 
   window.api = {
-    getItems: () => Promise.resolve(ALL_ITEMS),
+    getItems: () => Promise.resolve(ALL_ITEMS.slice(0, 500)), // Limit for performance in admin list view
     getItemByBarcode: (barcode) => {
       // Fast lookup by barcode, including leading-zero-stripped version
       return Promise.resolve(BARCODE_MAP[barcode] || BARCODE_MAP[barcode.replace(/^0+/, '')] || null);
@@ -237,10 +237,16 @@ export function installMockApi() {
     getItemsByCategory: (catId) => Promise.resolve(SAMPLE_ITEMS_BY_CATEGORY[catId] || []),
     searchItems: (q) => {
       const lower = q.toLowerCase();
-      return Promise.resolve(ALL_ITEMS.filter(i =>
-        i.name.toLowerCase().includes(lower) ||
-        (i.barcode && i.barcode.includes(q))
-      ).slice(0, 20));
+      const results = [];
+      // Performance: stop after 15 matches instead of scanning all 17K
+      for (let i = 0; i < ALL_ITEMS.length && results.length < 15; i++) {
+        const item = ALL_ITEMS[i];
+        if (item.name.toLowerCase().includes(lower) ||
+            (item.barcode && item.barcode.includes(q))) {
+          results.push(item);
+        }
+      }
+      return Promise.resolve(results);
     },
     createItem: (item) => Promise.resolve({ id: Date.now(), ...item }),
     updateItem: (id, item) => Promise.resolve({ id, ...item }),
