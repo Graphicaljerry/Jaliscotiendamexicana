@@ -3,28 +3,101 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  height: 100dvh; /* dynamic viewport height for mobile */
+  height: 100dvh;
   overflow: hidden;
 }
 
-/* ─── Top Bar Extras ──────────────────────────────────── */
-.txn-label {
-  font-size: 13px;
-  font-weight: 600;
-  color: rgba(255,255,255,0.6);
+/* ─── Top Bar ────────────────────────────────────────── */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #1e40af;
+  padding: 8px 16px;
+  flex-shrink: 0;
+  gap: 12px;
 }
 
+.store-name {
+  font-size: 16px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.top-bar-center {
+  flex: 1;
+  text-align: center;
+}
+
+.txn-number {
+  font-size: 14px;
+  color: rgba(255,255,255,0.8);
+}
+.txn-number strong {
+  color: #ffffff;
+  font-size: 18px;
+}
+
+.top-bar-right {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.top-bar-right button {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  min-height: 36px;
+}
+
+/* ─── View Toggle ───────────────────────────────────── */
+.view-toggle {
+  display: flex;
+  background: rgba(255,255,255,0.1);
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.view-toggle-btn {
+  padding: 6px 10px !important;
+  min-height: 32px !important;
+  background: transparent;
+  color: rgba(255,255,255,0.6);
+  border-radius: 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.view-toggle-btn.active {
+  background: rgba(255,255,255,0.2);
+  color: #ffffff;
+}
+
+.view-toggle-btn:hover {
+  background: rgba(255,255,255,0.15);
+  color: #ffffff;
+}
+
+/* ─── Top Bar Button Variants ────────────────────────── */
 .btn-scale-top {
   background: #ea8b0c;
   color: #ffffff;
 }
 .btn-scale-top:hover { background: #d97706; }
 
-.btn-grid-toggle {
-  background: #0d9488;
-  color: #ffffff;
+.btn-held-top {
+  background: #fbbf24;
+  color: #92400e;
+  font-weight: 700;
 }
-.btn-grid-toggle:hover { background: #0f766e; }
+.btn-held-top:hover { background: #f59e0b; }
 
 .btn-admin {
   background: rgba(255,255,255,0.15);
@@ -38,131 +111,10 @@
   display: flex;
   flex: 1;
   overflow: hidden;
-  min-height: 0; /* critical for flex children to shrink */
+  min-height: 0;
 }
 
-/* ─── Left Panel (simplified) ────────────────────────── */
-.left-panel {
-  width: 200px;
-  min-width: 200px;
-  max-width: 200px;
-  background: var(--bg-secondary);
-  border-right: 1px solid var(--border-color);
-  padding: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  overflow-y: auto;
-  flex-shrink: 0;
-}
-
-.section-label {
-  display: block;
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--text-muted);
-  margin-bottom: 4px;
-}
-
-.customer-section {
-  background: var(--bg-input);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-sm);
-  padding: 8px;
-}
-
-.customer-info {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  flex-wrap: wrap;
-}
-
-.customer-name {
-  font-weight: 600;
-  color: var(--accent-blue);
-  font-size: 13px;
-  flex: 1;
-}
-
-.btn-change-customer,
-.btn-clear-customer {
-  font-size: 10px;
-  padding: 2px 6px;
-  border-radius: 3px;
-  background: var(--bg-hover);
-  color: var(--text-secondary);
-}
-
-.btn-customer-lookup {
-  width: 100%;
-  padding: 8px;
-  background: var(--bg-hover);
-  color: var(--text-primary);
-  border-radius: var(--radius-sm);
-  font-size: 12px;
-  min-height: 36px;
-  border: 1px solid var(--border-color);
-}
-.btn-customer-lookup:hover {
-  background: var(--accent-blue);
-  color: #ffffff;
-  border-color: var(--accent-blue);
-}
-
-/* ─── Transaction Number ─────────────────────────────── */
-.txn-number {
-  font-size: 14px;
-  color: rgba(255,255,255,0.8);
-}
-.txn-number strong {
-  color: #ffffff;
-  font-size: 18px;
-}
-
-/* ─── Held Transactions Badge ────────────────────────── */
-.held-count-badge {
-  background: #fef3c7;
-  border: 1px solid #f59e0b;
-  color: #92400e;
-  text-align: center;
-  padding: 8px;
-  border-radius: var(--radius-sm);
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-}
-.held-count-badge:hover {
-  background: #fde68a;
-}
-
-.btn-begin-new {
-  background: var(--accent-blue);
-}
-.btn-begin-new:hover {
-  background: var(--btn-primary-hover);
-}
-
-/* ─── Begin/Finish Button ────────────────────────────── */
-.begin-section {
-  margin-top: auto;
-}
-
-.btn-begin {
-  width: 100%;
-  padding: 10px;
-  background: var(--accent-green);
-  color: #ffffff;
-  font-size: 14px;
-  font-weight: 700;
-  border-radius: var(--radius-md);
-  min-height: 44px;
-}
-.btn-begin:hover { background: var(--btn-success-hover); }
-
-/* ─── Center Panel ───────────────────────────────────── */
+/* ─── Center Panel (Product Grid / Invoice) ──────────── */
 .center-panel {
   flex: 1;
   display: flex;
@@ -247,23 +199,11 @@
 
 /* ─── Tablet / Mobile Responsive ─────────────────────── */
 @media (max-width: 1024px) {
-  .left-panel {
-    width: 170px;
-    min-width: 170px;
-    max-width: 170px;
-    padding: 6px;
-  }
-
   .top-bar { padding: 4px 8px; }
   .store-name { font-size: 14px; }
-  .txn-label { display: none; }
 }
 
 @media (max-width: 768px) {
-  .left-panel {
-    display: none; /* hide sidebar on small screens */
-  }
-
   .store-name { font-size: 13px; }
   .top-bar-right button { font-size: 11px; padding: 4px 8px; min-height: 32px; }
 }

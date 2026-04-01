@@ -1,11 +1,9 @@
 import React, { useState, useCallback } from 'react';
 import TransactionTable from './TransactionTable';
-import TransactionControls from './TransactionControls';
 import FunctionBar from './FunctionBar';
 import IdleFunctionBar from './IdleFunctionBar';
-import TotalsBar from '../layout/TotalsBar';
-import TopBar from '../layout/TopBar';
 import ItemGrid from '../grid/ItemGrid';
+import BillingSidebar from '../billing/BillingSidebar';
 import CustomerLookup from '../customer/CustomerLookup';
 import PaymentModal from '../payment/PaymentModal';
 import HeldTransactionsModal from '../payment/HeldTransactionsModal';
@@ -15,7 +13,7 @@ import useTransactionStore from '../../stores/transactionStore';
 import './TransactionScreen.css';
 
 function TransactionScreen() {
-  const [showGrid, setShowGrid] = useState(false);
+  const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'invoice'
   const [showCustomerLookup, setShowCustomerLookup] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
   const [showHeldModal, setShowHeldModal] = useState(false);
@@ -47,24 +45,20 @@ function TransactionScreen() {
 
   useBarcodeScanner(handleBarcodeScan);
 
-  // Keyboard shortcuts — only active when NO payment modal is open
+  // Keyboard shortcuts
   useKeyboardShortcuts({
     onRepeatLast: () => { if (isActive) store.repeatLastItem(); },
     onDeleteLast: () => { if (isActive) store.removeLastItem(); },
     onReturnNext: () => store.setReturnNext(true),
-    onItemDirect: () => setShowGrid(true),
+    onItemDirect: () => setViewMode('grid'),
     onQuantity: () => setQuantityPrompt(true),
     onPrice: () => setPricePrompt(true),
     onDiscount: () => setDiscountPrompt(true),
     onSalesChange: () => {},
-    onCancel: () => {
-      if (isActive) store.clearTransaction();
-    },
-    onFinish: () => {
-      if (store.items.length > 0) setShowPayment(true);
-    },
+    onCancel: () => { if (isActive) store.clearTransaction(); },
+    onFinish: () => { if (store.items.length > 0) setShowPayment(true); },
     onCoupon: () => {},
-    onItemLookup: () => setShowGrid(true),
+    onItemLookup: () => setViewMode('grid'),
   });
 
   const handleAddGridItem = useCallback((item) => {
@@ -73,7 +67,6 @@ function TransactionScreen() {
 
   const handleInlineItemAdd = useCallback(async (code) => {
     if (!window.api) return false;
-    // Exact barcode match only — type exactly what's in the system
     let item = await window.api.getItemByBarcode(code);
     if (item) {
       store.addItem(item);
@@ -95,14 +88,12 @@ function TransactionScreen() {
       }
     }
     setShowScale(false);
-    // Re-focus the code input after modal closes
     setTimeout(() => {
       const codeInput = document.querySelector('.hidden-code-input');
       if (codeInput) codeInput.focus();
     }, 200);
   };
 
-  // Hold current transaction
   const handleHold = () => {
     if (store.items.length === 0) return;
     const heldId = store.holdTransaction();
@@ -111,71 +102,65 @@ function TransactionScreen() {
 
   return (
     <div className="transaction-screen">
-      <TopBar rightContent={<>
-        {isActive && (
-          <button className="btn-scale-top" onClick={() => {
-            setScaleWeight((1 + Math.random() * 3).toFixed(2));
-            setShowScale(true);
-          }}>Scale Weight</button>
-        )}
-        <button className="btn-grid-toggle" onClick={() => setShowGrid(!showGrid)}>
-          {showGrid ? 'Hide Grid' : 'Item Grid'}
-        </button>
-        <button className="btn-admin" onClick={() => window.location.hash = '#/admin'}>Admin</button>
-      </>}>
-        {isActive ? (
-          <span className="txn-number">Transaction# <strong>{store.transactionNumber || '—'}</strong></span>
-        ) : (
-          <span className="txn-label">Sale Transaction Entry</span>
-        )}
-      </TopBar>
-
-      <div className="main-content">
-        {/* Left Side */}
-        <div className="left-panel">
-          <div className="customer-section">
-            <label className="section-label">Customer Lookup</label>
-            {store.customer ? (
-              <div className="customer-info">
-                <span className="customer-name">{store.customer.name}</span>
-                <button className="btn-change-customer" onClick={() => setShowCustomerLookup(true)}>Change</button>
-                <button className="btn-clear-customer" onClick={() => store.setCustomer(null)}>Clear</button>
-              </div>
-            ) : (
-              <button className="btn-customer-lookup" onClick={() => setShowCustomerLookup(true)}>
-                Look Up Customer
-              </button>
-            )}
+      {/* Top Bar */}
+      <div className="top-bar">
+        <div className="store-name">JALISCO TIENDA MEXICANA</div>
+        <div className="top-bar-center">
+          {isActive && (
+            <span className="txn-number">Transaction# <strong>{store.transactionNumber || '—'}</strong></span>
+          )}
+        </div>
+        <div className="top-bar-right">
+          {/* View Toggle */}
+          <div className="view-toggle">
+            <button
+              className={`view-toggle-btn ${viewMode === 'grid' ? 'active' : ''}`}
+              onClick={() => setViewMode('grid')}
+              title="Product Grid"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+              </svg>
+            </button>
+            <button
+              className={`view-toggle-btn ${viewMode === 'invoice' ? 'active' : ''}`}
+              onClick={() => setViewMode('invoice')}
+              title="Invoice View"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M3 3h18v18H3z"/><path d="M3 9h18M3 15h18M9 3v18"/>
+              </svg>
+            </button>
           </div>
 
-          <TransactionControls />
-
-          {/* Held transactions count */}
-          {store.heldTransactions.length > 0 && (
-            <div className="held-count-badge" onClick={() => setShowHeldModal(true)}>
-              {store.heldTransactions.length} Held Transaction{store.heldTransactions.length > 1 ? 's' : ''}
-            </div>
+          {isActive && (
+            <button className="btn-scale-top" onClick={() => {
+              setScaleWeight((1 + Math.random() * 3).toFixed(2));
+              setShowScale(true);
+            }}>
+              Scale
+            </button>
           )}
 
-          <div className="begin-section">
-            {isActive ? (
-              <button className="btn-begin" onClick={() => {
-                if (store.items.length > 0) setShowPayment(true);
-              }}>
-                Finish / Payment
-              </button>
-            ) : (
-              <button className="btn-begin btn-begin-new" onClick={() => store.beginTransaction()}>
-                Begin Transaction
-              </button>
-            )}
-          </div>
-        </div>
+          {store.heldTransactions.length > 0 && (
+            <button className="btn-held-top" onClick={() => setShowHeldModal(true)}>
+              Held ({store.heldTransactions.length})
+            </button>
+          )}
 
-        {/* Center */}
+          <button className="btn-admin" onClick={() => window.location.hash = '#/admin'}>
+            Admin
+          </button>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="main-content">
+        {/* Left/Center: Product Grid or Invoice Table */}
         <div className="center-panel">
-          {showGrid ? (
-            <ItemGrid onSelectItem={handleAddGridItem} onHideGrid={() => setShowGrid(false)} />
+          {viewMode === 'grid' ? (
+            <ItemGrid onSelectItem={handleAddGridItem} />
           ) : (
             <TransactionTable
               onInlineItemAdd={handleInlineItemAdd}
@@ -186,15 +171,18 @@ function TransactionScreen() {
             />
           )}
         </div>
+
+        {/* Right: Billing Sidebar */}
+        <BillingSidebar
+          onShowPayment={() => { if (store.items.length > 0) setShowPayment(true); }}
+          onShowCustomer={() => setShowCustomerLookup(true)}
+        />
       </div>
 
-      {/* Totals Bar */}
-      <TotalsBar />
-
-      {/* Function Bar — switches between active and idle */}
+      {/* Function Bar */}
       {isActive ? (
         <FunctionBar
-          onShowGrid={() => setShowGrid(true)}
+          onShowGrid={() => setViewMode('grid')}
           onShowCustomer={() => setShowCustomerLookup(true)}
           onShowPayment={() => { if (store.items.length > 0) setShowPayment(true); }}
           onQuantityPrompt={() => setQuantityPrompt(true)}
@@ -206,7 +194,7 @@ function TransactionScreen() {
         <IdleFunctionBar
           onReloadHeld={() => setShowHeldModal(true)}
           onShowCustomer={() => setShowCustomerLookup(true)}
-          onShowGrid={() => setShowGrid(true)}
+          onShowGrid={() => setViewMode('grid')}
           onBeginTransaction={() => store.beginTransaction()}
         />
       )}
