@@ -278,6 +278,28 @@
   vertical-align: middle;
 }
 
+/* Import/Export */
+.import-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 16px;
+}
+
+.import-section h4 {
+  font-size: 15px;
+  color: var(--text-bright);
+  margin-bottom: 10px;
+}
+
+.file-input {
+  padding: 8px;
+  border: 2px dashed var(--border-color);
+  border-radius: var(--radius-md);
+  width: 100%;
+  cursor: pointer;
+}
+
 /* Sales */
 .date-picker {
   display: flex;

@@ -183,119 +183,40 @@ const SAMPLE_ITEMS_BY_CATEGORY = {
 };
 
 // Build a flat list of ALL items for search/lookup
+// Load the full inventory from the TGS export (17,698 items)
+import inventoryData from './data/inventory.json';
+
 const ALL_ITEMS = [];
+// Add restaurant grid items first
 Object.values(SAMPLE_ITEMS_BY_CATEGORY).forEach(items => {
   items.forEach(item => ALL_ITEMS.push(item));
 });
 
-// Add grocery/produce items with real store SKU codes
-// S = sold by scale (per lb), Q = sold by quantity (each)
-// Verified against store binder pages 1-5
-const GROCERY_ITEMS = [
-  // ─── PAGE 1: Aguacate → Chayote Espino ────────────────
-  {id:500,barcode:'200',name:'Tomates Bola (lb)',price:1.29,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:501,barcode:'201',name:'Tomate Roma / Plum (lb)',price:1.29,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:502,barcode:'202',name:'Tomatillo Fresco (lb)',price:1.49,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:503,barcode:'203',name:'Jalapeno Fresco (lb)',price:1.49,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:504,barcode:'204',name:'Aguacate Mexicano Hass (each)',price:1.50,is_taxable:0,is_ebt_eligible:1,sell_by:'Q'},
-  {id:505,barcode:'207',name:'Nopal Sin Pelar (lb)',price:1.29,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:506,barcode:'208',name:'Nopal Pelado (lb)',price:1.99,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:507,barcode:'209',name:'Nopal Picado (lb)',price:2.49,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:508,barcode:'210',name:'Aguacate Dominicano (each)',price:1.99,is_taxable:0,is_ebt_eligible:1,sell_by:'Q'},
-  {id:509,barcode:'211',name:'Papas Blancas Suelta / Potato White (lb)',price:0.99,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:510,barcode:'212',name:'Papas Rojas Suelta / Potato Red (lb)',price:1.29,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:511,barcode:'213',name:'Cebolla Blanca / Onions White (lb)',price:0.99,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:512,barcode:'214',name:'Cebolla Amarilla Suelta / Onions Yellow (lb)',price:0.99,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:513,barcode:'215',name:'Cebolla Roja Suelta / Onions Red (lb)',price:1.29,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:514,barcode:'216',name:'Repollo / Cabbage (lb)',price:0.69,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:515,barcode:'217',name:'Pepinos / Cucumbers (each)',price:0.79,is_taxable:0,is_ebt_eligible:1,sell_by:'Q'},
-  {id:516,barcode:'218',name:'Calabasita / Green Squash (lb)',price:1.29,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:517,barcode:'219',name:'Chile Serrano Fresco (lb)',price:1.99,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:518,barcode:'220',name:'Chile Habanero (lb)',price:3.99,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:519,barcode:'221',name:'Chile Chilaca (lb)',price:3.99,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:520,barcode:'222',name:'Banana Verde (lb)',price:0.79,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:521,barcode:'223',name:'Banana Amarilla (lb)',price:0.69,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:522,barcode:'223B',name:'Batata / Camote (lb)',price:1.49,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:523,barcode:'224',name:'Manzana Roja / Apple Red (each)',price:0.99,is_taxable:0,is_ebt_eligible:1,sell_by:'Q'},
-  {id:524,barcode:'225',name:'Manzana Verde (each)',price:0.99,is_taxable:0,is_ebt_eligible:1,sell_by:'Q'},
-  {id:525,barcode:'226',name:'Mandarina (each)',price:0.50,is_taxable:0,is_ebt_eligible:1,sell_by:'Q'},
-  {id:526,barcode:'227',name:'Naranjas Grande (each)',price:0.79,is_taxable:0,is_ebt_eligible:1,sell_by:'Q'},
-  {id:527,barcode:'229',name:'Chile Poblano Fresco (lb)',price:1.99,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:528,barcode:'231',name:'Aullama / Calabaza (lb)',price:0.99,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:529,barcode:'232',name:'Cana / Cane (each)',price:1.99,is_taxable:0,is_ebt_eligible:1,sell_by:'Q'},
-  {id:530,barcode:'233',name:'Melon / Cantaloupe (each)',price:2.99,is_taxable:0,is_ebt_eligible:1,sell_by:'Q'},
-  {id:531,barcode:'234',name:'Zanahoria / Carrots Per Pound (lb)',price:0.99,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:532,barcode:'235',name:'Cebollin / Cambray / Scallions (bunch)',price:0.99,is_taxable:0,is_ebt_eligible:1,sell_by:'Q'},
-  {id:533,barcode:'236',name:'Celery (each)',price:1.49,is_taxable:0,is_ebt_eligible:1,sell_by:'Q'},
-  {id:534,barcode:'237',name:'Granada / Pomegranate (each)',price:1.99,is_taxable:0,is_ebt_eligible:1,sell_by:'Q'},
-  {id:535,barcode:'238',name:'Cilantro (bunch)',price:0.79,is_taxable:0,is_ebt_eligible:1,sell_by:'Q'},
-  {id:536,barcode:'240',name:'Jicama (lb)',price:1.29,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:537,barcode:'241',name:'Lechoza / Papaya (lb)',price:1.49,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
+// Add all 17,698 store inventory items from the TGS export
+let idCounter = 10000;
+inventoryData.forEach(item => {
+  ALL_ITEMS.push({
+    id: idCounter++,
+    barcode: item.b,
+    name: item.n,
+    price: item.p,
+    is_taxable: item.t,
+    is_ebt_eligible: item.e,
+    sell_by: item.s,
+    department: item.d,
+  });
+});
 
-  // ─── PAGE 2: Chile Ancho → Lechoza ────────────────────
-  // (chiles, fruits, greens)
-  {id:538,barcode:'243',name:'Lime / Limon Verde (each)',price:0.25,is_taxable:0,is_ebt_eligible:1,sell_by:'Q'},
-  {id:539,barcode:'244',name:'Maiz Mazorca / Elote (each)',price:0.79,is_taxable:0,is_ebt_eligible:1,sell_by:'Q'},
-  {id:540,barcode:'245',name:'Mango Bola (each)',price:1.29,is_taxable:0,is_ebt_eligible:1,sell_by:'Q'},
-  {id:541,barcode:'246',name:'Mango Mexicano (each)',price:1.29,is_taxable:0,is_ebt_eligible:1,sell_by:'Q'},
-  {id:542,barcode:'247',name:'Eggplant / Berenjena (lb)',price:1.99,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:543,barcode:'248',name:'Pepper Bell / Pimiento Verde (lb)',price:1.49,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:544,barcode:'249',name:'Pina / Pineapple (each)',price:3.99,is_taxable:0,is_ebt_eligible:1,sell_by:'Q'},
-  {id:545,barcode:'251',name:'Platano Verde (each)',price:0.50,is_taxable:0,is_ebt_eligible:1,sell_by:'Q'},
-  {id:546,barcode:'252',name:'Rabano / Radish (lb)',price:0.99,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:547,barcode:'253',name:'Watermelon / Sandia (each)',price:5.99,is_taxable:0,is_ebt_eligible:1,sell_by:'Q'},
-  {id:548,barcode:'254',name:'Tayota / Chayote (each)',price:1.29,is_taxable:0,is_ebt_eligible:1,sell_by:'Q'},
-  {id:549,barcode:'255',name:'Chayote Espino (lb)',price:1.49,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-
-  // ─── PAGE 3: Lime → Peach ─────────────────────────────
-  {id:550,barcode:'256',name:'Uvas Rojas / Grapes Red (lb)',price:2.49,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:551,barcode:'257',name:'Uva Verde / Grapes Green (lb)',price:2.49,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:552,barcode:'258',name:'Yuca (lb)',price:1.49,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:553,barcode:'259',name:'Durazno / Peach Nectarine (lb)',price:1.99,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:554,barcode:'260',name:'Pepper Red (lb)',price:1.99,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:555,barcode:'261',name:'Limon Amarillo (each)',price:0.50,is_taxable:0,is_ebt_eligible:1,sell_by:'Q'},
-
-  // ─── PAGE 4: Pepinos → Tuna Fruta ─────────────────────
-  {id:556,barcode:'262',name:'Chile Guajillo Seco (lb)',price:7.99,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:557,barcode:'263',name:'Tamarindo (lb)',price:2.99,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:558,barcode:'264',name:'Chile Morita Seco (lb)',price:6.99,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:559,barcode:'265',name:'Flor De Jamaica (lb)',price:5.99,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:560,barcode:'266',name:'Chile Arbol Seco (lb)',price:8.99,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:561,barcode:'267',name:'Chile Ancho Seco (lb)',price:7.99,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-
-  // ─── PAGE 5: Uva Verde → Yautia ──────────────────────
-  {id:562,barcode:'270',name:'Ginger / Jengibre (lb)',price:3.99,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:563,barcode:'271',name:'Epazote (lb)',price:1.99,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:564,barcode:'272',name:'Tuna Fruta (each)',price:0.99,is_taxable:0,is_ebt_eligible:1,sell_by:'Q'},
-  {id:565,barcode:'274',name:'Guayaba Fresca (lb)',price:2.99,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:566,barcode:'275',name:'Mamey (lb)',price:3.49,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:567,barcode:'276',name:'Plum / Ciruela (lb)',price:1.99,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:568,barcode:'277',name:'Pera / Pear (each)',price:0.99,is_taxable:0,is_ebt_eligible:1,sell_by:'Q'},
-  {id:569,barcode:'279',name:'Culantro (bunch)',price:1.49,is_taxable:0,is_ebt_eligible:1,sell_by:'Q'},
-  {id:570,barcode:'280',name:'Savila / Aloe Vera (each)',price:1.99,is_taxable:0,is_ebt_eligible:1,sell_by:'Q'},
-  {id:571,barcode:'281',name:'Apricot (lb)',price:2.49,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:572,barcode:'283',name:'Yautia / Lila (lb)',price:1.99,is_taxable:0,is_ebt_eligible:1,sell_by:'S'},
-  {id:573,barcode:'284',name:'Chinola (each)',price:1.49,is_taxable:0,is_ebt_eligible:1,sell_by:'Q'},
-
-  // ─── GROCERY / PANTRY / DAIRY ─────────────────────────
-  {id:600,barcode:'300',name:'Coca Cola Lata',price:1.49,is_taxable:1,is_ebt_eligible:0},
-  {id:601,barcode:'301',name:'Jarritos Tamarindo',price:1.50,is_taxable:1,is_ebt_eligible:0},
-  {id:602,barcode:'302',name:'Jarritos Mandarina',price:1.50,is_taxable:1,is_ebt_eligible:0},
-  {id:603,barcode:'303',name:'Takis Fuego 280g',price:4.99,is_taxable:1,is_ebt_eligible:1},
-  {id:604,barcode:'304',name:'Maseca Corn Flour 4.4lb',price:4.49,is_taxable:0,is_ebt_eligible:1},
-  {id:605,barcode:'305',name:'Abuelita Chocolate 540g',price:5.99,is_taxable:0,is_ebt_eligible:1},
-  {id:606,barcode:'306',name:'Crema Mexicana 16oz',price:3.99,is_taxable:0,is_ebt_eligible:1},
-  {id:607,barcode:'307',name:'Queso Fresco',price:4.49,is_taxable:0,is_ebt_eligible:1},
-  {id:608,barcode:'308',name:'Queso Oaxaca (lb)',price:5.99,is_taxable:0,is_ebt_eligible:1},
-  {id:609,barcode:'309',name:'Frijol Pinto 2lb',price:3.49,is_taxable:0,is_ebt_eligible:1},
-  {id:610,barcode:'310',name:'Arroz 2lb bag',price:2.49,is_taxable:0,is_ebt_eligible:1},
-  {id:611,barcode:'311',name:'Tortillas Corn (30ct)',price:2.99,is_taxable:0,is_ebt_eligible:1},
-  {id:612,barcode:'312',name:'Tortillas Flour (20ct)',price:3.49,is_taxable:0,is_ebt_eligible:1},
-  {id:613,barcode:'313',name:'Pan Dulce (each)',price:1.25,is_taxable:0,is_ebt_eligible:1},
-  {id:614,barcode:'314',name:'Leche Gallon',price:4.99,is_taxable:0,is_ebt_eligible:1},
-  {id:615,barcode:'315',name:'Huevos Dozen',price:3.99,is_taxable:0,is_ebt_eligible:1},
-];
-GROCERY_ITEMS.forEach(item => ALL_ITEMS.push(item));
+// Build a barcode lookup map for fast access
+const BARCODE_MAP = {};
+ALL_ITEMS.forEach(item => {
+  if (item.barcode) {
+    // Store by barcode, and also by barcode with leading zeros stripped
+    BARCODE_MAP[item.barcode] = item;
+    const stripped = item.barcode.replace(/^0+/, '');
+    if (stripped) BARCODE_MAP[stripped] = item;
+  }
+});
 
 const CUSTOMERS = [
   {id:1,customer_number:'C001',name:'Maria Garcia',phone:'555-0101',email:'maria@email.com'},
@@ -309,7 +230,8 @@ export function installMockApi() {
   window.api = {
     getItems: () => Promise.resolve(ALL_ITEMS),
     getItemByBarcode: (barcode) => {
-      return Promise.resolve(ALL_ITEMS.find(i => i.barcode === barcode) || null);
+      // Fast lookup by barcode, including leading-zero-stripped version
+      return Promise.resolve(BARCODE_MAP[barcode] || BARCODE_MAP[barcode.replace(/^0+/, '')] || null);
     },
     getItemById: (id) => Promise.resolve(ALL_ITEMS.find(i => i.id === id) || null),
     getItemsByCategory: (catId) => Promise.resolve(SAMPLE_ITEMS_BY_CATEGORY[catId] || []),

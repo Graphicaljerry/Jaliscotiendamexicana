@@ -142,6 +142,7 @@ function AdminScreen() {
       <div className="admin-tabs">
         {[
           { key: 'inventory', label: 'Inventory Maintenance' },
+          { key: 'import', label: 'Import / Export' },
           { key: 'categories', label: 'Categories' },
           { key: 'sales', label: 'Sales Reports' },
           { key: 'settings', label: 'Settings' }
@@ -416,6 +417,126 @@ function AdminScreen() {
                 </table>
               </>
             )}
+          </div>
+        )}
+
+        {/* ─── IMPORT / EXPORT ─────────────────── */}
+        {activeTab === 'import' && (
+          <div className="tab-panel">
+            <h3>Import / Export Inventory</h3>
+            <p style={{ color: 'var(--text-muted)', marginBottom: 16 }}>
+              Upload a CSV or TXT file to bulk import items. The file should have columns for: Item Number, Description, Price, Department.
+            </p>
+
+            <div className="import-section">
+              <h4>Upload Items (CSV / TXT)</h4>
+              <input
+                type="file"
+                accept=".csv,.txt,.tsv"
+                className="file-input"
+                onChange={async (e) => {
+                  const file = e.target.files[0];
+                  if (!file) return;
+                  const text = await file.text();
+                  const lines = text.split('\n').filter(l => l.trim());
+                  let imported = 0;
+                  for (const line of lines) {
+                    const parts = line.split(/[\t,]/).map(s => s.trim().replace(/"/g, ''));
+                    if (parts.length >= 3 && parts[0] !== 'Item Number') {
+                      const itemNum = parts[0];
+                      const desc = parts[1];
+                      const price = parseFloat(parts[2]) || 0;
+                      const dept = parts[3] || 'GROCERY';
+                      if (window.api && desc) {
+                        await window.api.createItem({
+                          barcode: itemNum,
+                          name: desc,
+                          price: price,
+                          is_taxable: ['MEAT','GROCERY','DAIRY','PRODUCE','FROZEN','DELI/KIT'].includes(dept) ? 0 : 1,
+                          is_ebt_eligible: ['MEAT','GROCERY','DAIRY','PRODUCE','FROZEN','DELI/KIT'].includes(dept) ? 1 : 0,
+                        });
+                        imported++;
+                      }
+                    }
+                  }
+                  alert(`Imported ${imported} items successfully!`);
+                  loadData();
+                }}
+              />
+              <p style={{ color: 'var(--text-muted)', fontSize: 12, marginTop: 8 }}>
+                Supported formats: CSV (comma-separated), TSV (tab-separated), TXT
+              </p>
+            </div>
+
+            <div className="import-section" style={{ marginTop: 24 }}>
+              <h4>Export Current Inventory</h4>
+              <button className="btn-add" onClick={() => {
+                const csv = ['Item Number,Description,Price,Department'];
+                items.forEach(item => {
+                  csv.push(`"${item.barcode || item.id}","${item.name}",${item.price.toFixed(2)},"${item.department || ''}"`);
+                });
+                const blob = new Blob([csv.join('\n')], { type: 'text/csv' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'inventory-export.csv';
+                a.click();
+                URL.revokeObjectURL(url);
+              }}>
+                Download as CSV
+              </button>
+            </div>
+
+            <div className="import-section" style={{ marginTop: 24 }}>
+              <h4>Quick Add Single Item</h4>
+              <div className="form-grid">
+                <div className="form-field">
+                  <label>Item Number / Barcode</label>
+                  <input id="qa-barcode" placeholder="e.g. 204 or 3800013841" />
+                </div>
+                <div className="form-field" style={{ minWidth: 200 }}>
+                  <label>Description</label>
+                  <input id="qa-name" placeholder="e.g. HERSHEY'S BAR" />
+                </div>
+                <div className="form-field">
+                  <label>Price</label>
+                  <input id="qa-price" type="number" step="0.01" placeholder="0.00" />
+                </div>
+                <div className="form-field">
+                  <label>Department</label>
+                  <select id="qa-dept">
+                    <option value="GROCERY">GROCERY</option>
+                    <option value="MEAT">MEAT</option>
+                    <option value="DAIRY">DAIRY</option>
+                    <option value="PRODUCE">PRODUCE</option>
+                    <option value="FROZEN">FROZEN</option>
+                    <option value="DELI/KIT">DELI/KIT</option>
+                    <option value="BEER">BEER</option>
+                    <option value="CIGARETT">CIGARETTES</option>
+                    <option value="MISC">MISC</option>
+                  </select>
+                </div>
+              </div>
+              <button className="btn-add" style={{ marginTop: 8 }} onClick={async () => {
+                const barcode = document.getElementById('qa-barcode').value.trim();
+                const name = document.getElementById('qa-name').value.trim();
+                const price = parseFloat(document.getElementById('qa-price').value) || 0;
+                const dept = document.getElementById('qa-dept').value;
+                if (!name) { alert('Description is required'); return; }
+                if (window.api) {
+                  await window.api.createItem({
+                    barcode, name, price,
+                    is_taxable: ['MEAT','GROCERY','DAIRY','PRODUCE','FROZEN','DELI/KIT'].includes(dept) ? 0 : 1,
+                    is_ebt_eligible: ['MEAT','GROCERY','DAIRY','PRODUCE','FROZEN','DELI/KIT'].includes(dept) ? 1 : 0,
+                  });
+                  alert(`Added: ${name} ($${price.toFixed(2)})`);
+                  document.getElementById('qa-barcode').value = '';
+                  document.getElementById('qa-name').value = '';
+                  document.getElementById('qa-price').value = '';
+                  loadData();
+                }
+              }}>Add Item</button>
+            </div>
           </div>
         )}
 
