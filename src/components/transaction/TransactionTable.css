@@ -117,6 +117,7 @@
   padding: 6px 10px;
   font-size: 13px;
   border-bottom: 1px solid var(--border-light);
+  height: 36px;
 }
 
 .col-itemnum { width: 110px; text-align: center; }
@@ -132,6 +133,10 @@
 /* ─── Entry Row (typing indicator, no visible input) ──── */
 .entry-row {
   background: #e8ecf1;
+}
+
+.entry-row td {
+  height: 36px;
 }
 
 .entry-cell {
@@ -185,15 +190,17 @@
   font-style: italic;
 }
 
-/* Empty placeholder rows */
+/* Empty placeholder rows — same height as data rows */
 .empty-row td {
-  height: 32px;
+  height: 36px;
   border-bottom: 1px solid var(--border-light);
 }
 
 .empty-row:nth-child(even) td {
   background: var(--bg-input);
 }
+
+.spacer-cell { height: 0; padding: 0; }
 
 /* ─── Quantity Input ─────────────────────────────────── */
 .qty-input {

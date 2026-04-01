@@ -24,14 +24,23 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
   const tableEndRef = useRef(null);
 
   // Focus the hidden code input ONLY when not editing and search is not focused
+  // Re-runs on any item/edit/search state change
   useEffect(() => {
-    if (editingRow === null && !searchFocused && codeRef.current) {
-      setTimeout(() => {
+    if (editingRow === null && !searchFocused) {
+      const timer = setTimeout(() => {
         const modalOpen = document.querySelector('.modal-overlay');
-        if (!modalOpen && !searchFocused) codeRef.current?.focus();
-      }, 50);
+        if (!modalOpen && codeRef.current) codeRef.current.focus();
+      }, 100);
+      return () => clearTimeout(timer);
     }
   }, [editingRow, items.length, searchFocused]);
+
+  // Also refocus when component mounts or items are cleared (cancel)
+  useEffect(() => {
+    if (items.length === 0 && codeRef.current) {
+      setTimeout(() => codeRef.current?.focus(), 150);
+    }
+  }, [items.length]);
 
   // Focus price or qty when editing
   useEffect(() => {
@@ -285,9 +294,10 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
               </tr>
             )}
 
-            {editingRow !== null && <tr ref={tableEndRef}><td colSpan="7"></td></tr>}
+            {editingRow !== null && <tr ref={tableEndRef}><td colSpan="7" className="spacer-cell"></td></tr>}
 
-            {Array.from({ length: Math.max(0, 5 - items.length) }).map((_, i) => (
+            {/* Fill remaining space with empty rows */}
+            {Array.from({ length: 20 }).map((_, i) => (
               <tr key={`empty-${i}`} className="empty-row">
                 <td className="col-itemnum"></td><td className="col-desc"></td>
                 <td className="col-price"></td><td className="col-qty"></td>
