@@ -225,7 +225,7 @@ export function installMockApi() {
   if (window.api) return;
 
   window.api = {
-    getItems: () => Promise.resolve(ALL_ITEMS.slice(0, 500)), // Limit for performance in admin list view
+    getItems: () => Promise.resolve(ALL_ITEMS),
     getItemByBarcode: (barcode) => {
       // Exact match only — type exactly what's in the system
       return Promise.resolve(BARCODE_MAP[barcode] || null);

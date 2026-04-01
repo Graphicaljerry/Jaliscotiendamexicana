@@ -7,6 +7,8 @@ function AdminScreen() {
   const [password, setPassword] = useState('');
   const [activeTab, setActiveTab] = useState('inventory');
   const [items, setItems] = useState([]);
+  const [itemPage, setItemPage] = useState(0);
+  const ITEMS_PER_PAGE = 100;
   const [categories, setCategories] = useState([]);
   const [settings, setSettings] = useState({});
   const [dailySales, setDailySales] = useState(null);
@@ -102,6 +104,9 @@ function AdminScreen() {
       (item.barcode && item.barcode.includes(itemFilter));
   });
 
+  const totalPages = Math.ceil(filteredItems.length / ITEMS_PER_PAGE);
+  const paginatedItems = filteredItems.slice(itemPage * ITEMS_PER_PAGE, (itemPage + 1) * ITEMS_PER_PAGE);
+
   // ─── LOGIN ─────────────────────────────────────
   if (!authenticated) {
     return (
@@ -169,7 +174,7 @@ function AdminScreen() {
                   type="text"
                   placeholder="Search by name or item #..."
                   value={itemFilter}
-                  onChange={(e) => setItemFilter(e.target.value)}
+                  onChange={(e) => { setItemFilter(e.target.value); setItemPage(0); }}
                   className="filter-input"
                 />
                 <button
@@ -302,7 +307,7 @@ function AdminScreen() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredItems.map((item) => (
+                  {paginatedItems.map((item) => (
                     <tr key={item.id}>
                       <td className="mono">{item.barcode || item.id}</td>
                       <td>
@@ -328,7 +333,14 @@ function AdminScreen() {
               </table>
             </div>
             <div className="inv-footer">
-              Number of Items: <strong>{filteredItems.length}</strong>
+              <span>Showing {itemPage * ITEMS_PER_PAGE + 1}–{Math.min((itemPage + 1) * ITEMS_PER_PAGE, filteredItems.length)} of <strong>{filteredItems.length}</strong> items</span>
+              <div className="pagination-controls">
+                <button disabled={itemPage === 0} onClick={() => setItemPage(0)}>First</button>
+                <button disabled={itemPage === 0} onClick={() => setItemPage(p => p - 1)}>Prev</button>
+                <span>Page {itemPage + 1} of {totalPages || 1}</span>
+                <button disabled={itemPage >= totalPages - 1} onClick={() => setItemPage(p => p + 1)}>Next</button>
+                <button disabled={itemPage >= totalPages - 1} onClick={() => setItemPage(totalPages - 1)}>Last</button>
+              </div>
             </div>
           </div>
         )}
