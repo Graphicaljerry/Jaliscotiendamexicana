@@ -207,14 +207,11 @@ inventoryData.forEach(item => {
   });
 });
 
-// Build a barcode lookup map for fast access
+// Build a barcode lookup map for fast access — EXACT match only, no zero stripping
 const BARCODE_MAP = {};
 ALL_ITEMS.forEach(item => {
   if (item.barcode) {
-    // Store by barcode, and also by barcode with leading zeros stripped
     BARCODE_MAP[item.barcode] = item;
-    const stripped = item.barcode.replace(/^0+/, '');
-    if (stripped) BARCODE_MAP[stripped] = item;
   }
 });
 
@@ -230,8 +227,8 @@ export function installMockApi() {
   window.api = {
     getItems: () => Promise.resolve(ALL_ITEMS.slice(0, 500)), // Limit for performance in admin list view
     getItemByBarcode: (barcode) => {
-      // Fast lookup by barcode, including leading-zero-stripped version
-      return Promise.resolve(BARCODE_MAP[barcode] || BARCODE_MAP[barcode.replace(/^0+/, '')] || null);
+      // Exact match only — type exactly what's in the system
+      return Promise.resolve(BARCODE_MAP[barcode] || null);
     },
     getItemById: (id) => Promise.resolve(ALL_ITEMS.find(i => i.id === id) || null),
     getItemsByCategory: (catId) => Promise.resolve(SAMPLE_ITEMS_BY_CATEGORY[catId] || []),

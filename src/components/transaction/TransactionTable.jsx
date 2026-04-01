@@ -87,16 +87,8 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
     setCodeError('');
     let item = null;
     if (window.api) {
+      // Exact barcode match only
       item = await window.api.getItemByBarcode(code);
-      if (!item && !isNaN(parseInt(code))) {
-        item = await window.api.getItemById(parseInt(code));
-      }
-      if (!item) {
-        const results = await window.api.searchItems(code);
-        if (results && results.length > 0) {
-          item = results.find(r => r.barcode === code) || null;
-        }
-      }
     }
 
     if (item) {
