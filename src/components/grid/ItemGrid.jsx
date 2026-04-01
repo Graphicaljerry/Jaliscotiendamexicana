@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import './ItemGrid.css';
 
-function ItemGrid({ onSelectItem }) {
+function ItemGrid({ onSelectItem, onHideGrid }) {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [categoryItems, setCategoryItems] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
 
   // Load categories on mount
   useEffect(() => {
@@ -45,121 +43,67 @@ function ItemGrid({ onSelectItem }) {
     loadItems();
   }, [selectedCategory]);
 
-  // Search debounced
-  useEffect(() => {
-    if (searchQuery.length < 2) { setSearchResults([]); return; }
-    const timer = setTimeout(async () => {
-      if (window.api) {
-        const results = await window.api.searchItems(searchQuery);
-        setSearchResults(results.slice(0, 20));
-      }
-    }, 400);
-    return () => clearTimeout(timer);
-  }, [searchQuery]);
-
   const handleItemClick = (item) => {
     onSelectItem(item);
   };
 
-  const displayItems = searchQuery.length >= 2 ? searchResults : categoryItems;
+  // Get the category color for sub-items
   const categoryColor = selectedCategory?.color || '#2563EB';
 
-  // Get a color for item card accent
-  const getItemColor = (item) => {
-    if (selectedCategory?.color) return selectedCategory.color;
-    const colors = ['#2563EB', '#16a34a', '#ea580c', '#7c3aed', '#0d9488', '#dc2626', '#ca8a04'];
-    let hash = 0;
-    const name = item.name || '';
-    for (let i = 0; i < name.length; i++) {
-      hash = name.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    return colors[Math.abs(hash) % colors.length];
-  };
-
   return (
-    <div className="item-grid-v2">
-      {/* Category Bar */}
-      <div className="category-bar">
-        <button
-          className={`category-pill ${!selectedCategory ? 'active' : ''}`}
-          onClick={() => setSelectedCategory(null)}
-        >
-          <span className="category-pill-icon" style={{ backgroundColor: '#6b7280' }}>All</span>
-          <span className="category-pill-label">All Items</span>
-        </button>
-        {categories.map((cat) => (
+    <div className="item-grid">
+      <div className="grid-header">
+        <h2 className="grid-title">
+          {selectedCategory ? selectedCategory.name : 'Categories'}
+        </h2>
+        <div className="grid-header-buttons">
           <button
-            key={cat.id}
-            className={`category-pill ${selectedCategory?.id === cat.id ? 'active' : ''}`}
-            onClick={() => { setSelectedCategory(cat); setSearchQuery(''); }}
+            className="btn-change-grid"
+            onClick={() => setSelectedCategory(null)}
           >
-            <span className="category-pill-icon" style={{ backgroundColor: cat.color || '#2563EB' }}>
-              {cat.name.charAt(0).toUpperCase()}
-            </span>
-            <span className="category-pill-label">{cat.name}</span>
+            {selectedCategory ? 'Back to Categories' : 'Change Grid'}
           </button>
-        ))}
-      </div>
-
-      {/* Section Title + Search */}
-      <div className="grid-toolbar">
-        <h3 className="grid-section-title">
-          {searchQuery.length >= 2
-            ? `Search: "${searchQuery}"`
-            : selectedCategory
-              ? selectedCategory.name
-              : 'All Products'}
-        </h3>
-        <div className="grid-search-wrap">
-          <svg className="grid-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
-          </svg>
-          <input
-            type="text"
-            className="grid-search-input"
-            placeholder="Search products..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
+          <button className="btn-hide-grid" onClick={onHideGrid}>
+            Hide Grid
+          </button>
         </div>
       </div>
 
-      {/* Product Grid */}
-      <div className="product-grid-scroll">
-        {loading ? (
-          <div className="grid-status">Loading items...</div>
-        ) : !selectedCategory && searchQuery.length < 2 ? (
-          <div className="grid-status">
-            <p>Select a category or search for products</p>
+      <div className="grid-body">
+        {!selectedCategory ? (
+          /* ─── CATEGORY GRID ────────────────────────────── */
+          <div className="grid-buttons category-grid">
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                className="grid-btn category-btn"
+                style={{ backgroundColor: cat.color || '#2563EB' }}
+                onClick={() => setSelectedCategory(cat)}
+              >
+                {cat.name}
+              </button>
+            ))}
           </div>
-        ) : displayItems.length === 0 ? (
-          <div className="grid-status">No items found</div>
         ) : (
-          <div className="product-grid">
-            {displayItems.map((item) => {
-              const color = getItemColor(item);
-              return (
+          /* ─── ITEM SUB-GRID ────────────────────────────── */
+          <div className="grid-buttons item-subgrid">
+            {loading ? (
+              <div className="grid-loading">Loading items...</div>
+            ) : categoryItems.length === 0 ? (
+              <div className="grid-empty">No items in this category</div>
+            ) : (
+              categoryItems.map((item) => (
                 <button
                   key={item.id}
-                  className="product-card"
+                  className="grid-btn item-btn"
+                  style={{ backgroundColor: categoryColor }}
                   onClick={() => handleItemClick(item)}
                 >
-                  <div className="product-card-image" style={{ backgroundColor: `${color}18` }}>
-                    <span className="product-card-letter" style={{ color: color }}>
-                      {(item.name || '?').charAt(0).toUpperCase()}
-                    </span>
-                  </div>
-                  <div className="product-card-body">
-                    <span className="product-card-name">{item.name}</span>
-                    <div className="product-card-pricing">
-                      <span className="product-card-price" style={{ color: color }}>
-                        ${item.price.toFixed(2)}
-                      </span>
-                    </div>
-                  </div>
+                  <span className="item-btn-name">{item.name}</span>
+                  <span className="item-btn-price">${item.price.toFixed(2)}</span>
                 </button>
-              );
-            })}
+              ))
+            )}
           </div>
         )}
       </div>
