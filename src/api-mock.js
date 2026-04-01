@@ -270,11 +270,11 @@ export function installMockApi() {
     getDailySales: () => Promise.resolve({ date: new Date().toISOString().split('T')[0], summary: { transaction_count: 0, total_subtotal: 0, total_tax: 0, total_sales: 0, total_discounts: 0, total_ebt: 0 }, byPaymentType: [], transactions: [] }),
 
     getSetting: (key) => {
-      const s = { tax_rate: '8.25', store_name: 'Jalisco Tienda Mexicana', admin_password: '1234', server_mode: 'primary' };
+      const s = { tax_rate: '6.5', store_name: 'Jalisco Tienda Mexicana', admin_password: '1234', server_mode: 'primary' };
       return Promise.resolve(s[key] || null);
     },
     setSetting: () => Promise.resolve({ success: true }),
-    getAllSettings: () => Promise.resolve({ tax_rate: '8.25', store_name: 'Jalisco Tienda Mexicana', admin_password: '1234', printer_type: 'epson', printer_interface: '', server_port: '3000', server_mode: 'primary', ebt_enabled: 'true' }),
+    getAllSettings: () => Promise.resolve({ tax_rate: '6.5', store_name: 'Jalisco Tienda Mexicana', admin_password: '1234', printer_type: 'epson', printer_interface: '', server_port: '3000', server_mode: 'primary', ebt_enabled: 'true' }),
 
     printReceipt: () => Promise.resolve({ success: true, message: 'Preview mode - no printer' }),
     openCashDrawer: () => Promise.resolve({ success: true }),

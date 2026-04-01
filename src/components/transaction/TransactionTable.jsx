@@ -69,14 +69,24 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
     const code = itemCode.trim();
     if (!code) return;
 
-    if (code === '1' || code === '2') {
-      const taxable = code === '2';
+    // Quick codes for manual entry
+    const QUICK_CODES = {
+      '000': { name: 'Convenience Fee', is_taxable: 1, is_ebt_eligible: 0 },
+      '1':   { name: 'Grocery', is_taxable: 0, is_ebt_eligible: 1 },
+      '2':   { name: 'Grocery Tax', is_taxable: 1, is_ebt_eligible: 0 },
+      '3':   { name: 'Meat/Carne/Cheese', is_taxable: 1, is_ebt_eligible: 1 },
+      '5':   { name: 'Restaurant/Food', is_taxable: 1, is_ebt_eligible: 0 },
+      '11':  { name: 'Boss Revolution', is_taxable: 1, is_ebt_eligible: 0 },
+    };
+
+    if (QUICK_CODES[code]) {
+      const qc = QUICK_CODES[code];
       addItem({
         id: Date.now(),
-        name: taxable ? 'Grocery Taxed' : 'Grocery',
+        name: qc.name,
         price: 0,
-        is_taxable: taxable ? 1 : 0,
-        is_ebt_eligible: 0,
+        is_taxable: qc.is_taxable,
+        is_ebt_eligible: qc.is_ebt_eligible,
         barcode: code,
       });
       setItemCode('');
@@ -150,8 +160,12 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
     <div className="transaction-table-wrapper">
       <div className="table-top-bar">
         <div className="code-legend">
-          <span className="legend-item"><strong>1</strong> = Grocery</span>
-          <span className="legend-item"><strong>2</strong> = Grocery Taxed</span>
+          <span className="legend-item"><strong>000</strong> Conv. Fee</span>
+          <span className="legend-item"><strong>1</strong> Grocery</span>
+          <span className="legend-item"><strong>2</strong> Grocery Tax</span>
+          <span className="legend-item"><strong>3</strong> Meat/Cheese</span>
+          <span className="legend-item"><strong>5</strong> Restaurant</span>
+          <span className="legend-item"><strong>11</strong> Boss Rev.</span>
         </div>
         <div className="search-wrap">
           <input
@@ -265,7 +279,7 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
                 </td>
                 <td className="col-desc entry-cell" colSpan="6">
                   <span className="entry-hint">
-                    {items.length === 0 ? 'Start typing an item code...' : 'Type next item code...'}
+                    {items.length === 0 ? 'Type item code or quick code (1, 2, 3, 5, 11, 000)...' : 'Type next item code...'}
                   </span>
                 </td>
               </tr>

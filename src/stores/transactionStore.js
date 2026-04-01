@@ -14,7 +14,7 @@ const useTransactionStore = create((set, get) => ({
   outputType: 'paper_tape',
   paymentType: 'cash',
   amountPaid: 0,
-  taxRate: 8.25,
+  taxRate: 6.5,
 
   // Current transaction number (assigned when items are added)
   transactionNumber: null,

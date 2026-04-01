@@ -49,7 +49,7 @@ function seedDatabase() {
   const insertSetting = db.prepare('INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)');
   const seedSettings = db.transaction(() => {
     insertSetting.run('store_name', 'Jalisco Tienda Mexicana');
-    insertSetting.run('tax_rate', '8.25');
+    insertSetting.run('tax_rate', '6.5');
     insertSetting.run('server_mode', 'primary');
     insertSetting.run('server_port', '3000');
     insertSetting.run('printer_type', 'epson');
