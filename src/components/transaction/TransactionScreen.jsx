@@ -125,59 +125,57 @@ function TransactionScreen() {
         )}
       </TopBar>
 
+      {/* Sidebar Overlay — covers everything below header */}
+      <div className={`sidebar-overlay ${sidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`} onClick={() => setSidebarOpen(false)}>
+        <div className="left-panel left-panel-overlay" onClick={(e) => e.stopPropagation()}>
+          <button className="btn-sidebar-close" onClick={() => setSidebarOpen(false)}>
+            <svg width="29" height="29" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" /><line x1="9" y1="3" x2="9" y2="21" />
+              <polyline points="15 9 12 12 15 15" />
+            </svg>
+          </button>
+          <div className="customer-section">
+            <label className="section-label">Customer Lookup</label>
+            {store.customer ? (
+              <div className="customer-info">
+                <span className="customer-name">{store.customer.name}</span>
+                <button className="btn-change-customer" onClick={() => setShowCustomerLookup(true)}>Change</button>
+                <button className="btn-clear-customer" onClick={() => store.setCustomer(null)}>Clear</button>
+              </div>
+            ) : (
+              <button className="btn-customer-lookup" onClick={() => setShowCustomerLookup(true)}>
+                Look Up Customer
+              </button>
+            )}
+          </div>
+
+          <TransactionControls />
+
+          {/* Held transactions count */}
+          {store.heldTransactions.length > 0 && (
+            <div className="held-count-badge" onClick={() => setShowHeldModal(true)}>
+              {store.heldTransactions.length} Held Transaction{store.heldTransactions.length > 1 ? 's' : ''}
+            </div>
+          )}
+
+          <div className="begin-section">
+            {isActive ? (
+              <button className="btn-begin" onClick={() => {
+                if (store.items.length > 0) setShowPayment(true);
+              }}>
+                Finish / Payment
+              </button>
+            ) : (
+              <button className="btn-begin btn-begin-new" onClick={() => store.beginTransaction()}>
+                Begin Transaction
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+
       <div className="pos-content-wrap">
       <div className="main-content">
-        {/* Sidebar Overlay */}
-        {sidebarOpen && (
-          <div className="sidebar-overlay" onClick={() => setSidebarOpen(false)}>
-            <div className="left-panel left-panel-overlay" onClick={(e) => e.stopPropagation()}>
-              <button className="btn-sidebar-close" onClick={() => setSidebarOpen(false)}>
-                <svg width="29" height="29" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="3" y="3" width="18" height="18" rx="2" /><line x1="9" y1="3" x2="9" y2="21" />
-                  <polyline points="15 9 12 12 15 15" />
-                </svg>
-              </button>
-              <div className="customer-section">
-                <label className="section-label">Customer Lookup</label>
-                {store.customer ? (
-                  <div className="customer-info">
-                    <span className="customer-name">{store.customer.name}</span>
-                    <button className="btn-change-customer" onClick={() => setShowCustomerLookup(true)}>Change</button>
-                    <button className="btn-clear-customer" onClick={() => store.setCustomer(null)}>Clear</button>
-                  </div>
-                ) : (
-                  <button className="btn-customer-lookup" onClick={() => setShowCustomerLookup(true)}>
-                    Look Up Customer
-                  </button>
-                )}
-              </div>
-
-              <TransactionControls />
-
-              {/* Held transactions count */}
-              {store.heldTransactions.length > 0 && (
-                <div className="held-count-badge" onClick={() => setShowHeldModal(true)}>
-                  {store.heldTransactions.length} Held Transaction{store.heldTransactions.length > 1 ? 's' : ''}
-                </div>
-              )}
-
-              <div className="begin-section">
-                {isActive ? (
-                  <button className="btn-begin" onClick={() => {
-                    if (store.items.length > 0) setShowPayment(true);
-                  }}>
-                    Finish / Payment
-                  </button>
-                ) : (
-                  <button className="btn-begin btn-begin-new" onClick={() => store.beginTransaction()}>
-                    Begin Transaction
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* Full-width Center */}
         <div className="center-panel">
           {showGrid ? (

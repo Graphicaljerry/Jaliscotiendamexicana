@@ -67,12 +67,18 @@
 
 /* ─── Sidebar Overlay ────────────────────────────────── */
 .sidebar-overlay {
-  position: absolute;
-  top: 0;
+  position: fixed;
+  top: 62px; /* below header */
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 20;
+  z-index: 50;
+  pointer-events: none;
+  transition: background 0.3s ease;
+}
+
+.sidebar-overlay.sidebar-open {
+  pointer-events: auto;
 }
 
 /* ─── Left Panel (overlay mode) ──────────────────────── */
@@ -94,7 +100,14 @@
   top: 0;
   left: 0;
   bottom: 0;
-  z-index: 21;
+  z-index: 51;
+  transform: translateX(-100%);
+  transition: transform 0.28s cubic-bezier(0.25, 0.1, 0.25, 1);
+  box-shadow: none;
+}
+
+.sidebar-open .left-panel-overlay {
+  transform: translateX(0);
   box-shadow: 112px 0 31px rgba(0,0,0,0), 71px 0 29px rgba(0,0,0,0.01), 40px 0 24px rgba(0,0,0,0.03), 18px 0 18px rgba(0,0,0,0.06), 4px 0 10px rgba(0,0,0,0.06);
 }
 
