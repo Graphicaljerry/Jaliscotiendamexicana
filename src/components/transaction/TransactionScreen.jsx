@@ -112,11 +112,6 @@ function TransactionScreen() {
 
   return (
     <div className="transaction-screen">
-      {/* Ambient gradient blurs */}
-      <div className="ambient-blur blur-1" />
-      <div className="ambient-blur blur-2" />
-      <div className="ambient-blur blur-3" />
-
       <TopBar rightContent={<>
         <button className="btn-grid-toggle" onClick={() => setShowGrid(!showGrid)}>
           {showGrid ? 'Hide Grid' : 'Item Grid'}

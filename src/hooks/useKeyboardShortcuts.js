@@ -20,6 +20,10 @@ function useKeyboardShortcuts(handlers) {
       const h = handlersRef.current;
 
       switch (e.key) {
+        case 'Escape':
+          e.preventDefault();
+          h.onCancel?.();
+          break;
         case 'F1':
           e.preventDefault();
           h.onRepeatLast?.();

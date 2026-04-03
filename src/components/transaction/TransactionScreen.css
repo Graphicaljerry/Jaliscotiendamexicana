@@ -9,45 +9,7 @@
   position: relative;
 }
 
-/* Ambient background blurs (decorative) */
-.ambient-blur {
-  position: fixed;
-  pointer-events: none;
-  border-radius: 50%;
-  z-index: 0;
-}
-
-.blur-1 {
-  top: -100px;
-  left: -160px;
-  width: 1032px;
-  height: 420px;
-  background: #aab5b7;
-  opacity: 0.4;
-  filter: blur(200px);
-}
-
-.blur-2 {
-  top: -20px;
-  right: -50px;
-  width: 735px;
-  height: 280px;
-  background: #cdaf87;
-  opacity: 0.35;
-  filter: blur(200px);
-}
-
-.blur-3 {
-  bottom: -50px;
-  left: 150px;
-  width: 1235px;
-  height: 416px;
-  background: #778d96;
-  opacity: 0.3;
-  filter: blur(200px);
-}
-
-.transaction-screen > *:not(.ambient-blur):not(.modal-overlay) {
+.transaction-screen > *:not(.modal-overlay) {
   position: relative;
   z-index: 1;
 }
