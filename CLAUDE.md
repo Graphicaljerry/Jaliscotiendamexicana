@@ -7,6 +7,11 @@ Point of Sale system for **Jalisco Tienda Mexicana**, a Mexican grocery store an
 **Live preview:** https://graphicaljerry.github.io/Jaliscotiendamexicana/
 **Figma designs:** https://www.figma.com/design/rRcPCDbbV4Vv37GRzVdUu8/Jalisco-Tienda-Mexicana
 
+### Figma Key Frames
+- **Main POS screen:** node-id=6637-3814
+- **Sidebar open:** node-id=6644-4602
+- **Sidebar panel detail:** node-id=6644-4954
+
 ## Tech Stack
 
 - **Framework:** React 18 + Vite 6
@@ -74,7 +79,7 @@ Single Zustand store manages:
 
 ### Keyboard Shortcuts
 - **F1-F12** mapped to function bar actions (context-dependent on idle vs active)
-- **Escape** cancels active transaction, returns to idle
+- **Escape** cancels active transaction, returns to idle function bar
 - **Enter** in code input submits barcode/quick code
 - Payment modal: F1=Cash, F2=Debit, F3=Credit, F4=EBT
 
@@ -87,29 +92,35 @@ Single Zustand store manages:
 - `11` — Boss Revolution (taxable, price entered manually)
 
 ### Item Search Priority
-Search results are ordered: exact barcode match first, then barcode-starts-with, then partial name/barcode matches. Within each tier, results sort by highest price first.
+Search results are ordered: exact barcode match first, then barcode-starts-with, then partial name/barcode matches. Within each tier, results sort by **highest price first** so higher-priced items and duplicates with higher prices appear at the top.
 
 ## Design System (from Figma)
 
 ### Layout
-- **Content wrapper:** 94.8vw width, centered (no px max-width)
-- **Header:** Full-width, `#121212` background, 62px height
-- **Sidebar:** 223px overlay panel, slides from left, `#fbfbfb` background
-- **Table:** Split into fixed header + scrollable body (scrollbar below header only)
-- **Totals bar:** Rounded 14px container
+- **Content wrapper:** `94.8vw` width, centered with `margin: 0 auto` (NO px max-width — always proportional to viewport)
+- **Header:** Full-width, `#121212` background, 62px height, logo only (no store name text)
+- **Sidebar:** 223px overlay panel, `position: fixed` starting at `top: 62px` (below header), overlays ALL content (table, totals, function keys). Slides in with `translateX` animation (280ms cubic-bezier). Always in DOM with `pointer-events: none/auto` toggle for smooth open/close transitions. Has close icon at top.
+- **Table:** Split into fixed header (`.table-header-fixed`) + scrollable body (`.table-scroll`) so scrollbar only appears below the dark header row, never overlapping it
+- **Search bar:** Absolutely centered in top bar with `position: absolute; left: 50%; transform: translateX(-50%)` — always perfectly centered regardless of sidebar toggle and Scale button widths. Search dropdown `z-index: 200` renders above the table.
+- **Totals bar:** Rounded 14px container, `align-items: center`, all total-fields 40px height with `justify-content: space-between` (except grand-total-field which is `height: auto`)
 - **Function keys:** Rounded 14px container, two rows of 9 keys each, 85px key height
 - **Bottom padding:** 35px below function keys
+- **Empty table rows:** 50 rows to fill the scroll area on any screen
 
 ### Colors
 - Header: `#121212`
-- Active sidebar buttons: `#47ab77` (green)
+- Active sidebar buttons: `#47ab77` (green) — NOT dark, green
 - Inactive sidebar buttons: `#ffffff` bg, `#d1d9e6` border, `#4a5568` text
 - Control group backgrounds: `#ecedf1`
+- Sidebar background: `#fbfbfb`
+- Customer section background: `#ecedf1`
+- Customer lookup button: `#fbfbfb` bg, `#d1d9e6` border
 - Item Grid button: `#47ab77`
 - Scale button: `#ea8b0c`
 - Admin button: `rgba(255,255,255,0.15)` with `rgba(255,255,255,0.3)` border
 - Cancel key: white with `#e26666` border
 - Finish key: `#47ab77` fill, `#c9f0dc` key text, `#f3f3f7` label text
+- Put on Hold: plain white key (NOT orange highlighted)
 - Table header: `#121212`
 - Row borders: `rgba(103, 133, 140, 0.3)`
 - NT badge: `#e8ecf1` bg, `#1e40af` text
@@ -119,11 +130,15 @@ Search results are ordered: exact barcode match first, then barcode-starts-with,
 - Primary text: `#1a1a2e`
 
 ### Background Gradients
-Three CSS `radial-gradient` on `#root`:
-1. Cool blue-gray top-left: `#b8c0c4`
-2. Warm golden top-right: `#d4bc9a`
-3. Steel blue-gray bottom: `#9aacb3`
-Base color: `#e8e8e8`
+Three CSS `radial-gradient` on `#root` (NOT on body, NOT as DOM elements):
+```css
+background:
+  radial-gradient(ellipse 80% 60% at 0% 0%, #b8c0c4 0%, rgba(184, 192, 196, 0) 100%),
+  radial-gradient(ellipse 60% 50% at 100% 0%, #d4bc9a 0%, rgba(212, 188, 154, 0) 100%),
+  radial-gradient(ellipse 90% 50% at 50% 100%, #9aacb3 0%, rgba(154, 172, 179, 0) 100%),
+  #e8e8e8;
+```
+**Critical:** Gradient end colors must fade to same-hue transparent (e.g. `rgba(184,192,196,0)`) NOT `transparent` (which is `rgba(0,0,0,0)` and causes muddy dark blending).
 
 Content areas use semi-transparent backgrounds (70-85% opacity) with `backdrop-filter: blur(12px)` so gradients bleed through.
 
@@ -134,13 +149,29 @@ Content areas use semi-transparent backgrounds (70-85% opacity) with `backdrop-f
 - Function key shortcuts: 9px bold, `#8896a6`
 - Section labels: 10px bold uppercase, 0.5px tracking, `#8896a6`
 - Control buttons: 10px semibold
+- Button border-radius: 3px (sidebar controls)
 
-### Sidebar Shadow (Figma exact)
+### Sidebar Specs (from Figma node 6644:4954)
+- Width: 223px
+- Background: `#fbfbfb`
+- Padding: 8px
+- Gap between sections: 16px
+- Gap between control groups: 14px
+- Control group bg: `#ecedf1`, padding 6px, border-radius 6px
+- Control button gap: 6px
+- Shadow (Figma exact):
 ```css
 box-shadow: 112px 0 31px rgba(0,0,0,0), 71px 0 29px rgba(0,0,0,0.01),
             40px 0 24px rgba(0,0,0,0.03), 18px 0 18px rgba(0,0,0,0.06),
             4px 0 10px rgba(0,0,0,0.06);
 ```
+- Slide animation: `transform: translateX(-100%)` → `translateX(0)`, 280ms `cubic-bezier(0.25, 0.1, 0.25, 1)`
+
+### Admin Screen Styling
+- Admin tables have their OWN overrides — white `td` backgrounds, gray `th` headers (`#edeff1`), NOT the POS dark theme
+- Categories table wrapped in `.inv-table-wrap` (same scrollable container as inventory maintenance)
+- Admin header: `#121212` (matches POS header)
+- `.inv-table-wrap`: white background, max-height 500px, overflow-y auto
 
 ## Important Rules
 
@@ -149,6 +180,15 @@ When redesigning the UI, prefer CSS-only changes. Do NOT modify JSX unless the s
 
 ### No Tailwind
 This project uses plain CSS with CSS variables. Do NOT install Tailwind or convert to Tailwind classes.
+
+### Z-Index Hierarchy
+- `.sidebar-overlay`: z-index 50 (fixed, covers full viewport below header)
+- `.left-panel-overlay`: z-index 51 (inside sidebar overlay)
+- `.table-top-bar`: z-index 20 (relative, for search dropdown)
+- `.search-wrap`: z-index 50 (absolute centered)
+- `.search-dropdown`: z-index 200 (above table)
+- `.modal-overlay` (globals): z-index 1000 (payment, customer, scale modals)
+- **Important:** `.transaction-screen > *` rule sets `z-index: 1` on children — `.sidebar-overlay` and `.modal-overlay` are EXCLUDED from this rule so their z-index values work
 
 ### Mock API vs Electron API
 - `window.api` is set by Electron's preload script in production
@@ -169,8 +209,12 @@ USB barcode scanners send keystrokes rapidly (<50ms between chars) followed by E
 7. F10 or "Finish" opens PaymentModal
 8. Payment completed → receipt prints → transaction clears → back to idle
 
+### Scroll Behavior
+- Table uses `scrollIntoView({ behavior: 'smooth', block: 'nearest' })` to avoid jumping when typing codes
+- Table body scrolls independently from the fixed header
+
 ### Logo
-The color logo SVG is at `public/jalisco-logo-color.svg` — red sombrero (#EE5F5D), green band (#46BC96), white JALISCO text. Built from Figma asset parts. The old white-only PNG is still in public/ but unused.
+The color logo SVG is at `public/jalisco-logo-color.svg` — red sombrero (#EE5F5D), green band (#46BC96), white JALISCO text. Built from Figma asset parts. The old white-only PNG is still in public/ but unused. Header shows logo only, no store name text.
 
 ## Build & Run
 
@@ -183,3 +227,12 @@ npm run dev:electron # Full Electron app with real database
 ## Deployment
 
 GitHub Pages deployment serves the Vite build from `dist/` as a static site. The mock API (`api-mock.js`) provides all data for the browser preview. Cache-bust with `?v=N` query param.
+
+## Known Patterns & Gotchas
+
+- **Sidebar is always in the DOM** — uses `pointer-events: none/auto` + CSS transform for animation, NOT conditional rendering (`{sidebarOpen && ...}`)
+- **`backdrop-filter` creates stacking contexts** — do NOT add it to `.table-scroll` or the search dropdown will render behind the table
+- **`table-layout: fixed`** — do NOT use on the POS tables; it causes columns to not fill the container at narrow viewports
+- **Gradient `transparent`** — never use bare `transparent` in gradients; it's `rgba(0,0,0,0)` and causes muddy transitions. Always use same-hue-transparent like `rgba(184,192,196,0)`
+- **`position: fixed` on body** — can interfere with `background-image` rendering; gradients are on `#root` instead
+- **Admin tables vs POS tables** — admin uses `.admin-content td { background: #ffffff }` to override the POS transparent row style
