@@ -1,7 +1,7 @@
 .totals-bar {
   flex-shrink: 0;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   background: rgba(235, 240, 241, 0.7);
   backdrop-filter: blur(12px);
   border-radius: 14px;
@@ -26,6 +26,9 @@
   flex-direction: column;
   align-items: flex-end;
   gap: 2px;
+  background: radial-gradient(ellipse at 50% 50%, rgba(119, 141, 150, 0.25) 0%, transparent 70%);
+  padding: 8px 16px;
+  border-radius: 10px;
 }
 
 .total-field {
@@ -86,6 +89,7 @@
   flex-direction: column;
   align-items: flex-end;
   gap: 2px;
+  height: auto;
 }
 
 .grand-total-value {
@@ -100,6 +104,8 @@
   color: #4f4f4f;
   letter-spacing: 0.5px;
   text-align: right;
+  text-transform: uppercase;
+  margin-top: -2px;
   text-transform: uppercase;
 }
 
