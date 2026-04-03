@@ -202,19 +202,24 @@ function TransactionTable({ onInlineItemAdd, onOpenScale, sidebarOpen, onToggleS
         <button className="btn-scale-inline" onClick={onOpenScale}>Scale</button>
       </div>
 
-      <div className="table-scroll">
-        <table className="transaction-table">
-          <thead>
-            <tr>
-              <th className="col-itemnum">Item Number</th>
-              <th className="col-desc">Description</th>
-              <th className="col-price">Price</th>
-              <th className="col-qty">Quantity</th>
-              <th className="col-total">Total</th>
-              <th className="col-disc">Disc.</th>
-              <th className="col-edit"></th>
-            </tr>
-          </thead>
+      <div className="table-outer">
+        <div className="table-header-fixed">
+          <table>
+            <thead>
+              <tr>
+                <th className="col-itemnum">Item Number</th>
+                <th className="col-desc">Description</th>
+                <th className="col-price">Price</th>
+                <th className="col-qty">Quantity</th>
+                <th className="col-total">Total</th>
+                <th className="col-disc">Disc.</th>
+                <th className="col-edit"></th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+        <div className="table-scroll">
+          <table className="transaction-table">
           <tbody>
             {items.map((item, index) => {
               const isEditing = editingRow === index;
@@ -305,7 +310,8 @@ function TransactionTable({ onInlineItemAdd, onOpenScale, sidebarOpen, onToggleS
             ))}
           </tbody>
         </table>
-      </div>
+        </div>{/* end table-scroll */}
+      </div>{/* end table-outer */}
 
       {/* Hidden input for item codes — does NOT steal focus from search */}
       <input
