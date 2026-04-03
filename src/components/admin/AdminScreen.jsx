@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import TopBar from '../layout/TopBar';
-import logoFullColor from '../../../public/jalisco-logo-full-color.png';
+import logoDarkText from '../../../public/jalisco-logo-dark-text.svg';
 import './AdminScreen.css';
 
 function AdminScreen() {
@@ -113,7 +113,7 @@ function AdminScreen() {
     return (
       <div className="admin-login">
         <div className="login-box">
-          <div className="login-logo"><img src={logoFullColor} alt="Jalisco Tienda Mexicana" style={{ height: 60, width: 'auto' }} /></div>
+          <div className="login-logo"><img src={logoDarkText} alt="Jalisco Tienda Mexicana" style={{ height: 60, width: 'auto' }} /></div>
           <h2>Admin Access</h2>
           <p>Enter admin password to continue</p>
           <input
