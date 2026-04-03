@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import TopBar from '../layout/TopBar';
-import logoDarkText from '../../../public/jalisco-logo-dark-text.svg';
+import logoDarkText from '../../../public/jalisco-logo-color-blacktext.png';
 import './AdminScreen.css';
 
 function AdminScreen() {
