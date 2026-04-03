@@ -172,6 +172,32 @@ box-shadow: 112px 0 31px rgba(0,0,0,0), 71px 0 29px rgba(0,0,0,0.01),
 - Categories table wrapped in `.inv-table-wrap` (same scrollable container as inventory maintenance)
 - Admin header: `#121212` (matches POS header)
 - `.inv-table-wrap`: white background, max-height 500px, overflow-y auto
+- Login page: full-color-with-black-text logo (`jalisco-logo-color-blacktext.png`), green accent (`#47ab77`), green input focus ring
+
+### Receipt Design (Thermal Printer)
+Printed via `node-thermal-printer` (ESC/POS) on Epson/Star printers. Config in Admin → Settings.
+
+**Layout (top to bottom):**
+1. **Logo** — black logo image (`electron/assets/receipt-logo.png`) printed as bitmap. Falls back to bold text header if image fails.
+2. **Store info** — name, address, phone (from `settings` table: `store_name`, `store_address`, `store_phone`)
+3. **Transaction header** — date, time, receipt number (`R0403-300001` format = RMMDD-txnId), transaction #, customer name (if attached), transaction type (SALE/RETURN/etc.)
+4. **Item table** — columns: QTY | ITEM | PRICE. Non-taxable items flagged with `[NT]`. Per-item discounts shown on indented line.
+5. **Totals** — Subtotal, Tax, Discount (if any)
+6. **Grand Total** — bold, larger text
+7. **Payment** — payment type (CASH/CREDIT/DEBIT/EBT), amount paid, CHANGE DUE (bold)
+8. **EBT section** — EBT Eligible total, EBT Applied amount (if EBT was used as payment)
+9. **Footer** — bilingual "Thank you / Gracias", receipt reference number
+10. **Auto-cut**
+
+**Console fallback:** Same layout rendered as ASCII box art when no printer is connected (browser preview / development).
+
+**Logo assets:**
+- `electron/assets/receipt-logo.png` — black monochrome logo for thermal printing
+- `public/jalisco-logo-color-blacktext.png` — colored hat + black text for admin login
+- `public/jalisco-logo-color.svg` — colored hat + white text for POS header (dark bg)
+- `public/jalisco-logo-dark-text.svg` — colored hat + dark text (SVG version)
+
+**Branding source:** `/Documents/Claude/Projects/Tienda Mexicana Jalisco/Assets/Logo/` contains Full Color, White, Black, and Full Color with Black Text variants in Web (PNG/JPG/SVG) and Print (AI/EPS/PDF) formats.
 
 ## Important Rules
 
@@ -213,8 +239,14 @@ USB barcode scanners send keystrokes rapidly (<50ms between chars) followed by E
 - Table uses `scrollIntoView({ behavior: 'smooth', block: 'nearest' })` to avoid jumping when typing codes
 - Table body scrolls independently from the fixed header
 
-### Logo
-The color logo SVG is at `public/jalisco-logo-color.svg` — red sombrero (#EE5F5D), green band (#46BC96), white JALISCO text. Built from Figma asset parts. The old white-only PNG is still in public/ but unused. Header shows logo only, no store name text.
+### Logo Variants
+- **POS header** (dark bg): `public/jalisco-logo-color.svg` — colored hat, white text
+- **Admin login** (light bg): `public/jalisco-logo-color-blacktext.png` — colored hat, black text
+- **Receipt printing**: `electron/assets/receipt-logo.png` — all-black monochrome
+- **SVG dark text**: `public/jalisco-logo-dark-text.svg` — colored hat, dark text (SVG)
+- **Legacy**: `public/jalisco-tienda-mexicana-logo-white-rgb-2000px-w-72ppi.png` — all-white (unused)
+
+Header shows logo only, no store name text.
 
 ## Build & Run
 
