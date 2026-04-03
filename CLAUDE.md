@@ -135,9 +135,10 @@ Three CSS `radial-gradient` on `#root` (NOT on body, NOT as DOM elements):
 background:
   radial-gradient(ellipse 80% 60% at 0% 0%, #b8c0c4 0%, rgba(184, 192, 196, 0) 100%),
   radial-gradient(ellipse 60% 50% at 100% 0%, #d4bc9a 0%, rgba(212, 188, 154, 0) 100%),
-  radial-gradient(ellipse 90% 50% at 50% 100%, #9aacb3 0%, rgba(154, 172, 179, 0) 100%),
+  radial-gradient(ellipse 90% 50% at 50% 100%, #7b8a8f 0%, rgba(123, 138, 143, 0) 100%),
   #e8e8e8;
 ```
+Bottom gradient was darkened 20% from original `#9aacb3` to `#7b8a8f`.
 **Critical:** Gradient end colors must fade to same-hue transparent (e.g. `rgba(184,192,196,0)`) NOT `transparent` (which is `rgba(0,0,0,0)` and causes muddy dark blending).
 
 Content areas use semi-transparent backgrounds (70-85% opacity) with `backdrop-filter: blur(12px)` so gradients bleed through.
@@ -235,9 +236,12 @@ USB barcode scanners send keystrokes rapidly (<50ms between chars) followed by E
 7. F10 or "Finish" opens PaymentModal
 8. Payment completed → receipt prints → transaction clears → back to idle
 
-### Scroll Behavior
+### Table Behavior
+- Clicking anywhere on the table (not on inputs/buttons) dismisses active row editing and refocuses the hidden code input, showing the typing indicator cursor on the next empty row
 - Table uses `scrollIntoView({ behavior: 'smooth', block: 'nearest' })` to avoid jumping when typing codes
 - Table body scrolls independently from the fixed header
+- `.table-outer` has NO border (removed — it was causing a visible white stroke)
+- 50 empty rows fill the scroll area on any screen size
 
 ### Logo Variants
 - **POS header** (dark bg): `public/jalisco-logo-color.svg` — colored hat, white text
@@ -247,6 +251,38 @@ USB barcode scanners send keystrokes rapidly (<50ms between chars) followed by E
 - **Legacy**: `public/jalisco-tienda-mexicana-logo-white-rgb-2000px-w-72ppi.png` — all-white (unused)
 
 Header shows logo only, no store name text.
+
+## Database (Electron only)
+
+SQLite via `better-sqlite3`. Schema in `electron/database/schema.sql`.
+
+### Tables
+- **items** — barcode, name, price, category_id, button_color, is_taxable, is_ebt_eligible, grid_position, active
+- **categories** — name, display_order
+- **customers** — customer_number, name, phone, email
+- **transactions** — timestamp (auto), customer_id, subtotal, tax_total, discount_total, grand_total, payment_type, amount_paid, change_given, transaction_type, ebt_amount, terminal_id, synced
+- **transaction_items** — transaction_id, item_id, item_name, quantity, unit_price, line_total, discount
+- **settings** — key/value pairs (tax_rate, store_name, store_address, store_phone, admin_password, printer_type, printer_interface, server_port, server_mode, ebt_enabled)
+
+### Transaction Persistence
+Every completed transaction is saved with all line items. The `dailySales` handler queries by date and returns: transaction count, total subtotal/tax/sales/discounts/EBT, breakdown by payment type, and full transaction list. Viewable in Admin → Sales tab.
+
+### Backend Files
+```
+electron/
+  main.js              # Electron main process
+  preload.js           # Exposes window.api to renderer
+  database/
+    index.js           # SQLite connection setup
+    schema.sql         # Table definitions
+  ipc/
+    handlers.js        # All IPC handlers (CRUD for items, categories, customers, transactions, settings, printer, network)
+  services/
+    printer.js         # Thermal receipt printing (ESC/POS)
+    network.js         # Multi-terminal networking (primary/secondary)
+  assets/
+    receipt-logo.png   # Black logo for thermal printer
+```
 
 ## Build & Run
 
