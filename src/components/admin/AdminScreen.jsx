@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import TopBar from '../layout/TopBar';
+import Logo from '../layout/Logo';
 import './AdminScreen.css';
 
 function AdminScreen() {
@@ -112,6 +113,7 @@ function AdminScreen() {
     return (
       <div className="admin-login">
         <div className="login-box">
+          <div className="login-logo"><Logo size={48} /></div>
           <h2>Admin Access</h2>
           <p>Enter admin password to continue</p>
           <input

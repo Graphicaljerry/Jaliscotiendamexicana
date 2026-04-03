@@ -35,6 +35,11 @@
   margin-bottom: 16px;
 }
 
+.login-box input:focus {
+  border-color: #47ab77;
+  box-shadow: 0 0 0 3px rgba(71, 171, 119, 0.15);
+}
+
 .login-actions {
   display: flex;
   gap: 8px;
@@ -51,9 +56,16 @@
   min-height: 44px;
 }
 
+.login-logo {
+  margin-bottom: 16px;
+}
+
 .btn-login {
-  background: var(--accent-blue) !important;
-  color: var(--text-bright) !important;
+  background: #47ab77 !important;
+  color: #ffffff !important;
+}
+.btn-login:hover {
+  background: #3d9568 !important;
 }
 
 /* ─── Admin Screen ────────────────────────────────────── */
