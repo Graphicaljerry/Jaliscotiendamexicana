@@ -13,8 +13,8 @@
   align-items: center;
   gap: 8px;
   padding: 10px 14px;
-  background: rgba(237, 239, 241, 0.85);
-  backdrop-filter: blur(10px);
+  background: rgba(237, 239, 241, 0.7);
+  backdrop-filter: blur(12px);
   border-radius: 12px;
   flex-shrink: 0;
   margin-bottom: 12px;
@@ -120,8 +120,9 @@
   overflow-y: auto;
   min-height: 0;
   border-radius: 14px;
-  border: 1px solid rgba(226, 232, 240, 0.6);
-  background: rgba(251, 251, 251, 0.9);
+  border: 1px solid rgba(226, 232, 240, 0.5);
+  background: rgba(251, 251, 251, 0.75);
+  backdrop-filter: blur(12px);
 }
 
 .transaction-table {
@@ -153,7 +154,7 @@
   font-size: 14px;
   border-bottom: 1px solid rgba(103, 133, 140, 0.3);
   height: 40px;
-  background: #fbfbfb;
+  background: rgba(251, 251, 251, 0.85);
 }
 
 .transaction-table tr:hover td {
@@ -229,7 +230,7 @@
 .empty-row td {
   height: 40px;
   border-bottom: 1px solid rgba(103, 133, 140, 0.3);
-  background: #fbfbfb;
+  background: rgba(251, 251, 251, 0.85);
 }
 
 .empty-row:last-child td {

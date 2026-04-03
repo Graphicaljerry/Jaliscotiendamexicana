@@ -1,7 +1,7 @@
 .function-bar {
   flex-shrink: 0;
-  background: rgba(221, 227, 229, 0.85);
-  backdrop-filter: blur(10px);
+  background: rgba(221, 227, 229, 0.7);
+  backdrop-filter: blur(12px);
   border-radius: 14px;
   padding: 9px 10px;
   margin: 12px 6px 6px;
