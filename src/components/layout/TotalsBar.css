@@ -16,7 +16,7 @@
 .totals-right {
   display: flex;
   gap: 16px;
-  align-items: flex-end;
+  align-items: flex-start;
 }
 
 .totals-left { flex-shrink: 0; }
@@ -31,7 +31,9 @@
 .total-field {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: 2px;
+  height: 40px;
 }
 
 .total-field label {
