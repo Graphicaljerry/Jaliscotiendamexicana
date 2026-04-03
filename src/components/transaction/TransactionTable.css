@@ -13,7 +13,8 @@
   align-items: center;
   gap: 8px;
   padding: 10px 14px;
-  background: #edeff1;
+  background: rgba(237, 239, 241, 0.85);
+  backdrop-filter: blur(10px);
   border-radius: 12px;
   flex-shrink: 0;
   margin-bottom: 12px;
@@ -119,8 +120,8 @@
   overflow-y: auto;
   min-height: 0;
   border-radius: 14px;
-  border: 1px solid #e2e8f0;
-  background: #fbfbfb;
+  border: 1px solid rgba(226, 232, 240, 0.6);
+  background: rgba(251, 251, 251, 0.9);
 }
 
 .transaction-table {

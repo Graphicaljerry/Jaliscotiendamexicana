@@ -5,7 +5,7 @@
   height: 100vh;
   height: 100dvh;
   overflow: hidden;
-  background: #fcfcfc;
+  background: transparent;
   position: relative;
 }
 
@@ -22,19 +22,19 @@
   left: -160px;
   width: 1032px;
   height: 420px;
-  background: #b1b1b1;
-  opacity: 0.25;
-  filter: blur(225px);
+  background: #aab5b7;
+  opacity: 0.4;
+  filter: blur(200px);
 }
 
 .blur-2 {
-  top: 10px;
+  top: -20px;
   right: -50px;
   width: 735px;
-  height: 248px;
+  height: 280px;
   background: #cdaf87;
-  opacity: 0.2;
-  filter: blur(225px);
+  opacity: 0.35;
+  filter: blur(200px);
 }
 
 .blur-3 {
@@ -43,11 +43,11 @@
   width: 1235px;
   height: 416px;
   background: #778d96;
-  opacity: 0.15;
-  filter: blur(225px);
+  opacity: 0.3;
+  filter: blur(200px);
 }
 
-.transaction-screen > *:not(.ambient-blur) {
+.transaction-screen > *:not(.ambient-blur):not(.modal-overlay) {
   position: relative;
   z-index: 1;
 }
