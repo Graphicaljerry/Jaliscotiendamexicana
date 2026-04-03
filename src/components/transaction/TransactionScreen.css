@@ -9,7 +9,7 @@
   position: relative;
 }
 
-.transaction-screen > *:not(.modal-overlay) {
+.transaction-screen > *:not(.modal-overlay):not(.sidebar-overlay) {
   position: relative;
   z-index: 1;
 }
