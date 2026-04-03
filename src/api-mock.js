@@ -251,6 +251,9 @@ export function installMockApi() {
         }
         if (exact.length + startsWith.length + partial.length >= 30) break;
       }
+      const byPrice = (a, b) => b.price - a.price;
+      startsWith.sort(byPrice);
+      partial.sort(byPrice);
       return Promise.resolve([...exact, ...startsWith, ...partial].slice(0, 15));
     },
     createItem: (item) => Promise.resolve({ id: Date.now(), ...item }),
