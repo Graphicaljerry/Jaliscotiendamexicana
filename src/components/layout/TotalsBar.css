@@ -16,6 +16,7 @@
 .totals-right {
   display: flex;
   gap: 16px;
+  align-items: flex-end;
 }
 
 .totals-left { flex-shrink: 0; }
