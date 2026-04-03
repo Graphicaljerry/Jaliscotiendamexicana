@@ -1,7 +1,7 @@
 .totals-bar {
   flex-shrink: 0;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   background: rgba(235, 240, 241, 0.7);
   backdrop-filter: blur(12px);
   border-radius: 14px;
@@ -26,9 +26,6 @@
   flex-direction: column;
   align-items: flex-end;
   gap: 2px;
-  background: radial-gradient(ellipse at 50% 50%, rgba(119, 141, 150, 0.25) 0%, transparent 70%);
-  padding: 8px 16px;
-  border-radius: 10px;
 }
 
 .total-field {
