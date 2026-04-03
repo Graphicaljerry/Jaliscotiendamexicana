@@ -118,12 +118,6 @@ function TransactionScreen() {
       <div className="ambient-blur blur-3" />
 
       <TopBar rightContent={<>
-        {isActive && (
-          <button className="btn-scale-top" onClick={() => {
-            setScaleWeight((1 + Math.random() * 3).toFixed(2));
-            setShowScale(true);
-          }}>Scale Weight</button>
-        )}
         <button className="btn-grid-toggle" onClick={() => setShowGrid(!showGrid)}>
           {showGrid ? 'Hide Grid' : 'Item Grid'}
         </button>

@@ -14,7 +14,7 @@ function FunctionBar({ onShowGrid, onShowCustomer, onShowPayment, onQuantityProm
     { label: 'Coupon', key: 'F11', action: () => {} },
     { label: 'Customer Inquiry', key: '', action: onShowCustomer },
     { label: 'Write Memo', key: '', action: () => {} },
-    { label: 'Put on Hold', key: '', action: onHold, highlight: true },
+    { label: 'Put on Hold', key: '', action: onHold },
   ];
 
   const row2 = [
