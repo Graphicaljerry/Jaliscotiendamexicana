@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import useTransactionStore from '../../stores/transactionStore';
 import './TransactionTable.css';
 
-function TransactionTable({ onInlineItemAdd, onOpenScale }) {
+function TransactionTable({ onInlineItemAdd, onOpenScale, sidebarOpen, onToggleSidebar }) {
   const items = useTransactionStore((s) => s.items);
   const addItem = useTransactionStore((s) => s.addItem);
   const removeItem = useTransactionStore((s) => s.removeItem);
@@ -168,6 +168,12 @@ function TransactionTable({ onInlineItemAdd, onOpenScale }) {
   return (
     <div className="transaction-table-wrapper">
       <div className="table-top-bar">
+        <button className="btn-sidebar-toggle" onClick={onToggleSidebar} title="Toggle sidebar">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" /><line x1="9" y1="3" x2="9" y2="21" />
+            {sidebarOpen ? <polyline points="15 9 12 12 15 15" /> : <polyline points="12 9 15 12 12 15" />}
+          </svg>
+        </button>
         <div className="code-legend">
           <span className="legend-item"><strong>000</strong> Conv. Fee</span>
           <span className="legend-item"><strong>1</strong> Grocery</span>

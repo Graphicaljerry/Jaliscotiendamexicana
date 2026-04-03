@@ -24,6 +24,7 @@ function TransactionScreen() {
   const [discountPrompt, setDiscountPrompt] = useState(false);
   const [showScale, setShowScale] = useState(false);
   const [scaleWeight, setScaleWeight] = useState('0.00');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const store = useTransactionStore();
   const isActive = store.isActive || store.items.length > 0;
@@ -131,48 +132,52 @@ function TransactionScreen() {
       </TopBar>
 
       <div className="main-content">
-        {/* Left Side */}
-        <div className="left-panel">
-          <div className="customer-section">
-            <label className="section-label">Customer Lookup</label>
-            {store.customer ? (
-              <div className="customer-info">
-                <span className="customer-name">{store.customer.name}</span>
-                <button className="btn-change-customer" onClick={() => setShowCustomerLookup(true)}>Change</button>
-                <button className="btn-clear-customer" onClick={() => store.setCustomer(null)}>Clear</button>
+        {/* Sidebar Overlay */}
+        {sidebarOpen && (
+          <div className="sidebar-overlay" onClick={() => setSidebarOpen(false)}>
+            <div className="left-panel left-panel-overlay" onClick={(e) => e.stopPropagation()}>
+              <div className="customer-section">
+                <label className="section-label">Customer Lookup</label>
+                {store.customer ? (
+                  <div className="customer-info">
+                    <span className="customer-name">{store.customer.name}</span>
+                    <button className="btn-change-customer" onClick={() => setShowCustomerLookup(true)}>Change</button>
+                    <button className="btn-clear-customer" onClick={() => store.setCustomer(null)}>Clear</button>
+                  </div>
+                ) : (
+                  <button className="btn-customer-lookup" onClick={() => setShowCustomerLookup(true)}>
+                    Look Up Customer
+                  </button>
+                )}
               </div>
-            ) : (
-              <button className="btn-customer-lookup" onClick={() => setShowCustomerLookup(true)}>
-                Look Up Customer
-              </button>
-            )}
-          </div>
 
-          <TransactionControls />
+              <TransactionControls />
 
-          {/* Held transactions count */}
-          {store.heldTransactions.length > 0 && (
-            <div className="held-count-badge" onClick={() => setShowHeldModal(true)}>
-              {store.heldTransactions.length} Held Transaction{store.heldTransactions.length > 1 ? 's' : ''}
+              {/* Held transactions count */}
+              {store.heldTransactions.length > 0 && (
+                <div className="held-count-badge" onClick={() => setShowHeldModal(true)}>
+                  {store.heldTransactions.length} Held Transaction{store.heldTransactions.length > 1 ? 's' : ''}
+                </div>
+              )}
+
+              <div className="begin-section">
+                {isActive ? (
+                  <button className="btn-begin" onClick={() => {
+                    if (store.items.length > 0) setShowPayment(true);
+                  }}>
+                    Finish / Payment
+                  </button>
+                ) : (
+                  <button className="btn-begin btn-begin-new" onClick={() => store.beginTransaction()}>
+                    Begin Transaction
+                  </button>
+                )}
+              </div>
             </div>
-          )}
-
-          <div className="begin-section">
-            {isActive ? (
-              <button className="btn-begin" onClick={() => {
-                if (store.items.length > 0) setShowPayment(true);
-              }}>
-                Finish / Payment
-              </button>
-            ) : (
-              <button className="btn-begin btn-begin-new" onClick={() => store.beginTransaction()}>
-                Begin Transaction
-              </button>
-            )}
           </div>
-        </div>
+        )}
 
-        {/* Center */}
+        {/* Full-width Center */}
         <div className="center-panel">
           {showGrid ? (
             <ItemGrid onSelectItem={handleAddGridItem} onHideGrid={() => setShowGrid(false)} />
@@ -183,6 +188,8 @@ function TransactionScreen() {
                 setScaleWeight((1 + Math.random() * 3).toFixed(2));
                 setShowScale(true);
               }}
+              sidebarOpen={sidebarOpen}
+              onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
             />
           )}
         </div>

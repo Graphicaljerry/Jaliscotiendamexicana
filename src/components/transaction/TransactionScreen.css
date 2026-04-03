@@ -79,9 +79,20 @@
   overflow: hidden;
   min-height: 0;
   padding: 0;
+  position: relative;
 }
 
-/* ─── Left Panel ─────────────────────────────────────── */
+/* ─── Sidebar Overlay ────────────────────────────────── */
+.sidebar-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+}
+
+/* ─── Left Panel (overlay mode) ──────────────────────── */
 .left-panel {
   width: 200px;
   min-width: 200px;
@@ -94,6 +105,15 @@
   gap: 8px;
   overflow-y: auto;
   flex-shrink: 0;
+}
+
+.left-panel-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 21;
+  box-shadow: 4px 0 16px rgba(0, 0, 0, 0.1);
 }
 
 .section-label {
@@ -288,7 +308,7 @@
 
 /* ─── Tablet / Mobile Responsive ─────────────────────── */
 @media (max-width: 1024px) {
-  .left-panel {
+  .left-panel-overlay {
     width: 170px;
     min-width: 170px;
     max-width: 170px;
@@ -299,9 +319,5 @@
 }
 
 @media (max-width: 768px) {
-  .left-panel {
-    display: none;
-  }
-
   .top-bar-right button { font-size: 11px; padding: 4px 8px; min-height: 32px; }
 }

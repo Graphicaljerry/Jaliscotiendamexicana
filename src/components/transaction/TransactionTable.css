@@ -19,6 +19,22 @@
   margin-bottom: 12px;
 }
 
+.btn-sidebar-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  color: var(--text-primary);
+  border-radius: 6px;
+  flex-shrink: 0;
+  padding: 0;
+}
+.btn-sidebar-toggle:hover {
+  background: #e0e4e8;
+}
+
 .code-legend {
   display: flex;
   gap: 10px;
