@@ -2,10 +2,12 @@
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  background: #ffffff;
-  border-top: 1px solid var(--border-color);
-  padding: 8px 16px;
-  gap: 24px;
+  background: #ebf0f1;
+  border-radius: 14px;
+  padding: 12px 23px 12px 23px;
+  margin: 12px 6px 0;
+  gap: 27px;
+  height: 97px;
 }
 
 .totals-left,
@@ -44,15 +46,15 @@
   color: var(--text-primary);
 }
 
-.paid-field { min-width: 100px; }
+.paid-field { min-width: 104px; }
 
 .paid-input-wrap {
   display: flex;
   align-items: center;
-  background: var(--bg-input);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
-  padding: 0 6px;
+  background: #fafafa;
+  border: 1px solid #cdcdcd;
+  border-radius: 6px;
+  padding: 1px 7px;
 }
 
 .dollar-sign { color: var(--text-muted); font-weight: 600; font-size: 14px; }
@@ -69,6 +71,7 @@
 }
 
 .paid-input:focus { border: none; outline: none; box-shadow: none; }
+.paid-input::placeholder { color: #757575; }
 
 .change-due { color: var(--accent-red) !important; font-size: 18px; }
 
@@ -84,17 +87,20 @@
 .grand-total-value {
   font-size: 38px;
   font-weight: 700;
-  color: var(--accent-green);
+  color: #282828;
+  line-height: 1;
 }
 
 .tax-label {
   font-size: 9px;
-  color: var(--text-muted);
+  color: #4f4f4f;
   letter-spacing: 0.5px;
   text-align: right;
+  text-transform: uppercase;
 }
 
 @media (max-width: 1024px) {
+  .totals-bar { margin: 8px 6px 0; padding: 8px 12px; height: auto; }
   .grand-total-value { font-size: 28px; }
   .total-value { font-size: 14px; }
 }

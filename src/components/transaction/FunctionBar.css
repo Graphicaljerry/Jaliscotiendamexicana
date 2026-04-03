@@ -1,15 +1,18 @@
 .function-bar {
   flex-shrink: 0;
-  background: var(--bg-tertiary);
-  border-top: 1px solid var(--border-color);
-  padding: 4px;
+  background: #dde3e5;
+  border-radius: 14px;
+  padding: 9px 10px;
+  margin: 12px 6px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .fn-row {
   display: flex;
-  gap: 3px;
-  margin-bottom: 2px;
-  height: 75px;
+  gap: 6px;
+  height: 85px;
 }
 
 .fn-row:last-child { margin-bottom: 0; }
@@ -21,31 +24,36 @@
   align-items: center;
   justify-content: center;
   padding: 4px;
-  background: #ffffff;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
+  background: #fcfcfc;
+  border-radius: 10px;
   color: var(--text-primary);
   min-height: 36px;
   gap: 1px;
+  border: none;
 }
 
 .fn-btn:hover {
-  background: var(--accent-blue);
-  color: #ffffff;
-  border-color: var(--accent-blue);
+  background: #f0f2f4;
+}
+
+.fn-btn:active {
+  background: #e0e4e8;
 }
 
 .fn-btn.fn-danger {
-  background: #ffffff;
-  border-color: #fdb8b8;
+  background: #fcfcfc;
+  border: 1px solid #e26666;
 }
-.fn-btn.fn-danger:hover { background: var(--btn-danger); color: #fff; border-color: var(--btn-danger); }
+.fn-btn.fn-danger:hover { background: #fff0f0; }
+.fn-btn.fn-danger:active { background: var(--btn-danger); color: #fff; }
 
 .fn-btn.fn-success {
-  background: #ffffff;
-  border-color: #90e1af;
+  background: #47ab77;
+  border: 2px solid #47ab77;
 }
-.fn-btn.fn-success:hover { background: var(--btn-success); color: #fff; border-color: var(--btn-success); }
+.fn-btn.fn-success .fn-key { color: #c9f0dc; }
+.fn-btn.fn-success .fn-label { color: #f3f3f7; }
+.fn-btn.fn-success:hover { background: #3d9568; border-color: #3d9568; }
 
 .fn-btn.fn-highlight {
   background: #ea8b0c;
@@ -63,18 +71,21 @@
   color: var(--text-muted);
   letter-spacing: 0.5px;
 }
-.fn-btn:hover .fn-key { color: #fff; }
+.fn-btn:hover .fn-key { color: var(--text-muted); }
 .fn-btn.fn-highlight .fn-key { color: #fff; }
 
 .fn-label {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
   text-align: center;
-  line-height: 1.2;
+  line-height: 12px;
+  color: var(--text-primary);
 }
 .fn-btn.fn-highlight .fn-label { color: #fff; }
 
 @media (max-width: 1024px) {
-  .fn-row { height: 60px; }
-  .fn-label { font-size: 9px; }
+  .fn-row { height: 65px; }
+  .fn-label { font-size: 10px; }
+  .function-bar { margin: 8px 6px 6px; padding: 6px 8px; gap: 4px; }
+  .fn-row { gap: 4px; }
 }

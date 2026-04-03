@@ -4,17 +4,19 @@
   flex-direction: column;
   overflow: hidden;
   min-height: 0;
+  padding: 12px 6px 0;
 }
 
-/* ─── Top Bar (search + scale) ───────────────────────── */
+/* ─── Top Bar (code legend + search + scale) ─────────── */
 .table-top-bar {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 10px;
-  background: var(--bg-secondary);
-  border-bottom: 1px solid var(--border-light);
+  padding: 10px 14px;
+  background: #edeff1;
+  border-radius: 12px;
   flex-shrink: 0;
+  margin-bottom: 12px;
 }
 
 .code-legend {
@@ -32,13 +34,18 @@
 
 .search-wrap {
   position: relative;
-  width: 260px;
+  flex: 1;
+  max-width: 280px;
+  margin-left: auto;
 }
 
 .compact-search {
   width: 100%;
   font-size: 13px;
-  padding: 6px 8px;
+  padding: 8px 12px;
+  background: #f9feff;
+  border: 1px solid #cdcdcd;
+  border-radius: 6px;
 }
 
 .search-dropdown {
@@ -78,22 +85,26 @@
 .search-result-btn:hover .sr-price { color: #fff; }
 
 .btn-scale-inline {
-  padding: 6px 12px;
+  padding: 10px 32px;
   background: #ea8b0c;
   color: #fff;
-  border-radius: var(--radius-sm);
+  border-radius: 6px;
   font-weight: 600;
   font-size: 12px;
-  min-height: 32px;
+  min-height: 38px;
   white-space: nowrap;
+  margin-left: auto;
 }
 .btn-scale-inline:hover { background: #d97706; }
 
-/* ─── Table ──────────────────────────────────────────── */
+/* ─── Table Container ────────────────────────────────── */
 .table-scroll {
   flex: 1;
   overflow-y: auto;
   min-height: 0;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  background: #fbfbfb;
 }
 
 .transaction-table {
@@ -104,20 +115,32 @@
   position: sticky;
   top: 0;
   z-index: 10;
-  background: #1e3a5f;
+  background: #121212;
   color: #ffffff;
   font-size: 12px;
-  padding: 8px 10px;
+  padding: 14px 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.3px;
 }
 
+.transaction-table th:first-child {
+  border-radius: 14px 0 0 0;
+}
+.transaction-table th:last-child {
+  border-radius: 0 14px 0 0;
+}
+
 .transaction-table td {
-  padding: 6px 10px;
-  font-size: 13px;
-  border-bottom: 1px solid var(--border-light);
-  height: 36px;
+  padding: 8px 10px;
+  font-size: 14px;
+  border-bottom: 1px solid #67858c;
+  height: 40px;
+  background: #fbfbfb;
+}
+
+.transaction-table tr:hover td {
+  background: #f4f6f8;
 }
 
 .col-itemnum { width: 110px; text-align: center; }
@@ -128,22 +151,18 @@
 .col-disc { width: 70px; text-align: right; }
 .col-edit { width: 40px; text-align: center; }
 
-.mono { font-family: 'Courier New', monospace; font-weight: 700; font-size: 13px; }
+.mono { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 14px; }
 
 /* ─── Entry Row (typing indicator, no visible input) ──── */
-.entry-row {
-  background: #e8ecf1;
-}
-
 .entry-row td {
-  height: 36px;
+  background: #f0f2f4;
+  height: 40px;
 }
 
 .entry-cell {
   position: relative;
 }
 
-/* The actual input is hidden off-screen */
 .hidden-code-input {
   position: absolute;
   left: -9999px;
@@ -153,7 +172,6 @@
   height: 1px;
 }
 
-/* Typing indicator shows typed text in the cell */
 .typing-indicator {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 20px;
@@ -190,14 +208,16 @@
   font-style: italic;
 }
 
-/* Empty placeholder rows — same height as data rows */
+/* Empty placeholder rows */
 .empty-row td {
-  height: 36px;
-  border-bottom: 1px solid var(--border-light);
+  height: 40px;
+  border-bottom: 1px solid #67858c;
+  background: #fbfbfb;
 }
 
-.empty-row:nth-child(even) td {
-  background: var(--bg-input);
+.empty-row:last-child td {
+  border-bottom: none;
+  border-radius: 0 0 14px 14px;
 }
 
 .spacer-cell { height: 0; padding: 0; }
@@ -208,7 +228,7 @@
   text-align: center;
   font-size: 14px;
   font-weight: 700;
-  padding: 4px 2px;
+  padding: 5px 3px;
   border: 1px solid var(--border-color);
   border-radius: 4px;
   background: var(--bg-input);
@@ -217,7 +237,7 @@
 
 .qty-input:focus {
   border-color: var(--accent-blue);
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
 }
 
 .qty-input::-webkit-inner-spin-button,
@@ -237,9 +257,10 @@
 }
 .btn-remove-item:hover { background: var(--btn-danger); color: #fff; }
 
-/* ─── Editing Row (active price/qty edit after scan) ──── */
+/* ─── Editing Row ────────────────────────────────────── */
 .editing-row td {
-  background: #f0f4ff;
+  background: #eef3ff;
+  border-color: #3e88c0;
 }
 
 .edit-price-input {
@@ -258,7 +279,7 @@
 }
 
 .tax-badge.no-tax {
-  background: #dbeafe;
+  background: #e8ecf1;
   color: #1e40af;
 }
 

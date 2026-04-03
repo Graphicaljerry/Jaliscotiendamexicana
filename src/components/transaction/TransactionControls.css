@@ -14,21 +14,21 @@
 .control-buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: 3px;
+  gap: 4px;
 }
 
 .ctrl-btn {
   flex: 1;
   min-width: 50px;
-  padding: 5px 3px;
-  font-size: 10px;
+  padding: 6px 4px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--text-secondary);
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
-  border-radius: 3px;
+  border-radius: 4px;
   text-align: center;
-  min-height: 28px;
+  min-height: 30px;
 }
 
 .ctrl-btn:hover {
@@ -37,9 +37,9 @@
 }
 
 .ctrl-btn.active {
-  background: var(--accent-blue);
+  background: #1a1a2e;
   color: #ffffff;
-  border-color: var(--accent-blue);
+  border-color: #1a1a2e;
 }
 
 .discount-percent {

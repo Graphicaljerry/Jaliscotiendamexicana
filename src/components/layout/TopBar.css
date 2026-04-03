@@ -2,16 +2,17 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #1e40af;
-  padding: 6px 12px;
+  background: #121212;
+  padding: 12px 40px;
   flex-shrink: 0;
   gap: 8px;
+  height: 62px;
 }
 
 .top-bar-brand {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   cursor: pointer;
   flex-shrink: 0;
 }
@@ -44,9 +45,11 @@
 }
 
 @media (max-width: 1024px) {
+  .app-top-bar { padding: 8px 16px; }
   .top-bar-store-name { font-size: 14px; }
 }
 
 @media (max-width: 768px) {
+  .app-top-bar { padding: 6px 10px; }
   .top-bar-store-name { font-size: 12px; }
 }

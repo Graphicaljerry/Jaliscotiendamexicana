@@ -3,33 +3,72 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  height: 100dvh; /* dynamic viewport height for mobile */
+  height: 100dvh;
   overflow: hidden;
+  background: #fcfcfc;
+  position: relative;
+}
+
+/* Ambient background blurs (decorative) */
+.transaction-screen::before {
+  content: '';
+  position: absolute;
+  top: -100px;
+  left: -160px;
+  width: 1032px;
+  height: 420px;
+  background: #aab5b7;
+  opacity: 0.15;
+  filter: blur(225px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.transaction-screen::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 150px;
+  width: 1235px;
+  height: 416px;
+  background: #778d96;
+  opacity: 0.12;
+  filter: blur(225px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.transaction-screen > * {
+  position: relative;
+  z-index: 1;
 }
 
 /* ─── Top Bar Extras ──────────────────────────────────── */
 .txn-label {
-  font-size: 13px;
-  font-weight: 600;
-  color: rgba(255,255,255,0.6);
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.8);
 }
 
 .btn-scale-top {
   background: #ea8b0c;
   color: #ffffff;
+  border-radius: 6px;
 }
 .btn-scale-top:hover { background: #d97706; }
 
 .btn-grid-toggle {
-  background: #0d9488;
+  background: #47ab77;
   color: #ffffff;
+  border-radius: 6px;
 }
-.btn-grid-toggle:hover { background: #0f766e; }
+.btn-grid-toggle:hover { background: #3d9568; }
 
 .btn-admin {
   background: rgba(255,255,255,0.15);
   color: #ffffff;
   border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 6px;
 }
 .btn-admin:hover { background: rgba(255,255,255,0.25); }
 
@@ -38,20 +77,21 @@
   display: flex;
   flex: 1;
   overflow: hidden;
-  min-height: 0; /* critical for flex children to shrink */
+  min-height: 0;
+  padding: 0;
 }
 
-/* ─── Left Panel (simplified) ────────────────────────── */
+/* ─── Left Panel ─────────────────────────────────────── */
 .left-panel {
   width: 200px;
   min-width: 200px;
   max-width: 200px;
   background: var(--bg-secondary);
-  border-right: 1px solid var(--border-color);
-  padding: 8px;
+  border-right: 1px solid var(--border-light);
+  padding: 10px 8px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   overflow-y: auto;
   flex-shrink: 0;
 }
@@ -99,7 +139,7 @@
 .btn-customer-lookup {
   width: 100%;
   padding: 8px;
-  background: var(--bg-hover);
+  background: var(--bg-secondary);
   color: var(--text-primary);
   border-radius: var(--radius-sm);
   font-size: 12px;
@@ -120,6 +160,7 @@
 .txn-number strong {
   color: #ffffff;
   font-size: 18px;
+  font-weight: 700;
 }
 
 /* ─── Held Transactions Badge ────────────────────────── */
@@ -152,13 +193,13 @@
 
 .btn-begin {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   background: var(--accent-green);
   color: #ffffff;
   font-size: 14px;
   font-weight: 700;
   border-radius: var(--radius-md);
-  min-height: 44px;
+  min-height: 48px;
 }
 .btn-begin:hover { background: var(--btn-success-hover); }
 
@@ -168,7 +209,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: var(--bg-primary);
+  background: transparent;
   min-width: 0;
 }
 
@@ -254,16 +295,13 @@
     padding: 6px;
   }
 
-  .top-bar { padding: 4px 8px; }
-  .store-name { font-size: 14px; }
   .txn-label { display: none; }
 }
 
 @media (max-width: 768px) {
   .left-panel {
-    display: none; /* hide sidebar on small screens */
+    display: none;
   }
 
-  .store-name { font-size: 13px; }
   .top-bar-right button { font-size: 11px; padding: 4px 8px; min-height: 32px; }
 }
