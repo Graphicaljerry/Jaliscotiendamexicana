@@ -125,6 +125,7 @@ function TransactionScreen() {
         )}
       </TopBar>
 
+      <div className="pos-content-wrap">
       <div className="main-content">
         {/* Sidebar Overlay */}
         {sidebarOpen && (
@@ -211,6 +212,8 @@ function TransactionScreen() {
           onBeginTransaction={() => store.beginTransaction()}
         />
       )}
+
+      </div>{/* end pos-content-wrap */}
 
       {/* Modals */}
       {showCustomerLookup && <CustomerLookup onClose={() => setShowCustomerLookup(false)} />}
