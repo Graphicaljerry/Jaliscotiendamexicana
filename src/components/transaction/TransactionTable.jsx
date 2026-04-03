@@ -202,7 +202,14 @@ function TransactionTable({ onInlineItemAdd, onOpenScale, sidebarOpen, onToggleS
         <button className="btn-scale-inline" onClick={onOpenScale}>Scale</button>
       </div>
 
-      <div className="table-outer">
+      <div className="table-outer" onClick={(e) => {
+        // Click on table area (not on inputs/buttons) → dismiss editing, show typing indicator
+        const tag = e.target.tagName.toLowerCase();
+        if (tag !== 'input' && tag !== 'button') {
+          confirmRow();
+          setTimeout(() => codeRef.current?.focus(), 50);
+        }
+      }}>
         <div className="table-header-fixed">
           <table>
             <thead>
