@@ -234,16 +234,24 @@ export function installMockApi() {
     getItemsByCategory: (catId) => Promise.resolve(SAMPLE_ITEMS_BY_CATEGORY[catId] || []),
     searchItems: (q) => {
       const lower = q.toLowerCase();
-      const results = [];
-      // Performance: stop after 15 matches instead of scanning all 17K
-      for (let i = 0; i < ALL_ITEMS.length && results.length < 15; i++) {
+      const exact = [];
+      const startsWith = [];
+      const partial = [];
+      for (let i = 0; i < ALL_ITEMS.length; i++) {
         const item = ALL_ITEMS[i];
-        if (item.name.toLowerCase().includes(lower) ||
-            (item.barcode && item.barcode.includes(q))) {
-          results.push(item);
+        if (item.barcode && item.barcode === q) {
+          exact.push(item);
+        } else if (item.barcode && item.barcode.startsWith(q)) {
+          if (startsWith.length < 15) startsWith.push(item);
+        } else if (
+          item.name.toLowerCase().includes(lower) ||
+          (item.barcode && item.barcode.includes(q))
+        ) {
+          if (partial.length < 15) partial.push(item);
         }
+        if (exact.length + startsWith.length + partial.length >= 30) break;
       }
-      return Promise.resolve(results);
+      return Promise.resolve([...exact, ...startsWith, ...partial].slice(0, 15));
     },
     createItem: (item) => Promise.resolve({ id: Date.now(), ...item }),
     updateItem: (id, item) => Promise.resolve({ id, ...item }),
