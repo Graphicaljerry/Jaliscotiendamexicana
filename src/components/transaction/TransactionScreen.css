@@ -77,15 +77,14 @@
 
 /* ─── Left Panel (overlay mode) ──────────────────────── */
 .left-panel {
-  width: 200px;
-  min-width: 200px;
-  max-width: 200px;
-  background: var(--bg-secondary);
-  border-right: 1px solid var(--border-light);
-  padding: 10px 8px;
+  width: 223px;
+  min-width: 223px;
+  max-width: 223px;
+  background: #fbfbfb;
+  padding: 8px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 16px;
   overflow-y: auto;
   flex-shrink: 0;
 }
@@ -96,7 +95,23 @@
   left: 0;
   bottom: 0;
   z-index: 21;
-  box-shadow: 4px 0 16px rgba(0, 0, 0, 0.1);
+  box-shadow: 112px 0 31px rgba(0,0,0,0), 71px 0 29px rgba(0,0,0,0.01), 40px 0 24px rgba(0,0,0,0.03), 18px 0 18px rgba(0,0,0,0.06), 4px 0 10px rgba(0,0,0,0.06);
+}
+
+/* Sidebar close button */
+.btn-sidebar-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 29px;
+  height: 29px;
+  background: transparent;
+  color: var(--text-primary);
+  padding: 0;
+  flex-shrink: 0;
+}
+.btn-sidebar-close:hover {
+  opacity: 0.7;
 }
 
 .section-label {
@@ -105,14 +120,13 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: var(--text-muted);
+  color: #8896a6;
   margin-bottom: 4px;
 }
 
 .customer-section {
-  background: var(--bg-input);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-sm);
+  background: #ecedf1;
+  border-radius: 6px;
   padding: 8px;
 }
 
@@ -141,18 +155,19 @@
 
 .btn-customer-lookup {
   width: 100%;
-  padding: 8px;
-  background: var(--bg-secondary);
-  color: var(--text-primary);
-  border-radius: var(--radius-sm);
+  padding: 10.5px 9px;
+  background: #fbfbfb;
+  color: #1a1a2e;
+  border-radius: 6px;
   font-size: 12px;
+  font-weight: 400;
   min-height: 36px;
-  border: 1px solid var(--border-color);
+  border: 1px solid #d1d9e6;
 }
 .btn-customer-lookup:hover {
-  background: var(--accent-blue);
+  background: #47ab77;
   color: #ffffff;
-  border-color: var(--accent-blue);
+  border-color: #47ab77;
 }
 
 /* ─── Transaction Number ─────────────────────────────── */
@@ -292,10 +307,9 @@
 /* ─── Tablet / Mobile Responsive ─────────────────────── */
 @media (max-width: 1024px) {
   .left-panel-overlay {
-    width: 170px;
-    min-width: 170px;
-    max-width: 170px;
-    padding: 6px;
+    width: 200px;
+    min-width: 200px;
+    max-width: 200px;
   }
 
   .txn-label { display: none; }

@@ -131,6 +131,12 @@ function TransactionScreen() {
         {sidebarOpen && (
           <div className="sidebar-overlay" onClick={() => setSidebarOpen(false)}>
             <div className="left-panel left-panel-overlay" onClick={(e) => e.stopPropagation()}>
+              <button className="btn-sidebar-close" onClick={() => setSidebarOpen(false)}>
+                <svg width="29" height="29" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" /><line x1="9" y1="3" x2="9" y2="21" />
+                  <polyline points="15 9 12 12 15 15" />
+                </svg>
+              </button>
               <div className="customer-section">
                 <label className="section-label">Customer Lookup</label>
                 {store.customer ? (
