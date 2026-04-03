@@ -50,7 +50,7 @@ function TransactionTable({ onInlineItemAdd, onOpenScale, sidebarOpen, onToggleS
     } else if (editField === 'qty' && qtyRef.current) {
       setTimeout(() => { qtyRef.current?.focus(); qtyRef.current?.select(); }, 50);
     }
-    if (tableEndRef.current) tableEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (tableEndRef.current) tableEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }, [editingRow, editField]);
 
   // After adding, decide where to focus

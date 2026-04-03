@@ -1,10 +1,10 @@
 import React from 'react';
-import logoImg from '../../../public/jalisco-tienda-mexicana-logo-white-rgb-2000px-w-72ppi.png';
+import logoColor from '../../../public/jalisco-logo-color.svg';
 
 function Logo({ size = 36 }) {
   return (
     <img
-      src={logoImg}
+      src={logoColor}
       alt="Jalisco Tienda Mexicana"
       style={{ height: size, width: 'auto', flexShrink: 0 }}
     />

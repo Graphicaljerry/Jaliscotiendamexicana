@@ -112,6 +112,11 @@ function TransactionScreen() {
 
   return (
     <div className="transaction-screen">
+      {/* Ambient gradient blurs */}
+      <div className="ambient-blur blur-1" />
+      <div className="ambient-blur blur-2" />
+      <div className="ambient-blur blur-3" />
+
       <TopBar rightContent={<>
         {isActive && (
           <button className="btn-scale-top" onClick={() => {

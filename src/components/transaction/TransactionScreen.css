@@ -10,35 +10,44 @@
 }
 
 /* Ambient background blurs (decorative) */
-.transaction-screen::before {
-  content: '';
-  position: absolute;
+.ambient-blur {
+  position: fixed;
+  pointer-events: none;
+  border-radius: 50%;
+  z-index: 0;
+}
+
+.blur-1 {
   top: -100px;
   left: -160px;
   width: 1032px;
   height: 420px;
-  background: #aab5b7;
-  opacity: 0.15;
+  background: #b1b1b1;
+  opacity: 0.25;
   filter: blur(225px);
-  pointer-events: none;
-  z-index: 0;
 }
 
-.transaction-screen::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
+.blur-2 {
+  top: 10px;
+  right: -50px;
+  width: 735px;
+  height: 248px;
+  background: #cdaf87;
+  opacity: 0.2;
+  filter: blur(225px);
+}
+
+.blur-3 {
+  bottom: -50px;
   left: 150px;
   width: 1235px;
   height: 416px;
   background: #778d96;
-  opacity: 0.12;
+  opacity: 0.15;
   filter: blur(225px);
-  pointer-events: none;
-  z-index: 0;
 }
 
-.transaction-screen > * {
+.transaction-screen > *:not(.ambient-blur) {
   position: relative;
   z-index: 1;
 }

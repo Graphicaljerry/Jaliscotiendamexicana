@@ -130,9 +130,8 @@ th {
 
 td {
   padding: 8px 12px;
-  border-bottom: 1px solid #67858c;
+  border-bottom: 1px solid rgba(103, 133, 140, 0.3);
   font-size: 14px;
-  background: #fbfbfb;
 }
 
 tr:hover td {
