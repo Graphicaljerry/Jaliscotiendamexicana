@@ -174,14 +174,6 @@ function TransactionTable({ onInlineItemAdd, onOpenScale, sidebarOpen, onToggleS
             {sidebarOpen ? <polyline points="15 9 12 12 15 15" /> : <polyline points="12 9 15 12 12 15" />}
           </svg>
         </button>
-        <div className="code-legend">
-          <span className="legend-item"><strong>000</strong> Conv. Fee</span>
-          <span className="legend-item"><strong>1</strong> Grocery</span>
-          <span className="legend-item"><strong>2</strong> Grocery Tax</span>
-          <span className="legend-item"><strong>3</strong> Meat/Cheese</span>
-          <span className="legend-item"><strong>5</strong> Restaurant</span>
-          <span className="legend-item"><strong>11</strong> Boss Rev.</span>
-        </div>
         <div className="search-wrap">
           <input
             type="text"

@@ -51,8 +51,8 @@
 .search-wrap {
   position: relative;
   flex: 1;
-  max-width: 280px;
-  margin-left: auto;
+  max-width: 320px;
+  margin: 0 auto;
 }
 
 .compact-search {
