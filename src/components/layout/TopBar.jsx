@@ -7,7 +7,6 @@ function TopBar({ children, rightContent }) {
     <div className="app-top-bar">
       <div className="top-bar-brand" onClick={() => window.location.hash = '#/'}>
         <Logo size={36} />
-        <span className="top-bar-store-name">JALISCO TIENDA MEXICANA</span>
       </div>
       <div className="top-bar-middle">
         {children}
