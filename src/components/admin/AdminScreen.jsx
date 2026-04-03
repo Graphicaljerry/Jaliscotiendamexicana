@@ -375,17 +375,19 @@ function AdminScreen() {
               </div>
             )}
 
-            <table>
-              <thead><tr><th>ID</th><th>Name</th><th>Order</th><th>Actions</th></tr></thead>
-              <tbody>
-                {categories.map((cat) => (
-                  <tr key={cat.id}>
-                    <td>{cat.id}</td><td>{cat.name}</td><td>{cat.display_order}</td>
-                    <td><button className="btn-edit-sm" onClick={() => setEditCategory({ ...cat })}>Edit</button></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <div className="inv-table-wrap">
+              <table>
+                <thead><tr><th>ID</th><th>Name</th><th>Order</th><th>Actions</th></tr></thead>
+                <tbody>
+                  {categories.map((cat) => (
+                    <tr key={cat.id}>
+                      <td>{cat.id}</td><td>{cat.name}</td><td>{cat.display_order}</td>
+                      <td><button className="btn-edit-sm" onClick={() => setEditCategory({ ...cat })}>Edit</button></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
 
