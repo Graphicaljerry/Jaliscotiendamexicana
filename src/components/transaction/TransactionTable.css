@@ -18,6 +18,8 @@
   border-radius: 12px;
   flex-shrink: 0;
   margin-bottom: 12px;
+  position: relative;
+  z-index: 20;
 }
 
 .btn-sidebar-toggle {
@@ -51,9 +53,10 @@
 
 .search-wrap {
   position: relative;
-  flex: 1;
-  max-width: 320px;
+  width: 320px;
+  flex-shrink: 0;
   margin: 0 auto;
+  z-index: 50;
 }
 
 .compact-search {
@@ -73,9 +76,9 @@
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
   border-radius: 0 0 var(--radius-sm) var(--radius-sm);
-  box-shadow: var(--shadow-lg);
-  z-index: 100;
-  max-height: 240px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  z-index: 200;
+  max-height: 300px;
   overflow-y: auto;
 }
 
