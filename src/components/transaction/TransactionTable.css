@@ -11,7 +11,7 @@
 .table-top-bar {
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: space-between;
   padding: 10px 14px;
   background: rgba(237, 239, 241, 0.7);
   backdrop-filter: blur(12px);
@@ -52,10 +52,10 @@
 }
 
 .search-wrap {
-  position: relative;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   width: 320px;
-  flex-shrink: 0;
-  margin: 0 auto;
   z-index: 50;
 }
 
