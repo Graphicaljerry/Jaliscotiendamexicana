@@ -300,7 +300,7 @@ function TransactionTable({ onInlineItemAdd, onOpenScale, sidebarOpen, onToggleS
             {editingRow !== null && <tr ref={tableEndRef}><td colSpan="7" className="spacer-cell"></td></tr>}
 
             {/* Fill remaining space with empty rows */}
-            {Array.from({ length: 20 }).map((_, i) => (
+            {Array.from({ length: 10 }).map((_, i) => (
               <tr key={`empty-${i}`} className="empty-row">
                 <td className="col-itemnum"></td><td className="col-desc"></td>
                 <td className="col-price"></td><td className="col-qty"></td>
