@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { HashRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, HashRouter, Routes, Route } from 'react-router-dom';
 import TransactionScreen from './components/transaction/TransactionScreen';
 import AdminScreen from './components/admin/AdminScreen';
+import PaymentPreview from './components/payment/PaymentPreview';
 import useTransactionStore from './stores/transactionStore';
 
 function App() {
@@ -23,12 +24,13 @@ function App() {
   }, [setTaxRate]);
 
   return (
-    <HashRouter>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Routes>
         <Route path="/" element={<TransactionScreen />} />
         <Route path="/admin" element={<AdminScreen />} />
+        <Route path="/payment-preview" element={<PaymentPreview />} />
       </Routes>
-    </HashRouter>
+    </BrowserRouter>
   );
 }
 

@@ -125,7 +125,7 @@ function AdminScreen() {
             autoFocus
           />
           <div className="login-actions">
-            <button onClick={() => window.location.hash = '#/'}>Back to POS</button>
+            <button onClick={() => window.location.href = '/'}>Back to POS</button>
             <button className="btn-login" onClick={handleLogin}>Login</button>
           </div>
         </div>
@@ -139,7 +139,7 @@ function AdminScreen() {
         <span className="admin-nav-links">
           P.O.S. &nbsp;|&nbsp; Inventory &nbsp;|&nbsp; Customers &nbsp;|&nbsp; Financials
         </span>
-        <button className="btn-back-pos" onClick={() => window.location.hash = '#/'}>
+        <button className="btn-back-pos" onClick={() => window.location.href = '/'}>
           Point Of Sale
         </button>
       </>}>

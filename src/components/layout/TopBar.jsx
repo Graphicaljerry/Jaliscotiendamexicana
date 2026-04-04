@@ -5,7 +5,7 @@ import './TopBar.css';
 function TopBar({ children, rightContent }) {
   return (
     <div className="app-top-bar">
-      <div className="top-bar-brand" onClick={() => window.location.hash = '#/'}>
+      <div className="top-bar-brand" onClick={() => window.location.href = '/'}>
         <Logo size={36} />
       </div>
       <div className="top-bar-middle">

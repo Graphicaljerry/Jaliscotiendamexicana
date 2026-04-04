@@ -116,7 +116,7 @@ function TransactionScreen() {
         <button className="btn-grid-toggle" onClick={() => setShowGrid(!showGrid)}>
           {showGrid ? 'Hide Grid' : 'Item Grid'}
         </button>
-        <button className="btn-admin" onClick={() => window.location.hash = '#/admin'}>Admin</button>
+        <button className="btn-admin" onClick={() => window.location.href = '/admin'}>Admin</button>
       </>}>
         {isActive ? (
           <span className="txn-number">Transaction# <strong>{store.transactionNumber || '—'}</strong></span>

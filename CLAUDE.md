@@ -11,13 +11,14 @@ Point of Sale system for **Jalisco Tienda Mexicana**, a Mexican grocery store an
 - **Main POS screen:** node-id=6637-3814
 - **Sidebar open:** node-id=6644-4602
 - **Sidebar panel detail:** node-id=6644-4954
+- **Payment modal:** built via use_figma on POS System page
 
 ## Tech Stack
 
 - **Framework:** React 18 + Vite 6
 - **Desktop:** Electron 33 (with electron-builder for packaging)
 - **State:** Zustand 4 (single store: `transactionStore.js`)
-- **Routing:** React Router v6 (HashRouter — `#/` for POS, `#/admin` for admin)
+- **Routing:** React Router v6 (BrowserRouter with `v7_startTransition` and `v7_relativeSplatPath` future flags — previously HashRouter, migrated to BrowserRouter)
 - **Styling:** Plain CSS with CSS variables (NO Tailwind, NO CSS modules)
 - **Database:** better-sqlite3 (Electron only; browser uses mock API)
 - **Printer:** node-thermal-printer (Electron only)
@@ -28,7 +29,7 @@ Point of Sale system for **Jalisco Tienda Mexicana**, a Mexican grocery store an
 ### File Structure
 ```
 src/
-  App.jsx                    # HashRouter with / and /admin routes
+  App.jsx                    # BrowserRouter with /, /admin, /payment-preview routes
   main.jsx                   # Entry point, installs mock API for browser
   api-mock.js                # Browser mock: categories, items, customers, barcode lookup
   data/inventory.json        # 17,698 store items (barcode, name, price, tax, ebt)
@@ -53,10 +54,16 @@ src/
       CustomerLookup.jsx/css # Customer search modal (name, phone, email)
     payment/
       PaymentModal.jsx/css   # Payment entry (cash/credit/debit/EBT, numpad, split payments)
+      PaymentPreview.jsx     # Standalone page rendering PaymentModal with sample data (for Figma capture)
       HeldTransactionsModal.jsx/css # Reload or delete held transactions
     admin/
       AdminScreen.jsx/css    # Admin panel (settings, categories, items management)
 ```
+
+### Routes
+- `/` — Main POS transaction screen
+- `/admin` — Admin panel (password protected)
+- `/payment-preview` — Standalone payment modal with sample data (for Figma capture/dev)
 
 ### State Management (transactionStore.js)
 
@@ -100,10 +107,11 @@ Search results are ordered: exact barcode match first, then barcode-starts-with,
 - **Content wrapper:** `94.8vw` width, centered with `margin: 0 auto` (NO px max-width — always proportional to viewport)
 - **Header:** Full-width, `#121212` background, 62px height, logo only (no store name text)
 - **Sidebar:** 223px overlay panel, `position: fixed` starting at `top: 62px` (below header), overlays ALL content (table, totals, function keys). Slides in with `translateX` animation (280ms cubic-bezier). Always in DOM with `pointer-events: none/auto` toggle for smooth open/close transitions. Has close icon at top.
-- **Table:** Split into fixed header (`.table-header-fixed`) + scrollable body (`.table-scroll`) so scrollbar only appears below the dark header row, never overlapping it
-- **Search bar:** Absolutely centered in top bar with `position: absolute; left: 50%; transform: translateX(-50%)` — always perfectly centered regardless of sidebar toggle and Scale button widths. Search dropdown `z-index: 200` renders above the table.
-- **Totals bar:** Rounded 14px container, `align-items: center`, all total-fields 40px height with `justify-content: space-between` (except grand-total-field which is `height: auto`)
-- **Function keys:** Rounded 14px container, two rows of 9 keys each, 85px key height
+- **Table:** Split into fixed header (`.table-header-fixed`) + scrollable body (`.table-scroll`) so scrollbar only appears below the dark header row, never overlapping it. No border on `.table-outer`.
+- **Search bar:** Absolutely centered in top bar with `position: absolute; left: 50%; transform: translateX(-50%)`, 320px width. Search dropdown `z-index: 200` renders above the table. No code hints in the top bar.
+- **Totals bar:** Rounded 14px container, `align-items: center`, all total-fields 40px height with `justify-content: space-between` (except grand-total-field which is `height: auto`). Background: `rgba(235, 240, 241, 0.7)` with `backdrop-filter: blur(12px)`.
+- **Function keys:** Rounded 14px container, two rows of 9 keys each, 85px key height. Background: `rgba(221, 227, 229, 0.7)` with `backdrop-filter: blur(12px)`.
+- **Top bar:** Background: `rgba(237, 239, 241, 0.7)` with `backdrop-filter: blur(12px)`.
 - **Bottom padding:** 35px below function keys
 - **Empty table rows:** 50 rows to fill the scroll area on any screen
 
@@ -122,12 +130,31 @@ Search results are ordered: exact barcode match first, then barcode-starts-with,
 - Finish key: `#47ab77` fill, `#c9f0dc` key text, `#f3f3f7` label text
 - Put on Hold: plain white key (NOT orange highlighted)
 - Table header: `#121212`
+- Table row background: `rgba(251, 251, 251, 0.85)` (semi-transparent for gradient bleed)
 - Row borders: `rgba(103, 133, 140, 0.3)`
 - NT badge: `#e8ecf1` bg, `#1e40af` text
 - Grand Total: `#282828` (38px bold)
 - EBT Eligible: `#0d9488` (teal)
 - Labels/muted text: `#8896a6`
 - Primary text: `#1a1a2e`
+
+### Payment Modal Colors
+- Modal bg: `#ffffff`, rounded 12px, shadow `0 8px 32px rgba(0,0,0,0.15)`
+- Pay input: `#eef2ff` bg, `#2563eb` 2px border (blue highlight)
+- Due value: `#ca8a04` (gold/yellow)
+- Change value: `#dc2626` (red)
+- Cash button: `#2E7D32` (dark green)
+- Credit Card button: `#1565C0` (blue)
+- Debit Card button: `#6A1B9A` (purple)
+- EBT SNAP button: `#E65100` (orange)
+- Numpad keys: `#f2f3f5` bg, `#d1d8e0` border
+- Quick amount keys ($1-$100): white bg, `#ca8a04` text
+- Exact button: `#2E7D32` (green)
+- Done button: `#2E7D32` (green)
+- Cancel button: `#C62828` (red)
+- Put on Hold button: `#f2f3f5` bg, `#d1d8e0` border
+- Payments table header: `#121212` bg, white text
+- SNAP Eligible: `#0d9488` border and value text
 
 ### Background Gradients
 Three CSS `radial-gradient` on `#root` (NOT on body, NOT as DOM elements):
@@ -139,18 +166,21 @@ background:
   #e8e8e8;
 ```
 Bottom gradient was darkened 20% from original `#9aacb3` to `#7b8a8f`.
+
 **Critical:** Gradient end colors must fade to same-hue transparent (e.g. `rgba(184,192,196,0)`) NOT `transparent` (which is `rgba(0,0,0,0)` and causes muddy dark blending).
 
-Content areas use semi-transparent backgrounds (70-85% opacity) with `backdrop-filter: blur(12px)` so gradients bleed through.
+Content areas use semi-transparent backgrounds (70-85% opacity) with `backdrop-filter: blur(12px)` so gradients bleed through. The `.transaction-screen` background is `transparent`.
 
 ### Typography
-- Font: Inter (with system fallbacks)
+- Font: Inter (loaded from Google Fonts, with system fallbacks)
 - Table data: 14px
 - Function key labels: 12px semibold
 - Function key shortcuts: 9px bold, `#8896a6`
 - Section labels: 10px bold uppercase, 0.5px tracking, `#8896a6`
 - Control buttons: 10px semibold
-- Button border-radius: 3px (sidebar controls)
+- Button border-radius: 3px (sidebar controls), 10px (payment buttons), 8px (numpad)
+- Grand Total: 38px bold `#282828`
+- Payment modal title: 18px bold
 
 ### Sidebar Specs (from Figma node 6644:4954)
 - Width: 223px
@@ -192,13 +222,16 @@ Printed via `node-thermal-printer` (ESC/POS) on Epson/Star printers. Config in A
 
 **Console fallback:** Same layout rendered as ASCII box art when no printer is connected (browser preview / development).
 
-**Logo assets:**
-- `electron/assets/receipt-logo.png` — black monochrome logo for thermal printing
-- `public/jalisco-logo-color-blacktext.png` — colored hat + black text for admin login
-- `public/jalisco-logo-color.svg` — colored hat + white text for POS header (dark bg)
-- `public/jalisco-logo-dark-text.svg` — colored hat + dark text (SVG version)
+### Logo Variants
+- **POS header** (dark bg): `public/jalisco-logo-color.svg` — colored hat, white text
+- **Admin login** (light bg): `public/jalisco-logo-color-blacktext.png` — colored hat, black text
+- **Receipt printing**: `electron/assets/receipt-logo.png` — all-black monochrome
+- **SVG dark text**: `public/jalisco-logo-dark-text.svg` — colored hat, dark text (SVG)
+- **Legacy**: `public/jalisco-tienda-mexicana-logo-white-rgb-2000px-w-72ppi.png` — all-white (unused)
 
-**Branding source:** `/Documents/Claude/Projects/Tienda Mexicana Jalisco/Assets/Logo/` contains Full Color, White, Black, and Full Color with Black Text variants in Web (PNG/JPG/SVG) and Print (AI/EPS/PDF) formats.
+Header shows logo only, no store name text.
+
+**Branding source:** `/Documents/Claude/Projects/Tienda Mexicana Jalisco/Assets/Logo/` contains Full Color, Full Color with Black Text, White, and Black variants in Web (PNG/JPG/SVG) and Print (AI/EPS/PDF) formats.
 
 ## Important Rules
 
@@ -207,6 +240,9 @@ When redesigning the UI, prefer CSS-only changes. Do NOT modify JSX unless the s
 
 ### No Tailwind
 This project uses plain CSS with CSS variables. Do NOT install Tailwind or convert to Tailwind classes.
+
+### Navigation
+Uses BrowserRouter (not HashRouter). Navigation uses `window.location.href = '/path'` not `window.location.hash = '#/path'`.
 
 ### Z-Index Hierarchy
 - `.sidebar-overlay`: z-index 50 (fixed, covers full viewport below header)
@@ -242,15 +278,6 @@ USB barcode scanners send keystrokes rapidly (<50ms between chars) followed by E
 - Table body scrolls independently from the fixed header
 - `.table-outer` has NO border (removed — it was causing a visible white stroke)
 - 50 empty rows fill the scroll area on any screen size
-
-### Logo Variants
-- **POS header** (dark bg): `public/jalisco-logo-color.svg` — colored hat, white text
-- **Admin login** (light bg): `public/jalisco-logo-color-blacktext.png` — colored hat, black text
-- **Receipt printing**: `electron/assets/receipt-logo.png` — all-black monochrome
-- **SVG dark text**: `public/jalisco-logo-dark-text.svg` — colored hat, dark text (SVG)
-- **Legacy**: `public/jalisco-tienda-mexicana-logo-white-rgb-2000px-w-72ppi.png` — all-white (unused)
-
-Header shows logo only, no store name text.
 
 ## Database (Electron only)
 
@@ -292,6 +319,14 @@ npm run build        # Production build (dist/)
 npm run dev:electron # Full Electron app with real database
 ```
 
+### Figma Capture (HTML to Figma)
+The `index.html` includes the Figma capture script (`https://mcp.figma.com/mcp/html-to-design/capture.js`). To use the capture toolbar:
+1. Start dev server: `npx vite --port 3000`
+2. Open in Chrome with capture hash params (generated by `generate_figma_design` tool)
+3. Or use `/payment-preview` route for standalone payment modal capture
+4. Requires the **HTML to Figma** Chrome extension installed
+5. The capture toolbar appears when the URL contains `#figmacapture=...` hash params
+
 ## Deployment
 
 GitHub Pages deployment serves the Vite build from `dist/` as a static site. The mock API (`api-mock.js`) provides all data for the browser preview. Cache-bust with `?v=N` query param.
@@ -304,3 +339,6 @@ GitHub Pages deployment serves the Vite build from `dist/` as a static site. The
 - **Gradient `transparent`** — never use bare `transparent` in gradients; it's `rgba(0,0,0,0)` and causes muddy transitions. Always use same-hue-transparent like `rgba(184,192,196,0)`
 - **`position: fixed` on body** — can interfere with `background-image` rendering; gradients are on `#root` instead
 - **Admin tables vs POS tables** — admin uses `.admin-content td { background: #ffffff }` to override the POS transparent row style
+- **HashRouter vs BrowserRouter** — migrated to BrowserRouter with v7 future flags. Navigation uses `window.location.href` not `window.location.hash`. The `/payment-preview` route exists for Figma capture.
+- **Figma capture + HashRouter conflict** — the `#figmacapture=...` hash fragment conflicts with HashRouter routes (causes blank page). This was a key reason for migrating to BrowserRouter.
+- **Semi-transparent content areas** — top bar, totals bar, function bar, and table all use `rgba` backgrounds at 70-85% opacity with `backdrop-filter: blur(12px)` so the background gradients are visible through them. Do NOT make these opaque or the gradients disappear.
