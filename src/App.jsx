@@ -23,8 +23,11 @@ function App() {
     loadSettings();
   }, [setTaxRate]);
 
+  // Use Vite BASE_URL as basename — works both in dev (/) and GitHub Pages (/Jaliscotiendamexicana/)
+  const basename = import.meta.env.BASE_URL.replace(/\/$/, '') || '/';
+
   return (
-    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <BrowserRouter basename={basename} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Routes>
         <Route path="/" element={<TransactionScreen />} />
         <Route path="/admin" element={<AdminScreen />} />
