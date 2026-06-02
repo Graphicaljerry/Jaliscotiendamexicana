@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import TopBar from '../layout/TopBar';
 import logoDarkText from '../../../public/jalisco-logo-color-blacktext.png';
 import './AdminScreen.css';
 
 function AdminScreen() {
+  const navigate = useNavigate();
   const [authenticated, setAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
   const [activeTab, setActiveTab] = useState('inventory');
@@ -125,7 +127,7 @@ function AdminScreen() {
             autoFocus
           />
           <div className="login-actions">
-            <button onClick={() => window.location.href = '/'}>Back to POS</button>
+            <button onClick={() => navigate('/')}>Back to POS</button>
             <button className="btn-login" onClick={handleLogin}>Login</button>
           </div>
         </div>
@@ -139,7 +141,7 @@ function AdminScreen() {
         <span className="admin-nav-links">
           P.O.S. &nbsp;|&nbsp; Inventory &nbsp;|&nbsp; Customers &nbsp;|&nbsp; Financials
         </span>
-        <button className="btn-back-pos" onClick={() => window.location.href = '/'}>
+        <button className="btn-back-pos" onClick={() => navigate('/')}>
           Point Of Sale
         </button>
       </>}>

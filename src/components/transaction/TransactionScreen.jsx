@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import TransactionTable from './TransactionTable';
 import TransactionControls from './TransactionControls';
 import FunctionBar from './FunctionBar';
@@ -15,6 +16,7 @@ import useTransactionStore from '../../stores/transactionStore';
 import './TransactionScreen.css';
 
 function TransactionScreen() {
+  const navigate = useNavigate();
   const [showGrid, setShowGrid] = useState(false);
   const [showCustomerLookup, setShowCustomerLookup] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
@@ -116,7 +118,7 @@ function TransactionScreen() {
         <button className="btn-grid-toggle" onClick={() => setShowGrid(!showGrid)}>
           {showGrid ? 'Hide Grid' : 'Item Grid'}
         </button>
-        <button className="btn-admin" onClick={() => window.location.href = '/admin'}>Admin</button>
+        <button className="btn-admin" onClick={() => navigate('/admin')}>Admin</button>
       </>}>
         {isActive ? (
           <span className="txn-number">Transaction# <strong>{store.transactionNumber || '—'}</strong></span>
