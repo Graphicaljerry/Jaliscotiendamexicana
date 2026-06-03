@@ -3,6 +3,7 @@ import { BrowserRouter, HashRouter, Routes, Route } from 'react-router-dom';
 import TransactionScreen from './components/transaction/TransactionScreen';
 import AdminScreen from './components/admin/AdminScreen';
 import PaymentPreview from './components/payment/PaymentPreview';
+import KitchenScreen from './components/kitchen/KitchenScreen';
 import useTransactionStore from './stores/transactionStore';
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
       <Routes>
         <Route path="/" element={<TransactionScreen />} />
         <Route path="/admin" element={<AdminScreen />} />
+        <Route path="/kitchen" element={<KitchenScreen />} />
         <Route path="/payment-preview" element={<PaymentPreview />} />
       </Routes>
     </BrowserRouter>

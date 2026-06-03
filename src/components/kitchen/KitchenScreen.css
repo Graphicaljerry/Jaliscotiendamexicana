@@ -1,0 +1,282 @@
+/* ─── Kitchen Display Screen (dark theme for kitchen visibility) ── */
+.kitchen-screen {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+  background: #16181d;
+  color: #f1f1f1;
+  overflow: hidden;
+}
+
+.kitchen-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  background: #0e0f12;
+  border-bottom: 2px solid #2a2d35;
+  flex-shrink: 0;
+  gap: 16px;
+}
+
+.kitchen-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.kds-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #47ab77;
+  box-shadow: 0 0 8px #47ab77;
+}
+
+.kds-count {
+  font-size: 13px;
+  font-weight: 600;
+  color: #8a909c;
+  margin-left: 8px;
+}
+
+.kitchen-station-tabs {
+  display: flex;
+  gap: 6px;
+}
+
+.station-tab {
+  padding: 8px 18px;
+  background: #22252d;
+  color: #b8bdc7;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.station-tab.active {
+  background: #47ab77;
+  color: #fff;
+}
+
+.kitchen-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.kds-btn-clear, .kds-btn-pos {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.kds-btn-clear {
+  background: #3a2326;
+  color: #e88;
+}
+.kds-btn-clear:hover { background: #dc2626; color: #fff; }
+.kds-btn-pos {
+  background: #22252d;
+  color: #b8bdc7;
+}
+.kds-btn-pos:hover { background: #2f333d; color: #fff; }
+
+/* ─── Order Grid ─────────────────────────────────────── */
+.kitchen-grid {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  align-content: start;
+}
+
+.kitchen-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 80px 20px;
+  color: #6b7280;
+}
+.kitchen-empty-icon { font-size: 56px; margin-bottom: 12px; }
+.kitchen-empty p { font-size: 18px; margin: 4px 0; }
+.kitchen-empty-hint { font-size: 14px !important; color: #4b5563; }
+
+/* ─── Ticket ─────────────────────────────────────────── */
+.ticket {
+  background: #1e2128;
+  border-radius: 12px;
+  border-top: 6px solid #47ab77;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.ticket-fresh { border-top-color: #47ab77; }
+.ticket-warning { border-top-color: #ea8b0c; }
+.ticket-late { border-top-color: #dc2626; animation: pulse-late 1.5s ease-in-out infinite; }
+
+@keyframes pulse-late {
+  0%, 100% { box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+  50% { box-shadow: 0 4px 20px rgba(220,38,38,0.5); }
+}
+
+.ticket-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: #15171c;
+}
+
+.ticket-num {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.ticket-timer {
+  font-size: 20px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #b8bdc7;
+}
+.ticket-late .ticket-timer { color: #ff6b6b; }
+.ticket-warning .ticket-timer { color: #ffb84d; }
+
+.ticket-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px 0;
+  flex-wrap: wrap;
+}
+
+.ticket-type {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 12px;
+  letter-spacing: 0.5px;
+}
+.type-dine_in { background: #1e3a5f; color: #7db8ff; }
+.type-takeout { background: #3d2e1a; color: #ffc078; }
+.type-call_in { background: #2d1f3d; color: #c79bff; }
+.type-delivery { background: #1a3d2e; color: #6ee7a8; }
+
+.ticket-station {
+  font-size: 11px;
+  font-weight: 700;
+  background: #4a3a1a;
+  color: #ffd584;
+  padding: 3px 8px;
+  border-radius: 12px;
+}
+
+.ticket-table {
+  font-size: 11px;
+  font-weight: 600;
+  color: #8a909c;
+}
+
+.ticket-customer {
+  padding: 6px 14px 0;
+  font-size: 13px;
+  color: #b8bdc7;
+}
+
+.ticket-items {
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ticket-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.1s;
+}
+.ticket-item:hover { background: #2a2e37; }
+
+.item-qty {
+  font-weight: 800;
+  color: #47ab77;
+  min-width: 28px;
+}
+
+.item-name { flex: 1; font-weight: 600; }
+
+.item-check { color: #47ab77; font-weight: 800; }
+
+.item-done .item-name {
+  text-decoration: line-through;
+  color: #5a6070;
+}
+.item-done .item-qty { color: #5a6070; }
+
+.ticket-note {
+  margin: 0 14px 10px;
+  padding: 8px 10px;
+  background: #2a2620;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #ffd584;
+}
+
+.ticket-footer {
+  display: flex;
+  gap: 8px;
+  padding: 10px 14px;
+  background: #15171c;
+  margin-top: auto;
+}
+
+.ticket-advance {
+  flex: 1;
+  padding: 12px;
+  background: #2563EB;
+  color: #fff;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+}
+.ticket-advance:hover { background: #1d4ed8; }
+
+.status-cooking .ticket-advance { background: #ea8b0c; }
+.status-cooking .ticket-advance:hover { background: #d97706; }
+
+.ticket-ready-label {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1a3d2e;
+  color: #6ee7a8;
+  border-radius: 8px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.ticket-bump {
+  padding: 12px 18px;
+  background: #47ab77;
+  color: #fff;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+}
+.ticket-bump:hover { background: #3d9568; }
+
+/* Ready tickets get a green glow */
+.status-ready { border-top-color: #47ab77; }
+.status-ready .ticket-header { background: #14241c; }

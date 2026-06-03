@@ -55,6 +55,22 @@
 }
 .btn-admin:hover { background: rgba(255,255,255,0.25); }
 
+.btn-fire {
+  background: #ea8b0c;
+  color: #ffffff;
+  border-radius: 6px;
+  font-weight: 700;
+}
+.btn-fire:hover { background: #d97706; }
+
+.btn-kitchen {
+  background: rgba(255,255,255,0.15);
+  color: #ffffff;
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 6px;
+}
+.btn-kitchen:hover { background: rgba(255,255,255,0.25); }
+
 /* ─── Main Content ───────────────────────────────────── */
 .main-content {
   display: flex;

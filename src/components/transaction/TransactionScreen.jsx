@@ -10,6 +10,7 @@ import ItemGrid from '../grid/ItemGrid';
 import CustomerLookup from '../customer/CustomerLookup';
 import PaymentModal from '../payment/PaymentModal';
 import HeldTransactionsModal from '../payment/HeldTransactionsModal';
+import FireToKitchenModal from '../kitchen/FireToKitchenModal';
 import useBarcodeScanner from '../../hooks/useBarcodeScanner';
 import useKeyboardShortcuts from '../../hooks/useKeyboardShortcuts';
 import useTransactionStore from '../../stores/transactionStore';
@@ -27,6 +28,7 @@ function TransactionScreen() {
   const [showScale, setShowScale] = useState(false);
   const [scaleWeight, setScaleWeight] = useState('0.00');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showFireModal, setShowFireModal] = useState(false);
 
   const store = useTransactionStore();
   const isActive = store.isActive || store.items.length > 0;
@@ -115,9 +117,13 @@ function TransactionScreen() {
   return (
     <div className="transaction-screen">
       <TopBar rightContent={<>
+        {isActive && store.items.length > 0 && (
+          <button className="btn-fire" onClick={() => setShowFireModal(true)}>🔥 Fire Order</button>
+        )}
         <button className="btn-grid-toggle" onClick={() => setShowGrid(!showGrid)}>
           {showGrid ? 'Hide Grid' : 'Item Grid'}
         </button>
+        <button className="btn-kitchen" onClick={() => navigate('/kitchen')}>Kitchen</button>
         <button className="btn-admin" onClick={() => navigate('/admin')}>Admin</button>
       </>}>
         {isActive ? (
@@ -225,6 +231,7 @@ function TransactionScreen() {
       {showCustomerLookup && <CustomerLookup onClose={() => setShowCustomerLookup(false)} />}
       {showPayment && <PaymentModal onClose={() => setShowPayment(false)} />}
       {showHeldModal && <HeldTransactionsModal onClose={() => setShowHeldModal(false)} />}
+      {showFireModal && <FireToKitchenModal onClose={() => setShowFireModal(false)} />}
 
       {/* Scale Modal */}
       {showScale && (
